@@ -141,6 +141,6 @@ form .page .btns button.next{
   display: none;
 }
 .steps .step .check.active{
-  display: block;
+  /* display: block; */
   color: #fff;
 }
