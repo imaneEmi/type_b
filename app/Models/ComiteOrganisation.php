@@ -16,4 +16,9 @@ class ComiteOrganisation extends Model
         'tel',
         'etablissement_id',
     ];
+
+    public function etablissement()
+    {
+        return $this->belongsTo(Etablissement::class, 'etablissement_id');
+    }
 }

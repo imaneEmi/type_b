@@ -15,5 +15,17 @@ class Contributeur extends Model
         'montant',
         'nature_contribution_id',
     ];
+
+    public function typeContributeur()
+    {
+        return $this->belongsTo(TypeContributeur::class, 'type_contributeur_id');
+    }
+    public function natureContribution()
+    {
+        return $this->belongsTo(NatureContribution::class, 'nature_contribution_id');
+    }
+
+
+    
     
 }

@@ -1,110 +1,113 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>UCA</title>
+    <style>
+        #customers {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
 
-    <!-- General CSS Files -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
+        #customers td,
+        #customers th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
 
-    <!-- CSS Libraries -->
+        #customers tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
 
-    <!-- Template CSS -->
-    <link rel="stylesheet" href="{{public_path('assets/css/style.css')}}">
-    <link rel="stylesheet" href="{{public_path('assets/css/components.css')}}">
-    <link rel="stylesheet" href="{{public_path('css/steps.css')}}">
+        #customers tr:hover {
+            background-color: #ddd;
+        }
 
-
+        #customers th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #a34f23;
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="section-body">
-        <div class="container">
-            <h5>Informations concernant la manifestation</h5>
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body p-0">
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="sortable-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Code</th>
-                                            <th>Date envoie</th>
-                                            <th>remarques</th>
-                                            <th>etat</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>{{$demande->code}}</td>
-                                            <td class="align-middle">
-                                                {{$demande->date_envoie}}
-                                            </td>
-                                            <td> {{$demande->remarques}}</td>
-                                            <td>
-                                                @if ($demande->etat === "PENDING")
-                                                <div class="badge badge-danger">{{$demande->etat}}</div>
 
-                                                @else
-                                                <div class="badge badge-success">{{$demande->etat}}</div>
+    <h3>Entité de recherche organisant la manifestation</h3>
 
-                                                @endif
+    <table id="customers">
+        <tr>
+            <th>Nom de l’entité de recherche </th>
+            <th>Responsable de l’entité</th>
+            <th>Etablissement</th>
+        </tr>
+        <tr>
+            <td>{{$demande->manifestation->entiteOrganisatrice->nom}}</td>
+            <td>{{$demande->manifestation->entiteOrganisatrice->responsable}}</td>
+            <td>{{$demande->manifestation->entiteOrganisatrice->etablissement->libelle}}</td>
+        </tr>
+    </table>
 
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <h3>Coordonnateur de la manifestation</h3>
 
-            <h5>Informations concernant la manifestation</h5>
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body p-0">
-                            <p>intitule :{{$demande->manifestation->intitule}} </p>
-                            <p>type :{{$demande->manifestation->type}} </p>
+    <table id="customers">
+        <tr>
+            <th>Nom </th>
+            <th>Prénom </th>
+            <th>Etablissement</th>
+            <th>E-mail</th>
+            <th>N° de téléphone personnelle</th>
+            <th>Fax</th>
+        </tr>
+        <tr>
+            <td>{{$demande->coordonnateur->name}}</td>
+            <td>{{$demande->coordonnateur->prenom}}</td>
+            <td>{{$demande->coordonnateur->etablissement->libelle}}</td>
+            <td>{{$demande->coordonnateur->email}}</td>
+            <td>{{$demande->coordonnateur->tel}}</td>
+            <td>{{$demande->coordonnateur->fax}}</td>
+        </tr>
+    </table>
 
-                            <p>etendue :{{$demande->manifestation->etendue}} </p>
+    <h3>Comité d'organisation</h3>
 
-                            <p>lieu :{{$demande->manifestation->lieu}} </p>
-                            <p>site_web :{{$demande->manifestation->site_web}} </p>
-                            <p>agence_organisatrice :{{$demande->manifestation->agence_organisatrice}} </p>
-                            <p>partenaires :{{$demande->manifestation->partenaires}} </p>
-                            <p>nbr_participants_prevus :{{$demande->manifestation->nbr_participants_prevus}} </p>
-                            <p>date_debut :{{$demande->manifestation->date_debut}} </p>
-                            <p>date_fin :{{$demande->manifestation->date_fin}} </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-    <!-- General JS Scripts -->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
-    </script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-    <script src="{{public_path('assets/js/stisla.js')}}"></script>
+    <table id="customers">
+        <tr>
+            <th>Nom & Prénom </th>
+            <th>tel </th>
+            <th>Etablissement/ Université </th>
+            <th>Contact / E-Mail</th>
+        </tr>
+        <tr>
+        @foreach ($manifestationComite as $mc)
+            <td>{{$mc->comiteOrganisation->nom}}  {{$mc->comiteOrganisation->prenom}}</td>
+            <td>{{$mc->comiteOrganisation->tel}}</td>
+            <td>{{$mc->comiteOrganisation->etablissement->libelle}}</td>
+            <td>{{$mc->comiteOrganisation->email}}</td>
+        </tr>
+        @endforeach
+    </table>
 
-    <!-- JS Libraies -->
+    <h3>Contribution </h3>
+    <table id="customers">
+        <tr>
+            <th>type </th>
+            <th>nom </th>
+            <th>montant </th>
+            <th>nature</th>
+        </tr>
+        <tr>
+        @foreach ($manifestationContributeur as $mc)
+            <td>{{$mc->contributeur->typeContributeur->libelle}}  </td>
+            <td>{{$mc->contributeur->nom}}</td>
+            <td>{{$mc->contributeur->montant}}</td>
+            <td>{{$mc->contributeur->natureContribution->libelle}}</td>
+        </tr>
+        @endforeach
+    </table>
 
-    <!-- Template JS File -->
-    <script src="{{public_path('assets/js/scripts.js')}}"></script>
-    <script src="{{public_path('assets/js/custom.js')}}"></script>
-    <script src="{{public_path('js/steps.js')}}"></script>
-    <!-- Page Specific JS File -->
 </body>
 
 </html>

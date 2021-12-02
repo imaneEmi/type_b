@@ -18,6 +18,8 @@ use App\Models\SoutienSollicite;
 use App\Services\DemandeService;
 use App\Services\EtablissementService;
 use App\Services\FraisCouvertService;
+use App\Services\ManifestationComiteService;
+use App\Services\ManifestationContributeurService;
 use App\Services\NatureContributionService;
 use App\Services\TypeContributeurService;
 use Illuminate\Http\Request;
@@ -30,7 +32,8 @@ class DashboardController extends Controller
     private EtablissementService $etablissementService;
     private NatureContributionService $natureContributionService;
     private FraisCouvertService $fraisCouvertService;
-    
+    private   ManifestationComiteService $manifestationComiteService;
+    private ManifestationContributeurService $manifestationContributeurService;
     /**
      * Create a new controller instance.
      *
@@ -40,13 +43,17 @@ class DashboardController extends Controller
     EtablissementService $etablissementService,
     TypeContributeurService $typeContributeurService,
     NatureContributionService $natureContributionService,
-    FraisCouvertService $fraisCouvertService
+    FraisCouvertService $fraisCouvertService,
+    ManifestationComiteService $manifestationComiteService,
+    ManifestationContributeurService $manifestationContributeurService
     ){
         $this->demandeService  =$demandeService;
         $this->etablissementService  =$etablissementService;
         $this->natureContributionService  =$natureContributionService;
         $this->typeContributeurService  =$typeContributeurService;
         $this->fraisCouvertService  =$fraisCouvertService;
+        $this->manifestationComiteService  =$manifestationComiteService;
+        $this->manifestationContributeurService  =$manifestationContributeurService;
     }
 
     /**
@@ -63,7 +70,11 @@ class DashboardController extends Controller
     public function generatePDF(Request $request)
     {   
         $demande = $this->demandeService->findById($request->route('id'));
-        $pdf = PDF::loadView('user/pdf', compact('demande'));
+        $manifestationComite = $this->manifestationComiteService->findByManifistation($demande->manifestation);
+        $manifestationContributeur = $this->manifestationContributeurService->findByManifistation($demande->manifestation);
+
+  //dd($manifestationComite[0]->comiteOrganisation);
+        $pdf = PDF::loadView('user/pdf', compact('demande','manifestationComite','manifestationContributeur'));
         return $pdf->stream("invoice.pdf",array("Attachment" => false));
     }
 
