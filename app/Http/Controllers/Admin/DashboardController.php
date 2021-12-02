@@ -14,6 +14,8 @@ use App\Models\ManifestationContributeur;
 use App\Models\NatureContribution;
 use App\Models\SoutienSollicite;
 use App\Models\TypeContributeur;
+use App\Services\DemandeService;
+use App\Services\BudgetAnnuelService;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -24,8 +26,12 @@ class DashboardController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    protected $demandeService;
+    protected $budgetAnnuelService;
+    public function __construct(DemandeService $d, BudgetAnnuelService $b)
     {
+        $this->demandeService = $d;
+        $this->budgetAnnuelService = $b;
         $this->middleware('auth');
     }
 
@@ -36,6 +42,18 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('admin/index');
+
+        $nbrTotal = $this->demandeService->getNbrDemandes();
+        $nbrTotalAccepte =  $this->demandeService->getNbrDemandesAcceptees();
+        $nbrTotalRefused =  $this->demandeService->getNbrDemandesRefusees();
+        $collection = $this->budgetAnnuelService->findAll();
+        $anneesarray = $collection->pluck('annee');
+        $budgetsAnnuelsFixes = $collection->pluck('budget_fixe');
+        $budgetsAnnuelsRestant = $collection->pluck('budget_restant');
+        return view('admin/index', [
+            'nbrTotal' => $nbrTotal, 'nbrTotalAccepte' => $nbrTotalAccepte, 'nbrTotalRefused' => $nbrTotalRefused,
+            'budgetsAnnuelsFixes' => $budgetsAnnuelsFixes,  'annees' => $anneesarray,
+            'budgetsAnnuelsRestant' => $budgetsAnnuelsRestant
+        ]);
     }
 }

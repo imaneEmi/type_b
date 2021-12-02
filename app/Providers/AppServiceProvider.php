@@ -46,6 +46,21 @@ class AppServiceProvider extends ServiceProvider
             'App\Services\FraisCouvertService',
             'App\Services\ServicesImpl\FraisCouvetServiceImpl'
         );
+        $this->app->bind(
+            'App\Services\ManifestationComiteService',
+            'App\Services\ServicesImpl\ManifestationComiteServiceImpl'
+        );
+        $this->app->bind(
+            'App\Services\ManifestationContributeurService',
+            'App\Services\ServicesImpl\ManifestationContributeurServiceImpl'
+        );
+        $this->app->bind(
+            'App\Services\BudgetAnnuelService',
+            'App\Services\ServicesImpl\BudgetAnnuelServiceImpl'
+        );
+
+
+
     }
 
     /**

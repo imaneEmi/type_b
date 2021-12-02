@@ -34,4 +34,16 @@ class DemandeServiceImpl implements DemandeService
         //dd($demandes);
         return ['demandes'=>$demandes];
     }
+    public function getNbrDemandes()
+    {
+        return $this->findAll()->count();
+    }
+    public function getNbrDemandesAcceptees()
+    {
+        return Demande::where('etat', 'Acceptée')->get()->count();
+    }
+    public function getNbrDemandesRefusees()
+    {
+        return Demande::where('etat', 'Refusée')->get()->count();
+    }
 }

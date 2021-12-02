@@ -13,4 +13,10 @@ class ManifestationComite extends Model
         'comite_organisation_id',
         'manifestation_id',
     ];
+
+    public function comiteOrganisation()
+    {
+        return $this->belongsTo(ComiteOrganisation::class, 'comite_organisation_id');
+    }
+  
 }

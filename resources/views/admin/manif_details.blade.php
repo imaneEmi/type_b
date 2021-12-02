@@ -240,7 +240,6 @@
                             </table>
                         </div>
                         <div class="card-footer bg-whitesmoke">
-                            site web: <a href="{{ $manifestation->site_web}}"> {{ $manifestation->site_web}}</a>
                         </div>
                     </div>
                 </section>

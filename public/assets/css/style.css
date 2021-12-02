@@ -80,7 +80,7 @@ a:not(.btn-social-icon):not(.btn-social):not(.page-link) .fab {
 }
 
 .bg-primary {
-    background-color: #a34f23 !important;
+    background-color: #6777ef !important;
 }
 
 .bg-secondary {
@@ -2745,8 +2745,6 @@ a.bb {
     display: inline;
     margin: 0 4px;
 }
-
-
 
 .slash:after {
     content: "/";

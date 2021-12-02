@@ -10,4 +10,7 @@ interface DemandeService
     public function update($demande);
     public function delete($id);
     public function findByEtat($etat,$manifestationService);
+    public function getNbrDemandesRefusees();
+    public function getNbrDemandesAcceptees();
+    public function getNbrDemandes();
 }
