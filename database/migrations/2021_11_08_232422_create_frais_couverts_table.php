@@ -16,7 +16,8 @@ class CreateFraisCouvertsTable extends Migration
         Schema::create('frais_couverts', function (Blueprint $table) {
             $table->id();
             $table->string('libelle',100);
-            $table->string('forfait',100);
+            $table->double('forfait');
+            $table->string('unite',60);
             $table->string('limite',100);
             $table->text('description');
             $table->text('remarques');

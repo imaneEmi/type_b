@@ -18,6 +18,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var string[]
      */
+    protected $with=['etablissement'];
     protected $fillable = [
         'name',
         'email',
@@ -28,7 +29,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'fax',
         'etablissement_id'
 
-        
+
     ];
 
     /**
@@ -53,5 +54,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function demande()
     {
         return $this->hasOne(Demande::class,'coordonateur_id');
+    }
+
+    public function etablissement(){
+        return $this->belongsTo(Etablissement::class);
     }
 }

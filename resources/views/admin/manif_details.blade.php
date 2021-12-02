@@ -37,9 +37,9 @@
                             <a href="#" data-toggle="dropdown" class="nav-link has-dropdown"><i
                                     class="fas fa-fire"></i><span>Organisation</span></a>
                             <ul class="dropdown-menu">
-                                <li class="nav-item"><a href="index-0.html" class="nav-link">Entité</a></li>
-                                <li class="nav-item"><a href="index.html" class="nav-link">Coordonnateur</a></li>
-                                <li class="nav-item"><a href="index.html" class="nav-link">Comité</a></li>
+                                <li class="nav-item"><a href="#entite" class="nav-link">Entité</a></li>
+                                <li class="nav-item"><a href="#coordonnateur" class="nav-link">Coordonnateur</a></li>
+                                <li class="nav-item"><a href="#comite" class="nav-link">Comité</a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
@@ -80,12 +80,11 @@
             <div class="main-content">
                 <section class="section">
                     <div class="section-header">
-                        <h1>Top Navigation</h1>
+                        <h1>{{ $manifestation->intitule }}</h1>
                         <div class="section-header-breadcrumb">
                             <div class="d-inline">
                                 <span>
-                                    <a href="{{ url()->previous() }}"
-                                        title="Retour en arrière">
+                                    <a href="{{ url()->previous() }}" title="Retour en arrière">
                                         <i class="fa fa-reply fa-lg"></i>
                                     </a>
                                 </span>
@@ -94,23 +93,154 @@
                     </div>
 
                     <div class="section-body">
-                        <h2 class="section-title">This is Example Page</h2>
+                        <h2 class="section-title">{{ $manifestation->type }}</h2>
                         <p class="section-lead">This page is just an example for you to create your own page.</p>
                         <div class="card">
                             <div class="card-header">
-                                <h4>Example Card</h4>
+                                <h4>Informations concernant la manifestation</h4>
                             </div>
                             <div class="card-body">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                                    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                <table class="table table-striped" id="table-1">
+                                    <thead>
+                                        <tr>
+                                            <th>Type</th>
+                                            <th>Etendue</th>
+                                            <th>Lieu</th>
+                                            <th>Date début</th>
+                                            <th>Date fin</th>
+                                            <th>Nombre participants prévus</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{ $manifestation->type }}</td>
+                                            <td>{{ $manifestation->etendue }}</td>
+                                            <td>{{ $manifestation->lieu }}</td>
+                                            <td>{{ $manifestation->date_debut }}</td>
+                                            <td>{{ $manifestation->date_fin }}</td>
+                                            <td>{{ $manifestation->nbr_participants_prevus }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                             <div class="card-footer bg-whitesmoke">
-                                This is card footer
+                                site web: <a href="{{ $manifestation->site_web}}"> {{ $manifestation->site_web}}</a>
                             </div>
+                        </div>
+
+                        <div class="card" id="entite">
+                            <div class="card-header">
+                                <h4>Entité de recherche organisant la manifestation</h4>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-striped" id="table-1">
+                                    <thead>
+                                        <tr>
+                                            <th>Nom</th>
+                                            <th>Responsable</th>
+                                            <th>Etablissement</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{ $entiteOrganisatrice->nom }}</td>
+                                            <td>{{ $entiteOrganisatrice->responsable }}</td>
+                                            <td>{{ $entiteOrganisatrice->etablissement->libelle }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="card-footer bg-whitesmoke">
+                            </div>
+                        </div>
+
+                        <div class="card" id="coordonnateur">
+                            <div class="card-header">
+                                <h4>Coordonnateur</h4>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-striped" id="table-1">
+                                    <thead>
+                                        <tr>
+                                            <th>Nom Prenom</th>
+                                            <th>Grade</th>
+                                            <th>Etablissement</th>
+                                            <th>E-mail</th>
+                                            <th>N° tel personnel</th>
+                                            <th>Fax</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{ $coordonnateur->name }}&nbsp;{{ $coordonnateur->prenom }}</td>
+                                            <td>{{ $coordonnateur->profession }}</td>
+                                            <td>{{ $coordonnateur->etablissement->libelle }}</td>
+                                            <td>{{ $coordonnateur->email }}</td>
+                                            <td>{{ $coordonnateur->tel }}</td>
+                                            <td>{{ $coordonnateur->fax }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="card-footer bg-whitesmoke">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" id="comite">
+                        <div class="card-header">
+                            <h4>Comité d'organisation</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped" id="table-1">
+                                <thead>
+                                    <tr>
+                                        <th>Nom Prénom</th>
+                                        <th>Etablissement</th>
+                                        <th>Contact</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($comiteOrganisations as $comiteOrganisation )
+                                    <tr>
+                                        <td>{{ $comiteOrganisation->nom }}&nbsp;{{ $comiteOrganisation->prenom }}</td>
+                                        <td>{{ $comiteOrganisation->etablissement->libelle }}</td>
+                                        <td>{{ $comiteOrganisation->email }}&nbsp;/{{ $comiteOrganisation->tel }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-footer bg-whitesmoke">
+                        </div>
+                    </div>
+
+                    <div class="card" id="sponsors">
+                        <div class="card-header">
+                            <h4>Contribution des sponsors</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped" id="table-1">
+                                <thead>
+                                    <tr>
+                                        <th>Nom</th>
+                                        <th>Montant</th>
+                                        <th>Nature</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($contributeurs as $contributeur )
+                                    <tr>
+                                        <td>{{ $contributeur->nom }}</td>
+                                        <td>{{ $contributeur->montant }}&nbsp;DH</td>
+                                        <td> contributeur->nature </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-footer bg-whitesmoke">
+                            site web: <a href="{{ $manifestation->site_web}}"> {{ $manifestation->site_web}}</a>
                         </div>
                     </div>
                 </section>

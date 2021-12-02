@@ -9,9 +9,15 @@ class EntiteOrganisatrice extends Model
 {
     use HasFactory;
 
+    protected $with=['etablissement'];
+
     public $fillable = [
         'nom',
         'responsable',
         'etablissement_id',
     ];
+
+    public function etablissement(){
+        return $this->belongsTo(Etablissement::class);
+    }
 }
