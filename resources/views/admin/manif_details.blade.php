@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>Forms &rsaquo; Advanced Forms &mdash; Stisla</title>
+    <title>Layout &rsaquo; Top Navigation &mdash; Stisla</title>
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -19,102 +19,108 @@
     <link rel="stylesheet" href="../assets/css/components.css">
 </head>
 
-<body>
+<body class="layout-3">
     <div id="app">
-        <div class="navbar-bg"></div>
-      <!--  <nav class="navbar navbar-expand-lg main-navbar">
-            <ul class="navbar-nav navbar-right">
-                <li class="dropdown"><a href="#" data-toggle="dropdown"
-                        class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                        <img alt="image" src="../assets/img/avatar/avatar-1.png" class="rounded-circle mr-1">
-                        <div class="d-sm-none d-lg-inline-block">Admin</div>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right">
-
-                        <a href="features-settings.html" class="dropdown-item has-icon">
-                            <i class="fas fa-cog"></i> Settings
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item has-icon text-danger">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </a>
-                    </div>
-                </li>
-            </ul>
-        </nav> -->
-        <div class="main-sidebar">
-            <aside id="sidebar-wrapper">
-                <div class="sidebar-brand">
-                    <a href="{{route('dashboard.admin')}}">uca</a>
+        <div class="main-wrapper container">
+            <div class="navbar-bg"></div>
+            <nav class="navbar navbar-expand-lg main-navbar">
+                <a href="index.html" class="navbar-brand sidebar-gone-hide">UCA</a>
+                <div class="navbar-nav">
+                    <a href="#" class="nav-link sidebar-gone-show" data-toggle="sidebar"><i class="fas fa-bars"></i></a>
                 </div>
-            </aside>
-        </div>
-        <!-- ------------------------------- MAIN ---------------------------- -->
-        <div class="main-content">
-            <section class="section mr-5">
-                <div class="section-header d-flex justify-content-between pl-2 pr-3">
+            </nav>
 
-                    <div class="d-inline"><label for="">Intitule: </label>&nbsp;<span> {{ $manifestation->intitule }} </span>
-                    </div>
-                    <div class="d-inline"><label for="">Type: </label>&nbsp;<span>{{ $manifestation->type }} </span></div>
-                    <div class="d-inline"><label for="">Lieu: </label>&nbsp;<span>{{ $manifestation->lieu }}</span></div>
-                    <div class="d-inline"><label for="">Date reçue: </label>&nbsp;<span> 14/11/2021</span></div>
-                    <div class="d-inline">
-                        <span>
-                            <a href="{{ route('admin.edit.manifestation',['id'=> $demande->id]) }}" title="Retour en arrière">
-                                <i class="fa fa-reply fa-lg"></i>
-                            </a>
-                        </span>
-                    </div>
+            <nav class="navbar navbar-secondary navbar-expand-lg">
+                <div class="container">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a href="#" data-toggle="dropdown" class="nav-link has-dropdown"><i
+                                    class="fas fa-fire"></i><span>Organisation</span></a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item"><a href="index-0.html" class="nav-link">Entité</a></li>
+                                <li class="nav-item"><a href="index.html" class="nav-link">Coordonnateur</a></li>
+                                <li class="nav-item"><a href="index.html" class="nav-link">Comité</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a href="#" data-toggle="dropdown" class="nav-link has-dropdown"><i
+                                    class="fas fa-fire"></i><span>Contribution</span></a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item"><a href="index-0.html" class="nav-link">Sponsors</a></li>
+                                <li class="nav-item"><a href="index.html" class="nav-link">Etablissements</a></li>
+                                <li class="nav-item"><a href="index.html" class="nav-link">Participants</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a href="#" data-toggle="dropdown" class="nav-link has-dropdown"><i
+                                    class="far fa-clone"></i><span>Multiple Dropdown</span></a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item"><a href="#" class="nav-link">Not Dropdown Link</a></li>
+                                <li class="nav-item dropdown"><a href="#" class="nav-link has-dropdown">Hover Me</a>
+                                    <ul class="dropdown-menu">
+                                        <li class="nav-item"><a href="#" class="nav-link">Link</a></li>
+                                        <li class="nav-item dropdown"><a href="#" class="nav-link has-dropdown">Link
+                                                2</a>
+                                            <ul class="dropdown-menu">
+                                                <li class="nav-item"><a href="#" class="nav-link">Link</a></li>
+                                                <li class="nav-item"><a href="#" class="nav-link">Link</a></li>
+                                                <li class="nav-item"><a href="#" class="nav-link">Link</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="nav-item"><a href="#" class="nav-link">Link 3</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
+            </nav>
 
-                <div class="section-body">
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-lg-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h4>Modification du montant sollicité</h4>
-                                </div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-md">
-                                            <tr>
-                                                <th class="text-center">Rubrique<th>
-                                                <th class="text-center">Nombre demandé</th>
-                                                <th class="text-center">Montant demandé</th>
-                                                <th class="text-center">Nombre accordé</th>
-                                                <th class="text-center">Montant accordé</th>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center">1</td>
-                                                <td class="text-center">Irwansyah Saputra</td>
-                                                <td class="text-center">0000 &nbsp;&nbsp;
-                                                    <i class="fa fa-info-circle" aria-hidden="true"
-                                                        data-container="body" data-toggle="popover"
-                                                        data-placement="right"
-                                                        data-content="Des remarques du coordonnateur." role="button">
-                                                    </i>
-                                                </td>
-                                                <td class="text-right"><input class="form-control" type="number" name=""
-                                                        id=""></td>
-                                                <td class="text-right"><input class="form-control" type="number" name=""
-                                                        id=""></td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
+            <!-- Main Content -->
+            <div class="main-content">
+                <section class="section">
+                    <div class="section-header">
+                        <h1>Top Navigation</h1>
+                        <div class="section-header-breadcrumb">
+                            <div class="d-inline">
+                                <span>
+                                    <a href="{{ url()->previous() }}"
+                                        title="Retour en arrière">
+                                        <i class="fa fa-reply fa-lg"></i>
+                                    </a>
+                                </span>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </div>
-        <!-- ----------------------------------- END MAIN ----------------------------- -->
-        <footer class="main-footer">
-            <div class="footer-right">
-                Copyright &copy; Made with 🧡 by EL OUADI, KHADIM and EL AIMANI
+
+                    <div class="section-body">
+                        <h2 class="section-title">This is Example Page</h2>
+                        <p class="section-lead">This page is just an example for you to create your own page.</p>
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Example Card</h4>
+                            </div>
+                            <div class="card-body">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            </div>
+                            <div class="card-footer bg-whitesmoke">
+                                This is card footer
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
-        </footer>
+            <footer class="main-footer">
+                <div class="footer-right">
+                    Copyright &copy; Made with 🧡 by EL OUADI, KHADIM and EL AIMANI
+                </div>
+            </footer>
+        </div>
     </div>
 
     <!-- General JS Scripts -->
@@ -132,13 +138,11 @@
 
     <!-- JS Libraies -->
 
+    <!-- Page Specific JS File -->
+
     <!-- Template JS File -->
     <script src="../assets/js/scripts.js"></script>
     <script src="../assets/js/custom.js"></script>
-
-    <!-- Page Specific JS File -->
-
-
 </body>
 
 </html>

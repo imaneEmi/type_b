@@ -9,8 +9,8 @@
         <div class="d-inline"><label for="">Coordonnateur: </label>&nbsp;<span> {{ $coordonnateur->name }}&nbsp;{{
                 $coordonnateur->prenom }}</span></div>
         <div class="d-inline"><label for="">Date reçue: </label>&nbsp;<span> {{ $demande->date_envoie }}</span></div>
-        <div class="d-inline"><span><a href="{{ url('/manif-details/'.$demande->id) }}" title="Plus de détails"><i
-                        class="fa fa-plus fa-lg"></i></a></span></div>
+        <div class="d-inline"><span><a href="{{ route('manifestation.details',['id'=>$demande->id]) }}" title="Plus de
+                    détails"><i class="fa fa-plus fa-lg"></i></a></span></div>
         @endif
     </div>
 
@@ -36,7 +36,9 @@
                                 </tr>
                                 @for ($i = 0; $i < sizeof($soutienSollicite); $i++) <tr>
                                     <td class="text-center">{{ $soutienSollicite[$i]->libelle }} &nbsp;({{
-                                        $soutienSollicite[$i]->forfait }})</td>
+                                        $soutienSollicite[$i]->forfait }})
+                                        <input type="number" hidden name="forfait" value="{{ $soutienSollicite[$i]->forfait }}" id="">
+                                    </td>
                                     <td class="">{{ $soutienSollicite[$i]->pivot->nbr }}</td>
                                     <td class="text-center">{{ $soutienSollicite[$i]->pivot->montant }} &nbsp;&nbsp;
                                         <i class="fa fa-info-circle" aria-hidden="true" data-container="body"
@@ -44,8 +46,11 @@
                                             data-content="{{ $soutienSollicite[$i]->pivot->remarques_ }}" role="button">
                                         </i>
                                     </td>
-                                    <td class="text-right"><input class="form-control" type="number" name="" id=""></td>
-                                    <td class="text-right"><input class="form-control montantOk" type="number"  id=""></td>
+                                    <td class="text-right"><input class="form-control text-right" type="number" min="0"
+                                            placeholder="0" name="" id=""></td>
+                                    <td class="text-right"><input class="form-control montantOk text-right"
+                                            type="number" min="0" placeholder="0" disabled id="">
+                                    </td>
                                     </tr>
                                     @endfor
 
@@ -66,8 +71,8 @@
                                     <th class="text-right"><input class="form-control" disabled type="number" name=""
                                             id=""></th>
                                     <th>Total accordé</th>
-                                    <th class="text-right"><input class="form-control text-right" disabled type="number"
-                                            value="1000" name="totalmontant" id="totalmontant"></th>
+                                    <th class="text-right"><input class="form-control totalmontant text-right" disabled
+                                            type="number" name="totalmontant" id="totalmontant"></th>
                                 </tr>
                             </table>
                         </div>

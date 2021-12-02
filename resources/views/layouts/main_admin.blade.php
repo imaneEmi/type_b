@@ -29,10 +29,10 @@
                     <ul class="navbar-nav mr-3">
                         <li><a href="#" data-toggle="sidebar" class="nav-link nav-link-lg"><i
                                     class="fas fa-bars"></i></a></li>
-                        <li><a href="#" data-toggle="search" class="nav-link nav-link-lg d-sm-none"><i
+                        <li hidden><a href="#" data-toggle="search" class="nav-link nav-link-lg d-sm-none"><i
                                     class="fas fa-search"></i></a></li>
                     </ul>
-                    <div class="search-element">
+                    <div class="search-element" hidden>
                         <input class="form-control" type="search" placeholder="Search" aria-label="Search"
                             data-width="250">
                         <button class="btn" type="submit"><i class="fas fa-search"></i></button>
@@ -84,34 +84,38 @@
                         </li>
                         <li class="menu-header">Liste des Demandes</li>
                         <li class="nav-item dropdown {{Route::is('demandes.courantes')?'active':''}}"><a
-                                class="{{Route::is('demandes.courantes')?'beep beep-sidebar':''}}"
+                                class=""
                                 href="{{ route('demandes.courantes') }}">
-                                <i class="fa fa-folder-open"></i>
+                                <i class="fas fa-folder-open"></i>
                                 <span> Courantes</span>
                             </a></li>
                         <li class="nav-item dropdown {{Route::is('demandes.acceptees')?'active':''}}"><a
-                                class="{{Route::is('demandes.acceptees')?'beep beep-sidebar':''}}"
+                                class=""
                                 href="{{ route('demandes.acceptees') }}">
-                                <i class="fa fa-folder"></i>
+                                <i class="fas fa-folder"></i>
                                 <span>Acceptées</span>
                             </a></li>
                         <li class="nav-item dropdown {{Route::is('demandes.refusees')?'active':''}}"><a
-                                class="{{Route::is('demandes.refusees')?'beep beep-sidebar':''}}"
+                                class=""
                                 href="{{ route('demandes.refusees') }}">
-                                <i class="fa fa-window-close"></i>
+                                <i class="fas fa-window-close"></i>
                                 <span>Refusées</span>
                             </a></li>
 
                         <li class="menu-header">Paramétres</li>
-                        <li class="nav-item dropdown">
-                            <a href="#" class="nav-link has-dropdown"><i class="far fa-file-alt"></i> <span>Liste des
+                        <li class="nav-item dropdown active">
+                            <a href="#" class="nav-link has-dropdown"><i class="fas fa-cog"></i><span>Liste des
                                     paramétres</span></a>
                             <ul class="dropdown-menu">
-                                <li><a class="" href="#">Demandes
-                                        courantes </a></li>
-                                <li><a class="" href="#">Demandes Acceptées</a></li>
-                                <li><a class="" href="#">Demandes Refusées</a></li>
+                                <li><a class="{{Route::is('edit.frais')?'beep beep-sidebar':''}}" href="{{ route('edit.frais') }}">Frais couvert</a></li>
+                                <li><a class="{{Route::is('edit.pieces')?'beep beep-sidebar':''}}" href="{{ route('edit.pieces') }}">Pieces demandées</a></li>
                             </ul>
+                        </li>
+                        <li class="nav-item dropdown {{Route::is('edit.profile')?'active':''}}">
+                            <a href="{{ route('edit.profile') }}" class="nav-link" >
+                                <i class="fas fa-user"></i>
+                                <span>Admin</span>
+                            </a>
                         </li>
                     </ul>
                 </aside>

@@ -6,3 +6,15 @@
  */
 
 "use strict";
+$(document).ready(function(){
+    $(".montantOk").on("input",function() {
+        var total=0;
+        $(".montantOk").each(function(){
+            if(!isNaN(parseInt($(this).val())))
+            {
+              total+=parseInt($(this).val());
+            }
+        });
+        $(".totalmontant").val(total);
+      });
+  })

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Services\ManifestationService;
 use App\Services\DemandeService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 
 class AdminsController extends Controller
@@ -35,24 +36,32 @@ class AdminsController extends Controller
 
     public function getManifestationDetails($id, ManifestationService $manifestationService, DemandeService $demandeService)
     {
-        //dd($manifestationService->getManifestationDetails($id, $demandeService));
         return view('admin/manif_details', $manifestationService->getManifestationDetails($id, $demandeService));
     }
 
     public function getDemandesCourantes(DemandeService $demandeService,ManifestationService $manifestationService)
     {
-        //dd( $demandeService->findByEtat('Courante'));
         return view('admin/liste_demandes', $demandeService->findByEtat('Courante',$manifestationService));
     }
 
     public function getDemandesAcceptees(DemandeService $demandeService,ManifestationService $manifestationService)
     {
-        //dd( $demandeService->findByEtat('Courante'));
         return view('admin/liste_demandes', $demandeService->findByEtat('Acceptée',$manifestationService));
     }
     public function getDemandesResfusees(DemandeService $demandeService,ManifestationService $manifestationService)
     {
-        //dd( $demandeService->findByEtat('Courante'));
         return view('admin/liste_demandes', $demandeService->findByEtat('Refusée',$manifestationService));
+    }
+    public function profile(UserService $userService)
+    {
+        return view('admin/edit_profile');
+    }
+    public function pieceDemandee()
+    {
+        return view('admin/edit_pieceDemandee');
+    }
+    public function fraisCouverts()
+    {
+        return view('admin/edit_fraisCouvert');
     }
 }

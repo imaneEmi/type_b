@@ -52,4 +52,7 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
     Route::get('/demandes-refusees', [App\Http\Controllers\Admin\AdminsController::class, 'getDemandesResfusees'])
         ->name('demandes.refusees');
     Route::post('/delete_demande', [App\Http\Controllers\Admin\AdminsController::class, 'delete'])->name('delete.demande');
+    Route::get('/edit-profile', [App\Http\Controllers\Admin\AdminsController::class, 'profile'])->name('edit.profile');
+    Route::get('/edit-pieces', [App\Http\Controllers\Admin\AdminsController::class, 'pieceDemandee'])->name('edit.pieces');
+    Route::get('/edit-frais', [App\Http\Controllers\Admin\AdminsController::class, 'fraisCouverts'])->name('edit.frais');
 });

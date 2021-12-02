@@ -21,6 +21,14 @@ class AppServiceProvider extends ServiceProvider
             'App\Services\DemandeService',
             'App\Services\ServicesImpl\DemandeServiceImpl'
         );
+        $this->app->bind(
+            'App\Services\UserService',
+            'App\Services\ServicesImpl\UserServiceImpl'
+        );
+        $this->app->bind(
+            'App\Services\PieceDemandeService',
+            'App\Services\ServicesImpl\PieceDemandeServiceImpl'
+        );
     }
 
     /**
