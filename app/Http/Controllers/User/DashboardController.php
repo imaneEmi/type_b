@@ -9,28 +9,44 @@ use App\Models\ComiteOrganisation;
 use App\Models\Contributeur;
 use App\Models\Demande;
 use App\Models\EntiteOrganisatrice;
-use App\Models\Etablissement;
-use App\Models\FraisCouvert;
 use App\Models\GestionFinanciere;
 use App\Models\Manifestation;
 use App\Models\ManifestationComite;
 use App\Models\ManifestationContributeur;
 use App\Models\ManifestationEtablissement;
-use App\Models\NatureContribution;
 use App\Models\SoutienSollicite;
-use App\Models\TypeContributeur;
+use App\Services\DemandeService;
+use App\Services\EtablissementService;
+use App\Services\FraisCouvertService;
+use App\Services\NatureContributionService;
+use App\Services\TypeContributeurService;
 use Illuminate\Http\Request;
-
+use PDF;
 class DashboardController extends Controller
 {
-
+    
+    private DemandeService $demandeService ;
+    private TypeContributeurService $typeContributeurService;
+    private EtablissementService $etablissementService;
+    private NatureContributionService $natureContributionService;
+    private FraisCouvertService $fraisCouvertService;
+    
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct(DemandeService $demandeService,
+    EtablissementService $etablissementService,
+    TypeContributeurService $typeContributeurService,
+    NatureContributionService $natureContributionService,
+    FraisCouvertService $fraisCouvertService
+    ){
+        $this->demandeService  =$demandeService;
+        $this->etablissementService  =$etablissementService;
+        $this->natureContributionService  =$natureContributionService;
+        $this->typeContributeurService  =$typeContributeurService;
+        $this->fraisCouvertService  =$fraisCouvertService;
     }
 
     /**
@@ -39,26 +55,34 @@ class DashboardController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    {
-        return view('user/index');
+    {  
+        $demandes = $this->demandeService->findAll();
+        return view('user/list-request',['demandes'=>$demandes]);
     }
 
+    public function generatePDF(Request $request)
+    {   
+        $demande = $this->demandeService->findById($request->route('id'));
+        $pdf = PDF::loadView('user/pdf', compact('demande'));
+        return $pdf->stream("invoice.pdf",array("Attachment" => false));
+    }
 
     public function createRequest(Request $request)
     {
 
-        $etablissements = Etablissement::all();
+        $etablissements = $this->etablissementService->findAll();
         $user = $request->user();
-        $typeContributeurs = TypeContributeur::all();
-        $fraisCouvert = FraisCouvert::all();
-        $natureContributions  = NatureContribution::all();
+        $typeContributeurs = $this->typeContributeurService->findAll();
+        $fraisCouvert = $this->fraisCouvertService->findAll();
+        $natureContributions  =$this->natureContributionService->findAll();
+
         if ($request->isMethod('post')) {
             $data = $request->all();
 
             $user->etablissement_id =  $data['etablissment_coordonnateur_manifestation'];
             $user->tel =  $data['tel_coordonnateur_manifestation'];
             $user->fax =  $data['fax_coordonnateur_manifestation'];
-
+            
 
             $updated = $user->update($user->getAttributes());
 
@@ -139,6 +163,7 @@ class DashboardController extends Controller
                 }
            }
 
+            return redirect()->route('dashboard.user');
         }
 
         return view('user/create-request', ["natureContributions" => $natureContributions, "typeContributeurs" => $typeContributeurs, "etablissements" => $etablissements, 'user' => $user, 'fraisCouvert' => $fraisCouvert]);

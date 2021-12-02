@@ -29,6 +29,23 @@ class AppServiceProvider extends ServiceProvider
             'App\Services\PieceDemandeService',
             'App\Services\ServicesImpl\PieceDemandeServiceImpl'
         );
+        $this->app->bind(
+            'App\Services\TypeContributeurService',
+            'App\Services\ServicesImpl\TypeContributeurServiceImpl'
+        );
+
+        $this->app->bind(
+            'App\Services\NatureContributionService',
+            'App\Services\ServicesImpl\NatureContributionServiceImpl'
+        );
+        $this->app->bind(
+            'App\Services\EtablissementService',
+            'App\Services\ServicesImpl\EtablissementServiceImpl'
+        );
+        $this->app->bind(
+            'App\Services\FraisCouvertService',
+            'App\Services\ServicesImpl\FraisCouvetServiceImpl'
+        );
     }
 
     /**

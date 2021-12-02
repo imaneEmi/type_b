@@ -12,9 +12,119 @@
         </div>
     </div>
 
-    <div class="steps">
-        <div class="step ">
-            <p>
+  <div class="steps">
+    <div class="step ">
+      <p>
+
+      </p>
+      <div class="bullet">
+        <span>1</span>
+      </div>
+      <div class="check fas fa-check"></div>
+    </div>
+    <div class="step">
+      <p>
+
+      </p>
+      <div class="bullet">
+        <span>2</span>
+      </div>
+      <div class="check fas fa-check"></div>
+    </div>
+    <div class="step">
+      <p>
+
+      </p>
+      <div class="bullet">
+        <span>3</span>
+      </div>
+      <div class="check fas fa-check"></div>
+    </div>
+    <div class="step">
+      <p>
+
+      </p>
+      <div class="bullet">
+        <span>4</span>
+      </div>
+      <div class="check fas fa-check"></div>
+    </div>
+  </div>
+
+  <div class="section-body">
+
+    <div class="container">
+      <div class="form-outer">
+      <form method="POST" action="{{ route('create.request.store') }}" id="form">
+       @csrf
+          <div class="page slide-page">
+            <div class="row">
+              <div class="col-12 col-md-12 col-lg-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h4>Informations concernant la manifestation</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="form-group">
+                      <label>intitule</label>
+                      <input type="text" class="form-control" name="intitule" required="">
+                    </div>
+                    <div class="form-group">
+                      <label>Type</label>
+                      <input type="text" class="form-control" name="type" required="">
+                    </div>
+                    <div class="form-group">
+                      <label>Lieu</label>
+                      <input type="text" class="form-control" name="lieu" required="">
+                    </div>
+                    <div class="form-group">
+                      <label>Etendue</label>
+                      <input type="text" class="form-control" name="etendue" required="">
+                    </div>
+                    <div class="form-group">
+                      <label>Site web</label>
+                      <input type="text" class="form-control" name="site_web" required="">
+                    </div>
+                    <div class="form-group">
+                      <label>Agence organisatrice </label>
+                      <input type="text" class="form-control" name="agence_organisatrice" required="">
+                    </div>
+                    <div class="form-group">
+                      <label>Partenaires </label>
+                      <input type="text" class="form-control" name="partenaires" required="">
+                    </div>
+                    <div class="section-title mt-0"></div>
+                    <div class="form-group">
+                      <label>Etablissement(s) de l’UCAM impliqué(s) dans l’organisation </label>
+                      <select class="custom-select" name="etablissements_organisateur[]" id="etablissements_organisateur" multiple="multiple" data-height="100%">
+                        @foreach ($etablissements as $etablissement)
+                        <option value="{{$etablissement->id}}" id="{{$etablissement->libelle}}" selected>{{$etablissement->libelle}}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label>Numbre participants prevus </label>
+                      <input type="number" class="form-control" name="nbr_participants_prevus" min="0" required="">
+                    </div>
+                    <div class="form-group">
+                      <label>Date debut</label>
+                      <input type="date" class="form-control" name="date_debut" required="">
+                    </div>
+                    <div class="form-group">
+                      <label>Date fin</label>
+                      <input type="date" class="form-control" name="date_fin" required="">
+
+                    </div>
+
+                  </div>
+                  <div class="card-footer text-right">
+                    <button class="btn btn-primary firstNext next"> Next </button>
+                  </div>
+                </div>
+
+
+
+              </div>
 
             </p>
             <div class="bullet">
@@ -317,6 +427,7 @@
                                     <p class="btn btn-primary next-2 next"> Next </p>
                                 </div>
 
+<<<<<<< HEAD
                             </div>
                         </div>
 
@@ -436,6 +547,16 @@
                                 </div>
                             </div>
 
+=======
+                  </div>
+                </div>
+                <div class="card-footer text-right">
+                  <p class="btn btn-primary prev-3 prev">Previous </p>
+                  <button class="btn btn-primary">Créer </button>
+                </div>
+              </div>
+            </div>
+>>>>>>> 2e6e686e6cbe7944300f9e96bfed0251ebc8c1aa
 
                         </div>
 
