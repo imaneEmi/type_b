@@ -7,8 +7,10 @@
         <h1>Demandes courantes</h1>
         @elseif (Route::is('demandes.acceptees'))
         <h1>Demandes acceptées</h1>
-        @else
+        @elseif (Route::is('demandes.refusees'))
         <h1>Demandes refusées</h1>
+        @else
+        <h1>Archive</h1>
         @endif
     </div>
     <div class="section-body">

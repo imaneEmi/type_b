@@ -42,35 +42,13 @@
                                 <li class="nav-item"><a href="#comite" class="nav-link">Comité</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a href="#" data-toggle="dropdown" class="nav-link has-dropdown"><i
+                        <li class="nav-item">
+                            <a href="#contribution" class="nav-link"><i
                                     class="fas fa-fire"></i><span>Contribution</span></a>
-                            <ul class="dropdown-menu">
-                                <li class="nav-item"><a href="index-0.html" class="nav-link">Sponsors</a></li>
-                                <li class="nav-item"><a href="index.html" class="nav-link">Etablissements</a></li>
-                                <li class="nav-item"><a href="index.html" class="nav-link">Participants</a></li>
-                            </ul>
                         </li>
                         <li class="nav-item dropdown">
-                            <a href="#" data-toggle="dropdown" class="nav-link has-dropdown"><i
-                                    class="far fa-clone"></i><span>Multiple Dropdown</span></a>
-                            <ul class="dropdown-menu">
-                                <li class="nav-item"><a href="#" class="nav-link">Not Dropdown Link</a></li>
-                                <li class="nav-item dropdown"><a href="#" class="nav-link has-dropdown">Hover Me</a>
-                                    <ul class="dropdown-menu">
-                                        <li class="nav-item"><a href="#" class="nav-link">Link</a></li>
-                                        <li class="nav-item dropdown"><a href="#" class="nav-link has-dropdown">Link
-                                                2</a>
-                                            <ul class="dropdown-menu">
-                                                <li class="nav-item"><a href="#" class="nav-link">Link</a></li>
-                                                <li class="nav-item"><a href="#" class="nav-link">Link</a></li>
-                                                <li class="nav-item"><a href="#" class="nav-link">Link</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="nav-item"><a href="#" class="nav-link">Link 3</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
+                            <a href="#soutienSollicite" class="nav-link"><i class="far fa-clone"></i><span>Soutien
+                                    sollicité</span></a>
                         </li>
                     </ul>
                 </div>
@@ -100,28 +78,30 @@
                                 <h4>Informations concernant la manifestation</h4>
                             </div>
                             <div class="card-body">
-                                <table class="table table-striped" id="table-1">
-                                    <thead>
-                                        <tr>
-                                            <th>Type</th>
-                                            <th>Etendue</th>
-                                            <th>Lieu</th>
-                                            <th>Date début</th>
-                                            <th>Date fin</th>
-                                            <th>Nombre participants prévus</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>{{ $manifestation->type }}</td>
-                                            <td>{{ $manifestation->etendue }}</td>
-                                            <td>{{ $manifestation->lieu }}</td>
-                                            <td>{{ $manifestation->date_debut }}</td>
-                                            <td>{{ $manifestation->date_fin }}</td>
-                                            <td>{{ $manifestation->nbr_participants_prevus }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="table-1">
+                                        <thead>
+                                            <tr>
+                                                <th>Type</th>
+                                                <th>Etendue</th>
+                                                <th>Lieu</th>
+                                                <th>Date début</th>
+                                                <th>Date fin</th>
+                                                <th>Nombre participants prévus</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>{{ $manifestation->type }}</td>
+                                                <td>{{ $manifestation->etendue }}</td>
+                                                <td>{{ $manifestation->lieu }}</td>
+                                                <td>{{ $manifestation->date_debut }}</td>
+                                                <td>{{ $manifestation->date_fin }}</td>
+                                                <td>{{ $manifestation->nbr_participants_prevus }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                             <div class="card-footer bg-whitesmoke">
                                 site web: <a href="{{ $manifestation->site_web}}"> {{ $manifestation->site_web}}</a>
@@ -151,6 +131,9 @@
                                 </table>
                             </div>
                             <div class="card-footer bg-whitesmoke">
+                                @if ($manifestation->agence_organisatrice != null)
+                                <span>Organisation confié à l'agence: {{ $manifestation->agence_organisatrice }}</span>
+                                @endif
                             </div>
                         </div>
 
@@ -215,14 +198,15 @@
                         </div>
                     </div>
 
-                    <div class="card" id="sponsors">
+                    <div class="card" id="contribution">
                         <div class="card-header">
-                            <h4>Contribution des sponsors</h4>
+                            <h4>Contribution</h4>
                         </div>
                         <div class="card-body">
                             <table class="table table-striped" id="table-1">
                                 <thead>
                                     <tr>
+                                        <th>Catégorie</th>
                                         <th>Nom</th>
                                         <th>Montant</th>
                                         <th>Nature</th>
@@ -231,15 +215,73 @@
                                 <tbody>
                                     @foreach ($contributeurs as $contributeur )
                                     <tr>
-                                        <td>{{ $contributeur->nom }}</td>
+                                        <td>{{ $contributeur->typeContributeur->libelle }}</td>
+                                        <td>
+                                            @if ($contributeur->nom !='')
+                                            {{ $contributeur->nom }}
+                                            @endif
+                                        </td>
                                         <td>{{ $contributeur->montant }}&nbsp;DH</td>
-                                        <td> contributeur->nature </td>
+                                        <td>{{ $contributeur->natureContribution->libelle }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
                         <div class="card-footer bg-whitesmoke">
+                        </div>
+                    </div>
+
+                    <div class="card" id="soutienSollicite">
+                        <div class="card-header">
+                            <h4>Soutien sollicité</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-md">
+                                    <tr>
+                                        <th class="text-center">Rubrique</th>
+                                        <th class="text-center">Nombre demandé</th>
+                                        <th class="text-center">Montant demandé</th>
+                                        <th class="text-center">Nombre accordé</th>
+                                        <th class="text-center">Montant accordé</th>
+                                    </tr>
+                                    @for ($i = 0; $i < sizeof($soutienSollicite); $i++) <tr>
+                                        <td class="text-center">{{ $soutienSollicite[$i]->libelle }} &nbsp;({{
+                                            $soutienSollicite[$i]->forfait }})
+                                        </td>
+                                        <td class="">{{ $soutienSollicite[$i]->pivot->nbr }}</td>
+                                        <td class="text-center">{{ $soutienSollicite[$i]->pivot->montant }} &nbsp;&nbsp;
+                                            <i class="fa fa-info-circle" aria-hidden="true" data-container="body"
+                                                data-toggle="popover" data-placement="right"
+                                                data-content="{{ $soutienSollicite[$i]->pivot->remarques_ }}"
+                                                role="button">
+                                            </i>
+                                        </td>
+                                        <td class="text-right"><input class="form-control text-right" type="number"
+                                                disabled name="" id=""></td>
+                                        <td class="text-right"><input class="form-control montantOk text-right"
+                                                type="number" disabled id="">
+                                        </td>
+                                        </tr>
+                                        @endfor
+
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-whitesmoke">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-md">
+                                    <tr>
+                                        <th>Total demandé</th>
+                                        <th class="text-right"><input class="form-control" disabled type="number"
+                                                name="" id=""></th>
+                                        <th>Total accordé</th>
+                                        <th class="text-right"><input class="form-control totalmontant text-right"
+                                                disabled type="number" name="totalmontant" id="totalmontant"></th>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </section>

@@ -9,6 +9,8 @@ class Contributeur extends Model
 {
     use HasFactory;
 
+    protected $with=['typeContributeur','natureContribution'];
+
     public $fillable = [
         'type_contributeur_id',
         'nom',
@@ -26,6 +28,6 @@ class Contributeur extends Model
     }
 
 
-    
-    
+
+
 }

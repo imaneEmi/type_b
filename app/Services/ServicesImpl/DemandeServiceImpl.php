@@ -24,6 +24,12 @@ class DemandeServiceImpl implements DemandeService
     public function update($demande){
         return $demande->save();
     }
+    public function changeEtat($id,$etat){
+        $demande = $this->findById($id);
+        $demande->etat = $etat;
+        $demande->save();
+        return 1;
+    }
     public function delete($id){
         $demande = $this->findById($id);
         return $demande->delete();
@@ -31,7 +37,6 @@ class DemandeServiceImpl implements DemandeService
 
     public function findByEtat($etat,$manifestationService){
         $demandes = Demande::where('etat',$etat)->with('coordonnateur','manifestation')->get();
-        //dd($demandes);
         return ['demandes'=>$demandes];
     }
     public function getNbrDemandes()

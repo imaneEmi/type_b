@@ -33,6 +33,18 @@ class AdminsController extends Controller
             return redirect('/admin_edit_form');
         }
     }
+    public function accept(Request $request, DemandeService $demandeService)
+    {
+        try {
+            $id = $request->demande;
+            $demandeService->changeEtat($id,'Acceptée');
+            $msg = "Demande acceptée";
+            return redirect('/demandes-acceptees');
+        } catch (\Exception $ex) {
+            error_log($ex->getMessage());
+            return redirect()->back();
+        }
+    }
 
     public function getManifestationDetails($id, ManifestationService $manifestationService, DemandeService $demandeService)
     {
@@ -63,5 +75,9 @@ class AdminsController extends Controller
     public function fraisCouverts()
     {
         return view('admin/edit_fraisCouvert');
+    }
+    public function archive(DemandeService $demandeService)
+    {
+        return view('admin/liste_demandes',$demandeService->findAll());
     }
 }

@@ -61,7 +61,6 @@ class ManifestationServiceImpl implements ManifestationService
             'etablissements' => $etablissements, 'contributeurs' => $contributeurs,
             'gestionFinanciere' => $gestionFinanciere, 'comiteOrganisations' => $comiteOrganisations
         ]);
-
         return $details;
     }
 
