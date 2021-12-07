@@ -70,7 +70,7 @@ class AdminsController extends Controller
     }
     public function getDemandesResfusees(DemandeService $demandeService,ManifestationService $manifestationService)
     {
-        return view('admin/liste_demandes', $demandeService->findByEtat('Refusée',$manifestationService));
+        return view('admin/liste_demandes', $demandeService->findByEtat('Refusée'));
     }
     public function profile(UserService $userService)
     {
@@ -86,6 +86,7 @@ class AdminsController extends Controller
     }
     public function archive(DemandeService $demandeService)
     {
-        return view('admin/liste_demandes',$demandeService->findAll());
+
+        return view('admin/archive',$demandeService->findAll());
     }
 }

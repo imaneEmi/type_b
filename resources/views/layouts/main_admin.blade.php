@@ -99,7 +99,7 @@
                                 <span>Refusées</span>
                             </a></li>
                         <li class="nav-item dropdown {{Route::is('demandes')?'active':''}}"><a class=""
-                                href="{{ route('demandes.refusees') }}">
+                                href="{{ route('archive') }}">
                                 <i class="fas fa-archive"></i>
                                 <span>Archive</span>
                             </a></li>

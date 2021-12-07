@@ -3,13 +3,7 @@
 @section('content')
 <section class="section">
     <div class="section-header">
-        @if (Route::is('demandes.courantes'))
-        <h1>Demandes courantes</h1>
-        @elseif (Route::is('demandes.acceptees'))
-        <h1>Demandes acceptées</h1>
-        @else
-        <h1>Demandes refusées</h1>
-        @endif
+        <h1>Archive</h1>
     </div>
     <div class="section-body">
         <h2 class="section-title">{{ date('d-m-Y H:i') }}</h2>
@@ -29,19 +23,10 @@
                                         </th>
                                         <th>Intitule</th>
                                         <th>Coordonnateur</th>
-                                        <th>
-                                            @if (Route::is('demandes.acceptees'))
-                                            Montant accordé
-                                            @else
-                                            Montant demandé
-                                            @endif
-                                        </th>
+                                        <th>Etat</th>
                                         <th>Date reçu</th>
-                                        <th>@if (Route::is('demandes.courantes'))
-                                            Modifier
-                                            @else
+                                        <th>
                                             Details
-                                            @endif
                                         </th>
                                     </tr>
                                 </thead>
@@ -57,10 +42,18 @@
                                             }}
                                         </td>
                                         <td>
-                                            @if (Route::is('demandes.acceptees'))
-                                            {{ $demande->manifestation->soutienAccorde()->sum('montant') }}
+                                            @if ($demande->etat ==='Acceptée')
+                                            <div class="badge badge-success">
+                                                {{$demande->etat}}
+                                            </div>
+                                            @elseif ($demande->etat === 'Courante')
+                                            <div class="badge badge-warning">
+                                                {{$demande->etat}}
+                                            </div>
                                             @else
-                                            {{ $demande->manifestation->soutienSollicite()->sum('montant') }}
+                                            <div class="badge badge-danger">
+                                                {{$demande->etat}}
+                                            </div>
                                             @endif
                                         </td>
                                         <td>{{ $demande->created_at }}</td>
@@ -70,7 +63,8 @@
                                                 class="text-job has-icon"><i class="fas fa-pen"></i>
                                             </a>
                                             @else
-                                            <a href="{{ route('manifestation.details',['id'=>$demande->id]) }}" title="Plus de détails"><i class="fa fa-plus fa-lg"></i>
+                                            <a href="{{ route('manifestation.details',['id'=>$demande->id]) }}"
+                                                title="Plus de détails"><i class="fa fa-plus fa-lg"></i>
                                             </a>
                                             @endif
                                         </td>
