@@ -254,14 +254,16 @@
                                         <td class="text-center">{{ $soutienSollicite[$i]->pivot->montant }} &nbsp;&nbsp;
                                             <i class="fa fa-info-circle" aria-hidden="true" data-container="body"
                                                 data-toggle="popover" data-placement="right"
-                                                data-content="{{ $soutienSollicite[$i]->pivot->remarques_ }}"
+                                                data-content="{{ $soutienSollicite[$i]->pivot->remarques }}"
                                                 role="button">
                                             </i>
                                         </td>
                                         <td class="text-right"><input class="form-control text-right" type="number"
-                                                disabled name="" id=""></td>
+                                                disabled name="" id="" value="{ $soutienAccorde[$i]->pivot->nbr }}">
+                                        </td>
                                         <td class="text-right"><input class="form-control montantOk text-right"
-                                                type="number" disabled id="">
+                                                type="number" disabled id=""
+                                                value="{ $soutienAccorde[$i]->pivot->montant }}">
                                         </td>
                                         </tr>
                                         @endfor
@@ -275,10 +277,14 @@
                                     <tr>
                                         <th>Total demandé</th>
                                         <th class="text-right"><input class="form-control" disabled type="number"
-                                                name="" id=""></th>
+                                                name="" id=""
+                                                value="{{ $demande->manifestation->soutienSollicite()->sum('montant') }}">
+                                        </th>
                                         <th>Total accordé</th>
                                         <th class="text-right"><input class="form-control totalmontant text-right"
-                                                disabled type="number" name="totalmontant" id="totalmontant"></th>
+                                                disabled type="number" name="totalmontant" id="totalmontant"
+                                                value="{{ $demande->manifestation->soutienAccorde()->sum('montant') }}">
+                                        </th>
                                     </tr>
                                 </table>
                             </div>

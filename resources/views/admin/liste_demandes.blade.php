@@ -31,7 +31,13 @@
                                         </th>
                                         <th>Intitule</th>
                                         <th>Coordonnateur</th>
-                                        <th>Montant demandé</th>
+                                        <th>
+                                            @if (Route::is('demandes.acceptees'))
+                                            Montant accordé
+                                            @else
+                                            Montant demandé
+                                            @endif
+                                        </th>
                                         <th>Date reçu</th>
                                         <th>@if (Route::is('demandes.courantes'))
                                             Modifier
@@ -53,7 +59,11 @@
                                             }}
                                         </td>
                                         <td>
-                                            {{ $demande->manifestation->soutienSollicite->sum('montant') }}
+                                            @if (Route::is('demandes.acceptees'))
+                                            {{ $demande->manifestation->soutienAccorde()->sum('montant') }}
+                                            @else
+                                            {{ $demande->manifestation->soutienSollicite()->sum('montant') }}
+                                            @endif
                                         </td>
                                         <td>{{ $demande->created_at }}</td>
                                         <td class="text-center">

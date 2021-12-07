@@ -64,10 +64,4 @@ class ManifestationServiceImpl implements ManifestationService
         return $details;
     }
 
-    public function getMontantTotal($id)
-    {
-        $manifestation = $this->findById($id);
-        $montantTotal = $manifestation->soutienAccorde->sum('montant');
-        return $montantTotal;
-    }
 }

@@ -38,13 +38,17 @@
                                 <tbody>
                                     <form method="post" action="{{ route('accept.demande') }}" name="accepter-demande">
                                         <input type="text" hidden name="demande" value="{{ $demande->id }}" id="">
+                                        <input type="text" hidden name="manifestation" value="{{ $manifestation->id }}"
+                                            id="">
                                         @csrf
                                         @for ($i = 0; $i < sizeof($soutienSollicite); $i++) <tr>
                                             <td name="forfaits" class="text-center">{{ $soutienSollicite[$i]->libelle }}
                                                 &nbsp;({{
                                                 $soutienSollicite[$i]->forfait }})
-                                                <input type="number" hidden name="forfait"
-                                                    value="{{ $soutienSollicite[$i]->forfait }}" id="">
+                                                <input type="number" hidden name="forfait_id[{{ $i }}]"
+                                                    value="{{ $soutienSollicite[$i]->id }}">
+                                                <input type="number" hidden value="{{ $soutienSollicite[$i]->forfait }}"
+                                                    id="{{ $soutienSollicite[$i]->id }}" name="forfait">
                                             </td>
                                             <td class="">{{ $soutienSollicite[$i]->pivot->nbr }}</td>
                                             <td class="text-center">{{ $soutienSollicite[$i]->pivot->montant }}
@@ -56,10 +60,12 @@
                                                 </i>
                                             </td>
                                             <td class="text-right"><input class="form-control text-right nbrOk"
-                                                    type="number" min="0" placeholder="0" name="" id=""></td>
+                                                    type="number" min="0" placeholder="0" name="nbrOk[{{ $i }}]" id=""
+                                                    value="">
+                                            </td>
                                             <td class="text-right"><input class="form-control montantOk text-right"
-                                                    type="number" min="0" placeholder="0" id="" name="montantOk"
-                                                    disabled>
+                                                    type="number" min="0" placeholder="0" id=""
+                                                    name="montantOk[{{ $i }}]" value="" readonly>
                                             </td>
                                             </tr>
                                             @endfor
@@ -80,7 +86,7 @@
                                 <tr>
                                     <th>Total demandé</th>
                                     <th class="text-right"><input class="form-control" disabled type="number" name=""
-                                            id="" value="{{ $soutienSollicite->sum('montant') }}"></th>
+                                            id="" value="{{ $manifestation->soutienSollicite()->sum('montant') }}"></th>
                                     <th>Total accordé</th>
                                     <th class="text-right"><input class="form-control totalmontant text-right" disabled
                                             type="number" name="totalmontant" id="totalmontant"></th>
