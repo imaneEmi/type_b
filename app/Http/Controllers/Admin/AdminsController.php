@@ -6,14 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Services\ManifestationService;
 use App\Services\DemandeService;
 use App\Services\UserService;
+use App\Services\util\Config;
 use Illuminate\Http\Request;
 
 class AdminsController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+
 
     public function getManifestation($id, ManifestationService $manifestationService, DemandeService $demandeService)
     {
@@ -39,18 +37,18 @@ class AdminsController extends Controller
         return view('admin/manif_details', $manifestationService->getManifestationDetails($id, $demandeService));
     }
 
-    public function getDemandesCourantes(DemandeService $demandeService,ManifestationService $manifestationService)
+    public function getDemandesCourantes(DemandeService $demandeService, ManifestationService $manifestationService)
     {
-        return view('admin/liste_demandes', $demandeService->findByEtat('Courante',$manifestationService));
+        return view('admin/liste_demandes', $demandeService->findByEtat(Config::$COURANTE, $manifestationService));
     }
 
-    public function getDemandesAcceptees(DemandeService $demandeService,ManifestationService $manifestationService)
+    public function getDemandesAcceptees(DemandeService $demandeService, ManifestationService $manifestationService)
     {
-        return view('admin/liste_demandes', $demandeService->findByEtat('Acceptée',$manifestationService));
+        return view('admin/liste_demandes', $demandeService->findByEtat(Config::$ACCEPTEE, $manifestationService));
     }
-    public function getDemandesResfusees(DemandeService $demandeService,ManifestationService $manifestationService)
+    public function getDemandesResfusees(DemandeService $demandeService, ManifestationService $manifestationService)
     {
-        return view('admin/liste_demandes', $demandeService->findByEtat('Refusée',$manifestationService));
+        return view('admin/liste_demandes', $demandeService->findByEtat(Config::$REFUSEE, $manifestationService));
     }
     public function profile(UserService $userService)
     {
@@ -63,5 +61,9 @@ class AdminsController extends Controller
     public function fraisCouverts()
     {
         return view('admin/edit_fraisCouvert');
+    }
+    public function budgetFixe()
+    {
+        return view('admin/edit_budgetFixe');
     }
 }

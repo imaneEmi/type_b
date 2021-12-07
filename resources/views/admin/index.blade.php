@@ -2,14 +2,90 @@
 
 @section('content')
 <section class="section">
-    <div class="section-header">
-        <h1>Tableau de bord</h1>
-    </div>
+
     <div class="row">
-        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-            <div class="card card-statistic-1">
-                <div class="card-icon bg-primary">
-                    <i class="far fa-file-alt"></i>
+
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="card card-statistic-2">
+                <div class="card-stats">
+                    <div class="card-stats-title">
+                        Statistiques sur le budget de l'année
+
+                    </div>
+                    <div class="row">
+                        <div class="card-icon shadow-primary bg-primary">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <h4>Budget Fixe</h4>
+                            </div>
+                            @if(empty($budgetCourantFixe))
+                            <div class="card-body">
+
+                                MAD 0
+                            </div>
+                            @else
+                            <div class="card-body">
+
+                                MAD {{$budgetCourantFixe}}
+                            </div>
+                            @endif
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="card-icon shadow-primary bg-primary">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <h4>Budget Restant</h4>
+                            </div>
+                            @if(empty($budgetCourantRestant))
+                            <div class="card-body">
+
+                                MAD 0
+                            </div>
+                            @else
+                            <div class="card-body">
+
+                                MAD {{$budgetCourantRestant}}
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="card card-statistic-2">
+                <div class="card-stats">
+                    <div class="card-stats-title">Statistiques sur les demandes
+
+                    </div>
+
+
+                    <div class="card-stats-items mb-5">
+
+                        <div class="card-stats-item mt-5">
+                            <div class="card-stats-item-count">{{$nbrTotalCourant}}</div>
+                            <div class="card-stats-item-label text-info font-weight-bold text-uppercase">Courantes</div>
+                        </div>
+                        <div class="card-stats-item mt-5">
+                            <div class="card-stats-item-count"> {{$nbrTotalAccepte}}</div>
+                            <div class="card-stats-item-label text-success font-weight-bold text-uppercase">Acceptées</div>
+                        </div>
+                        <div class="card-stats-item mt-5">
+                            <div class="card-stats-item-count">{{ $nbrTotalRefused}}</div>
+                            <div class="card-stats-item-label text-danger font-weight-bold text-uppercase">Refusées</div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card-icon shadow-primary bg-primary">
+                    <i class="fas fa-archive"></i>
                 </div>
                 <div class="card-wrap">
                     <div class="card-header">
@@ -21,93 +97,13 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-            <div class="card card-statistic-1">
-                <div class="card-icon bg-success">
-                    <i class="fas fa-check"></i>
-                </div>
-                <div class="card-wrap">
-                    <div class="card-header">
-                        <h4>Demades Acceptées</h4>
-                    </div>
-                    <div class="card-body">
-                        {{$nbrTotalAccepte}}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-            <div class="card card-statistic-1">
-                <div class="card-icon bg-danger">
-                    <i class="fas fa-times-circle"></i>
-                </div>
-                <div class="card-wrap">
-                    <div class="card-header">
-                        <h4>Demades Refusées</h4>
-                    </div>
-                    <div class="card-body">
-                        {{ $nbrTotalRefused
-}}
-                    </div>
-                </div>
-            </div>
-        </div>
-
 
     </div>
     <!-- <h2 class="section-title">Statistiques</h2>
     <p class="section-lead"></p> -->
 
     <div class="row">
-        <!-- <div class="col-12 col-sm-12 col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    <h4>Summary</h4>
-                    <div class="card-header-action">
-                        <a href="#summary-chart" data-tab="summary-tab" class="btn active">Chart</a>
-                        <a href="#summary-text" data-tab="summary-tab" class="btn">Text</a>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="summary">
-                        <div class="summary-info" data-tab-group="summary-tab" id="summary-text">
-                            <h4>$1,858</h4>
-                            <div class="text-muted">Sold 4 items on 2 customers</div>
-                            <div class="d-block mt-2">
-                                <a href="#">View All</a>
-                            </div>
-                        </div>
-                        <div class="summary-chart active" data-tab-group="summary-tab" id="summary-chart">
-                            <canvas id="myChart" height="180"></canvas>
-                            <div class="statistic-details mt-1">
-                                <div class="statistic-details-item">
-                                    <div class="text-small text-muted"><span class="text-primary"><i class="fas fa-caret-up"></i></span> 7%</div>
-                                    <div class="detail-value">$243</div>
-                                    <div class="detail-name">Today</div>
-                                </div>
-                                <div class="statistic-details-item">
-                                    <div class="text-small text-muted"><span class="text-danger"><i class="fas fa-caret-down"></i></span> 23%</div>
-                                    <div class="detail-value">$2,902</div>
-                                    <div class="detail-name">This Week</div>
-                                </div>
-                                <div class="statistic-details-item">
-                                    <div class="text-small text-muted"><span class="text-primary"><i class="fas fa-caret-up"></i></span>9%</div>
-                                    <div class="detail-value">$12,821</div>
-                                    <div class="detail-name">This Month</div>
-                                </div>
-                                <div class="statistic-details-item">
-                                    <div class="text-small text-muted"><span class="text-primary"><i class="fas fa-caret-up"></i></span> 19%</div>
-                                    <div class="detail-value">$92,142</div>
-                                    <div class="detail-name">This Year</div>
-                                </div>
-                            </div>
 
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div> -->
         <div class="col-12 col-sm-12 col-lg-6">
             <div class="card">
                 <div class="card-header">
@@ -123,7 +119,7 @@
                 <div class="card-footer pt-3 d-flex justify-content-center">
                     <div class="budget-price justify-content-center">
                         <div class="budget-price-square bg-primary" style="color: #6777ef" data-width="20"></div>
-                        <div class="budget-price-label" >Budget Annuel Restant</div>
+                        <div class="budget-price-label">Budget Annuel Restant</div>
                     </div>
                     <div class="budget-price justify-content-center">
                         <div class="budget-price-square bg-danger" data-width="20"></div>
@@ -137,72 +133,51 @@
         <div class="col-lg-6 col-md-6 col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4>Demandes Acceptées</h4>
+                    <h4>Demandes Acceptées Par établissement</h4>
                 </div>
                 <div class="card-body">
-                    <div class="mb-4">
-                        <div class="text-small float-right font-weight-bold text-muted">2,100</div>
-                        <div class="font-weight-bold mb-1">FSTG</div>
-                        <div class="progress" data-height="3">
-                            <div class="progress-bar" role="progressbar" data-width="80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                    @if(empty($nbrTotalAccepte))
+                    <div class="alert alert-primary alert-has-icon">
+                        <div class="alert-icon"><i class="far fa-lightbulb"></i></div>
+                        <div class="alert-body">
+                            <div class="alert-title">Infos</div>
+                            Aucune demande n'est acceptée
                         </div>
-                    </div>
+                    </div>@else
+                    @foreach($demandesAcceParEtab as $demandeacc)
 
                     <div class="mb-4">
-                        <div class="text-small float-right font-weight-bold text-muted">1,880</div>
-                        <div class="font-weight-bold mb-1">FSSM</div>
-                        <div class="progress" data-height="3">
-                            <div class="progress-bar" role="progressbar" data-width="67%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
+                        <div class="text-small float-right font-weight-bold text-muted">{{$demandeacc->total}}</div>
+                        <div class="font-weight-bold mb-1">{{$demandeacc->libelle}}</div>
+                        <div class="progress progress-bar-success" data-height="20">
 
-                    <div class="mb-4">
-                        <div class="text-small float-right font-weight-bold text-muted">1,521</div>
-                        <div class="font-weight-bold mb-1">ENS</div>
-                        <div class="progress" data-height="3">
-                            <div class="progress-bar" role="progressbar" data-width="58%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-success" role="progressbar" data-width="{{ (($demandeacc->total)/$nbrTotalAccepte)*100}}%" aria-valuenow="{{ (($demandeacc->total)/$nbrTotal)*100}}" aria-valuemin="0" aria-valuemax="100">
+                                {{ (($demandeacc->total)/$nbrTotalAccepte)*100}}%
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="mb-4">
-                        <div class="text-small float-right font-weight-bold text-muted">884</div>
-                        <div class="font-weight-bold mb-1">FMPM</div>
-                        <div class="progress" data-height="3">
-                            <div class="progress-bar" role="progressbar" data-width="36%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
 
-                    <div class="mb-4">
-                        <div class="text-small float-right font-weight-bold text-muted">473</div>
-                        <div class="font-weight-bold mb-1">FSJES</div>
-                        <div class="progress" data-height="3">
-                            <div class="progress-bar" role="progressbar" data-width="28%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
                     </div>
+                    @endforeach
 
-                    <div class="mb-4">
-                        <div class="text-small float-right font-weight-bold text-muted">418</div>
-                        <div class="font-weight-bold mb-1">ENSA SAFI</div>
-                        <div class="progress" data-height="3">
-                            <div class="progress-bar" role="progressbar" data-width="20%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <input id="annees" type="text" value="{{$annees}}" hidden>
-                    </div>
+                    @endif
+
+
+
+
+
+
+
+
+
                 </div>
             </div>
 
 
         </div>
 
-    <div class="row">
 
 
-    </div>
-
-    <div class="row">
-
-
-    </div>
 </section>
 
 @endsection

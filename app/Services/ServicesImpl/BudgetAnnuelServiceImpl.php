@@ -7,8 +7,17 @@ use App\Services\BudgetAnnuelService;
 
 class BudgetAnnuelServiceImpl implements BudgetAnnuelService
 {
-    public static function findAll()
+    public   function findAll()
     {
         return BudgetAnnuel::all()->sortBy('annee');
+    }
+
+    public  function findBudgetParAnneeAndType($annee, $type)
+    {
+        return BudgetAnnuel::select($type)->where('annee', $annee)->first()->$type;
+    }
+    public  function findBudgetParAnnee($annee)
+    {
+        return BudgetAnnuel::where('annee', $annee)->first();
     }
 }

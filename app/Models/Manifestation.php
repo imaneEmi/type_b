@@ -9,7 +9,7 @@ class Manifestation extends Model
 {
     use HasFactory;
 
-    protected $with=['soutienSollicite'];
+    protected $with = ['soutienSollicite'];
 
     public $fillable = [
         'intitule',

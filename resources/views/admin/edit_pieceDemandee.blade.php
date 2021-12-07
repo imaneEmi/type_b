@@ -4,10 +4,6 @@
 <section class="section">
     <div class="section-header">
         <h1>Pièces demandées</h1>
-        <!-- <div class="section-header-breadcrumb">
-            <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
-            <div class="breadcrumb-item">Pièces demandées</div>
-        </div> -->
     </div>
     <div class="card">
         <form method="post" class="needs-validation" novalidate="">
@@ -60,8 +56,7 @@
                             <td class="col-2">Nombre de copie</td>
                             <td class="text-center"><i class="fas fa-pen"></i></td>
                             <td class="text-center">
-                                <a class="text-danger" data-confirm="Realy?|Do you want to continue?"
-                                    data-confirm-yes="alert('Deleted :)');">
+                                <a class="text-danger" data-confirm="Realy?|Do you want to continue?" data-confirm-yes="alert('Deleted :)');">
                                     <i class="fas fa-trash"></i>
                                 </a>
                             </td>

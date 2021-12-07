@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Services\config\Config;
+
 interface DemandeService
 {
     public function findAll();
@@ -9,8 +11,8 @@ interface DemandeService
     public function save($demande);
     public function update($demande);
     public function delete($id);
-    public function findByEtat($etat,$manifestationService);
-    public function getNbrDemandesRefusees();
-    public function getNbrDemandesAcceptees();
-    public function getNbrDemandes();
+    public function findByEtat($etat, $manifestationService);
+    public function getNbrDemandesParEtatAnneeCour($etat);
+    public function getNbrDemandesAnneeCour();
+    public  function nbrDemandeParEtablissAnneeCour();
 }
