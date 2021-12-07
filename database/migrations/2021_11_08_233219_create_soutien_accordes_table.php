@@ -18,7 +18,7 @@ class CreateSoutienAccordesTable extends Migration
             $table->id();
             $table->integer('nbr');
             $table->double('montant');
-            $table->string('remarques', 200);
+            $table->string('remarques', 200)->nullable();
             $table->unsignedBigInteger('manifestation_id');
             $table->unsignedBigInteger('frais_couvert_id');
 

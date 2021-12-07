@@ -20,6 +20,11 @@ class DemandeServiceImpl implements DemandeService
     {
         return Demande::all();
     }
+    public function getAll()
+    {
+        $demandes = Demande::with('coordonnateur', 'manifestation')->get();
+        return ['demandes' => $demandes];
+    }
     public function findById($id)
     {
         return Demande::findOrFail($id);
@@ -32,16 +37,22 @@ class DemandeServiceImpl implements DemandeService
     {
         return $demande->save();
     }
+    public function changeEtat($id, $etat)
+    {
+        $demande = $this->findById($id);
+        $demande->etat = $etat;
+        $demande->save();
+        return 1;
+    }
     public function delete($id)
     {
         $demande = $this->findById($id);
         return $demande->delete();
     }
 
-    public function findByEtat($etat, $manifestationService)
+    public function findByEtat($etat)
     {
-        $demandes = Demande::where('etat', $etat)->with('coordonnateur', 'manifestation')->get();
-        //dd($demandes);
+        $demandes = Demande::whereYear('created_at', date('Y'))->where('etat', $etat)->with('coordonnateur', 'manifestation')->get();
         return ['demandes' => $demandes];
     }
     public function getNbrDemandesAnneeCour()

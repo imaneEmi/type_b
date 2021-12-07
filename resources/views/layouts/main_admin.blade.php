@@ -87,6 +87,10 @@
                                 <i class="fas fa-window-close"></i>
                                 <span>Refusées</span>
                             </a></li>
+                        <li class="nav-item dropdown {{Route::is('demandes')?'active':''}}"><a class="" href="{{ route('archive') }}">
+                                <i class="fas fa-archive"></i>
+                                <span>Archive</span>
+                            </a></li>
 
                         <li class="menu-header">Paramétres</li>
                         <li class="nav-item dropdown">

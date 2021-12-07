@@ -24,36 +24,53 @@
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered table-md">
-                                <tr>
-                                    <th class="text-center">Rubrique &nbsp;&nbsp;
-                                        <a href="#" data-toggle="modal" data-target="#rubriqueModal"><i
-                                                class="fa fa-book" aria-hidden="true"></i></a>
-                                    </th>
-                                    <th class="text-center">Nombre demandé</th>
-                                    <th class="text-center">Montant demandé</th>
-                                    <th class="text-center">Nombre accordé</th>
-                                    <th class="text-center">Montant accordé</th>
-                                </tr>
-                                @for ($i = 0; $i < sizeof($soutienSollicite); $i++) <tr>
-                                    <td class="text-center">{{ $soutienSollicite[$i]->libelle }} &nbsp;({{
-                                        $soutienSollicite[$i]->forfait }})
-                                        <input type="number" hidden name="forfait" value="{{ $soutienSollicite[$i]->forfait }}" id="">
-                                    </td>
-                                    <td class="">{{ $soutienSollicite[$i]->pivot->nbr }}</td>
-                                    <td class="text-center">{{ $soutienSollicite[$i]->pivot->montant }} &nbsp;&nbsp;
-                                        <i class="fa fa-info-circle" aria-hidden="true" data-container="body"
-                                            data-toggle="popover" data-placement="right"
-                                            data-content="{{ $soutienSollicite[$i]->pivot->remarques_ }}" role="button">
-                                        </i>
-                                    </td>
-                                    <td class="text-right"><input class="form-control text-right" type="number" min="0"
-                                            placeholder="0" name="" id=""></td>
-                                    <td class="text-right"><input class="form-control montantOk text-right"
-                                            type="number" min="0" placeholder="0" disabled id="">
-                                    </td>
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Rubrique &nbsp;&nbsp;
+                                            <a href="#" id="rubrique"><i class="fa fa-book" aria-hidden="true"></i></a>
+                                        </th>
+                                        <th class="text-center">Nombre demandé</th>
+                                        <th class="text-center">Montant demandé</th>
+                                        <th class="text-center">Nombre accordé</th>
+                                        <th class="text-center">Montant accordé</th>
                                     </tr>
-                                    @endfor
-
+                                </thead>
+                                <tbody>
+                                    <form method="post" action="{{ route('accept.demande') }}" name="accepter-demande">
+                                        <input type="text" hidden name="demande" value="{{ $demande->id }}" id="">
+                                        <input type="text" hidden name="manifestation" value="{{ $manifestation->id }}"
+                                            id="">
+                                        @csrf
+                                        @for ($i = 0; $i < sizeof($soutienSollicite); $i++) <tr>
+                                            <td name="forfaits" class="text-center">{{ $soutienSollicite[$i]->libelle }}
+                                                &nbsp;({{
+                                                $soutienSollicite[$i]->forfait }})
+                                                <input type="number" hidden name="forfait_id[{{ $i }}]"
+                                                    value="{{ $soutienSollicite[$i]->id }}">
+                                                <input type="number" hidden value="{{ $soutienSollicite[$i]->forfait }}"
+                                                    id="{{ $soutienSollicite[$i]->id }}" name="forfait">
+                                            </td>
+                                            <td class="">{{ $soutienSollicite[$i]->pivot->nbr }}</td>
+                                            <td class="text-center">{{ $soutienSollicite[$i]->pivot->montant }}
+                                                &nbsp;&nbsp;
+                                                <i class="fa fa-info-circle" aria-hidden="true" data-container="body"
+                                                    data-toggle="popover" data-placement="right"
+                                                    data-content="{{ $soutienSollicite[$i]->pivot->remarques_ }}"
+                                                    role="button">
+                                                </i>
+                                            </td>
+                                            <td class="text-right"><input class="form-control text-right nbrOk"
+                                                    type="number" min="0" placeholder="0" name="nbrOk[{{ $i }}]" id=""
+                                                    value="">
+                                            </td>
+                                            <td class="text-right"><input class="form-control montantOk text-right"
+                                                    type="number" min="0" placeholder="0" id=""
+                                                    name="montantOk[{{ $i }}]" value="" readonly>
+                                            </td>
+                                            </tr>
+                                            @endfor
+                                    </form>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -69,7 +86,7 @@
                                 <tr>
                                     <th>Total demandé</th>
                                     <th class="text-right"><input class="form-control" disabled type="number" name=""
-                                            id=""></th>
+                                            id="" value="{{ $manifestation->soutienSollicite()->sum('montant') }}"></th>
                                     <th>Total accordé</th>
                                     <th class="text-right"><input class="form-control totalmontant text-right" disabled
                                             type="number" name="totalmontant" id="totalmontant"></th>
@@ -78,54 +95,41 @@
                         </div>
                     </div>
                     <div class="card-footer text-right">
-                        <button class="btn btn-success">Enregistrer</button>
-                        <button class="btn btn-danger">Annuler</button>
+                        <button class="btn btn-success" id="accepter-demande">Enregistrer</button>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- ------------------ MODALS ---------------------- -->
-    <div class="modal fade" tabindex="-1" role="dialog" id="rubriqueModal" data-backdrop="false">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Rubriques soutenues par l’UCAM</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-md">
-                            <tr>
-                                <th>Rubrique</th>
-                                <th>Forfait</th>
-                                <th>Limite</th>
-                                <th>Description</th>
-                                <th>Remarques</th>
-                            </tr>
-                            @foreach ($frais as $frais_)
-                            <tr>
-                                <td>{{ $frais_->libelle }}</td>
-                                <td>{{ $frais_->forfait }}
-                                    @if ( $frais_->forfait =="" )
-                                    <span>-----</span>
-                                    @endif
-                                </td>
-                                <td>{{ $frais_->limite }}</td>
-                                <td>{{ $frais_->description }}</td>
-                                <td>{{ $frais_->remarques }}</td>
-                            </tr>
-                            @endforeach
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer bg-whitesmoke br">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
 </section>
+@endsection
+@section('scripts')
+<script src="../assets/js/page/bootstrap-modal.js"></script>
+<script type="text/javascript">
+    let rubrique_body = '<div class="table-responsive">';
+rubrique_body += '<table class="table table-bordered table-md">';
+rubrique_body += '<tr><th>Rubrique</th><th>Forfait</th><th>Limite</th><th>Description</th><th>Remarques</th></tr>';
+rubrique_body += '@foreach ($frais as $frais_)';
+rubrique_body += '<tr><td>{{ $frais_->libelle }}</td>';
+rubrique_body += '<td>{{ $frais_->forfait }}@if ( $frais_->forfait =="" )<span>-----</span>@endif </td>';
+rubrique_body += '<td>{{ $frais_->limite }}</td>';
+rubrique_body += '<td>{{ $frais_->description }}</td>';
+rubrique_body += '<td>{{ $frais_->remarques }}</td>';
+rubrique_body += '</tr>@endforeach</table></div>';
+
+$("#rubrique").fireModal({
+    title: 'Rubrique',
+    body: rubrique_body,
+    buttons: [
+        {
+            text: 'Fermer',
+            class: 'btn btn-danger btn-shadow',
+            handler: function (modal) {
+                modal.modal('toggle');
+            }
+        }
+    ],
+    size:'modal-lg'
+});
+</script>
 @endsection

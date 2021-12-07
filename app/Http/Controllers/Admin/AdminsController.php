@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\SoutienAccorde;
 use App\Services\ManifestationService;
 use App\Services\DemandeService;
 use App\Services\UserService;
@@ -29,6 +30,25 @@ class AdminsController extends Controller
         } catch (\Exception $ex) {
             error_log($ex->getMessage());
             return redirect('/admin_edit_form');
+        }
+    }
+    public function accept(Request $request, DemandeService $demandeService)
+    {
+        try {
+            $soutienAccorde = new SoutienAccorde();
+            for ($i = 0; $i < sizeof($request->forfait_id); $i++) {
+                $soutienAccorde->nbr = $request->nbrOk[$i];
+                $soutienAccorde->montant = $request->montantOk[$i];
+                $soutienAccorde->frais_couvert_id = $request->forfait_id[$i];
+                $soutienAccorde->manifestation_id = $request->manifestation;
+                SoutienAccorde::create($soutienAccorde->getAttributes());
+            }
+            $demandeService->changeEtat($request->demande, 'Acceptée');
+            $msg = "Demande acceptée";
+            return redirect('/demandes-acceptees');
+        } catch (\Exception $ex) {
+            error_log($ex->getMessage());
+            return redirect()->back();
         }
     }
 
@@ -65,5 +85,10 @@ class AdminsController extends Controller
     public function budgetFixe()
     {
         return view('admin/edit_budgetFixe');
+    }
+    public function archive(DemandeService $demandeService)
+    {
+
+        return view('admin/archive', $demandeService->getAll());
     }
 }
