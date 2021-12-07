@@ -5,6 +5,7 @@ namespace App\Services;
 interface DemandeService
 {
     public function findAll();
+    public function getAll();
     public function findById($id);
     public function save($demande);
     public function update($demande);

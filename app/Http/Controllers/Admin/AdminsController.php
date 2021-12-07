@@ -87,6 +87,6 @@ class AdminsController extends Controller
     public function archive(DemandeService $demandeService)
     {
 
-        return view('admin/archive',$demandeService->findAll());
+        return view('admin/archive',$demandeService->getAll());
     }
 }

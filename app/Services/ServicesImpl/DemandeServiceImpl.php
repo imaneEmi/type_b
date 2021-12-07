@@ -13,6 +13,10 @@ class DemandeServiceImpl implements DemandeService
     }
     public function findAll()
     {
+        return Demande::all();
+    }
+    public function getAll()
+    {
         $demandes = Demande::with('coordonnateur', 'manifestation')->get();
         return ['demandes' => $demandes];
     }
