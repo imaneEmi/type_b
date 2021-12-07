@@ -3,19 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\ComiteOrganisation;
-use App\Models\Contributeur;
-use App\Models\EntiteOrganisatrice;
-use App\Models\Etablissement;
-use App\Models\FraisCouvert;
-use App\Models\Manifestation;
-use App\Models\ManifestationComite;
-use App\Models\ManifestationContributeur;
-use App\Models\NatureContribution;
-use App\Models\SoutienSollicite;
-use App\Models\TypeContributeur;
 use App\Services\DemandeService;
 use App\Services\BudgetAnnuelService;
+use App\Services\util\Config;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -32,7 +23,6 @@ class DashboardController extends Controller
     {
         $this->demandeService = $d;
         $this->budgetAnnuelService = $b;
-        $this->middleware('auth');
     }
 
     /**
@@ -42,18 +32,22 @@ class DashboardController extends Controller
      */
     public function index()
     {
-
-        $nbrTotal = $this->demandeService->getNbrDemandes();
-        $nbrTotalAccepte =  $this->demandeService->getNbrDemandesAcceptees();
-        $nbrTotalRefused =  $this->demandeService->getNbrDemandesRefusees();
         $collection = $this->budgetAnnuelService->findAll();
         $anneesarray = $collection->pluck('annee');
         $budgetsAnnuelsFixes = $collection->pluck('budget_fixe');
         $budgetsAnnuelsRestant = $collection->pluck('budget_restant');
+        $annee = Carbon::now()->format('Y');
         return view('admin/index', [
-            'nbrTotal' => $nbrTotal, 'nbrTotalAccepte' => $nbrTotalAccepte, 'nbrTotalRefused' => $nbrTotalRefused,
-            'budgetsAnnuelsFixes' => $budgetsAnnuelsFixes,  'annees' => $anneesarray,
-            'budgetsAnnuelsRestant' => $budgetsAnnuelsRestant
+            'nbrTotal' => $this->demandeService->getNbrDemandesAnneeCour(),
+            'nbrTotalCourant' => $this->demandeService->getNbrDemandesParEtatAnneeCour(Config::$COURANTE),
+            'nbrTotalAccepte' => $this->demandeService->getNbrDemandesParEtatAnneeCour(Config::$ACCEPTEE),
+            'nbrTotalRefused' => $this->demandeService->getNbrDemandesParEtatAnneeCour(Config::$REFUSEE),
+            'budgetsAnnuelsFixes' => $budgetsAnnuelsFixes,
+            'annees' => $anneesarray,
+            'budgetsAnnuelsRestant' => $budgetsAnnuelsRestant,
+            'budgetCourantFixe' => $this->budgetAnnuelService->findBudgetParAnneeAndType($annee, 'budget_fixe'),
+            'budgetCourantRestant' => $this->budgetAnnuelService->findBudgetParAnneeAndType($annee, 'budget_restant'),
+            'demandesAcceParEtab' => $this->demandeService->nbrDemandeParEtablissAnneeCour()
         ]);
     }
 }

@@ -15,8 +15,15 @@
                         <img src="../assets/img/uca.jpg" alt="logo" width="100" class="mt-2 center">
                     </div>
 
-                    <div class="card-header">
+
+
+
+                    <div class="section-header">
+                        <div class="section-header-back">
+                            <a href="{{route('home')}}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
+                        </div>
                         <h4>S'inscrire</h4>
+
                     </div>
 
                     <div class="card-body">

@@ -3,14 +3,19 @@
 namespace App\Services\ServicesImpl;
 
 use App\Models\Demande;
+use App\Models\Manifestation;
+use App\Services\util\Config;
 use App\Services\DemandeService;
+use App\Services\util\Common;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Expr\Cast\Array_;
+
 
 class DemandeServiceImpl implements DemandeService
 {
-    public function __construct()
-    {
-    }
+
+
     public function findAll()
     {
         return Demande::all();
@@ -50,16 +55,25 @@ class DemandeServiceImpl implements DemandeService
         $demandes = Demande::whereYear('created_at', date('Y'))->where('etat', $etat)->with('coordonnateur', 'manifestation')->get();
         return ['demandes' => $demandes];
     }
-    public function getNbrDemandes()
+    public function getNbrDemandesAnneeCour()
     {
-        return $this->findAll()->count();
+        return  Demande::whereYear('date_envoie', '=', date(Common::getAnneeActuelle()))->count();
     }
-    public function getNbrDemandesAcceptees()
+    public function getNbrDemandesParEtatAnneeCour($etat)
     {
-        return Demande::where('etat', 'Acceptée')->get()->count();
+        return Demande::where('etat', $etat)->whereYear('date_envoie', '=', date(Common::getAnneeActuelle()))->count();
     }
-    public function getNbrDemandesRefusees()
+    public  function nbrDemandeParEtablissAnneeCour()
     {
-        return Demande::where('etat', 'Refusée')->get()->count();
+
+        return DB::table('manifestations')
+
+            ->join('demandes', 'manifestations.demande_id', '=', 'demandes.id')
+            ->join('entite_organisatrices', 'manifestations.entite_organisatrice_id', '=', 'entite_organisatrices.id')
+            ->join('etablissements', 'entite_organisatrices.etablissement_id', '=', 'etablissements.id')
+            ->whereYear('date_envoie', '=', date(Common::getAnneeActuelle()))
+            ->where('etat', '=', Config::$ACCEPTEE)
+            ->select('libelle', DB::raw('count(*) as total'))
+            ->groupBy('libelle')->get();
     }
 }

@@ -15,7 +15,7 @@ class CreateBudgetAnnuelsTable extends Migration
     {
         Schema::create('budget_annuels', function (Blueprint $table) {
             $table->id();
-            $table->year('annee');
+            $table->year('annee')->unique()->nullable(false);
             $table->double('budget_fixe');
             $table->double('budget_restant');
             $table->timestamps();
