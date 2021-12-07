@@ -107,6 +107,44 @@
                                 site web: <a href="{{ $manifestation->site_web}}"> {{ $manifestation->site_web}}</a>
                             </div>
                         </div>
+                        <div class="card" id="gestion-financiere">
+                            <div class="card-header">
+                                <h4>Gestion financière</h4>
+                            </div>
+                            <div class="card-body">
+                                <p>Délégué à: <span>{{ $gestionFinanciere->libelle }}</span>
+                                <h6>{{ $gestionFinanciere->information }}</h6>
+                                </p>
+                            </div>
+                            <div class="card-footer bg-whitesmoke">
+                            </div>
+                        </div>
+
+                        <div class="card" id="etablissements">
+                            <div class="card-header">
+                                <h4>Etablissement(s) de l’UCAM impliqué(s) dans l’organisation </h4>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-striped" id="table-1">
+                                    <thead>
+                                        <tr>
+                                            <th>Etablissement</th>
+                                            <th>Intitule</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($etablissements as $etablissement )
+                                        <tr>
+                                            <td>{{ $etablissement->libelle }}</td>
+                                            <td>{{ $etablissement->intitule }}</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="card-footer bg-whitesmoke">
+                            </div>
+                        </div>
 
                         <div class="card" id="entite">
                             <div class="card-header">
