@@ -24,6 +24,8 @@ use App\Services\NatureContributionService;
 use App\Services\TypeContributeurService;
 use Illuminate\Http\Request;
 use PDF;
+use Illuminate\Support\Facades\Gate;
+
 class DashboardController extends Controller
 {
     
@@ -69,11 +71,11 @@ class DashboardController extends Controller
 
     public function generatePDF(Request $request)
     {   
+        
         $demande = $this->demandeService->findById($request->route('id'));
+        Gate::authorize('showDemande', $demande);
         $manifestationComite = $this->manifestationComiteService->findByManifistation($demande->manifestation);
         $manifestationContributeur = $this->manifestationContributeurService->findByManifistation($demande->manifestation);
-
-  //dd($manifestationComite[0]->comiteOrganisation);
         $pdf = PDF::loadView('user/pdf', compact('demande','manifestationComite','manifestationContributeur'));
         return $pdf->stream("invoice.pdf",array("Attachment" => false));
     }
@@ -107,7 +109,7 @@ class DashboardController extends Controller
             $entiteOrganisatrice = EntiteOrganisatrice::create($entiteOrganisatrice->getAttributes());
 
             $demande = new Demande();
-            $demande->code = 'sdv';
+            $demande->code = $user->id  ."/".$this->demandeService->countCoordonnateurDemandeByCurrentYear($user)."/". date('Y');
             $demande->date_envoie = date('Y-m-d H:i:s');
             $demande->etat = 'PENDING';
             $demande->remarques = 'PENDING';

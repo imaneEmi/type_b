@@ -34,4 +34,8 @@ class DemandeServiceImpl implements DemandeService
         //dd($demandes);
         return ['demandes'=>$demandes];
     }
+
+    public function countCoordonnateurDemandeByCurrentYear($user){
+       return Demande::where("date_envoie",date('Y-m-d '))->orWhere("coordonnateur_id", 'like', '%'.$user->id. '%')->count();
+    }
 }

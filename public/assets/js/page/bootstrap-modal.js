@@ -42,9 +42,12 @@ $("#modal-4").fireModal({
   ]
 });
 
+
+console.log("aaaa", document.getElementById("modal-upload-part"))
+
 $("#modal-5").fireModal({
-  title: 'Login',
-  body: $("#modal-login-part"),
+  title: 'Upload Rapport',
+  body: $("#modal-upload-part"),
   footerClass: 'bg-whitesmoke',
   autoFocus: false,
   onFormSubmit: function(modal, e, form) {
@@ -67,7 +70,7 @@ $("#modal-5").fireModal({
   },
   buttons: [
     {
-      text: 'Login',
+      text: 'Upload',
       submit: true,
       class: 'btn btn-primary btn-shadow',
       handler: function(modal) {

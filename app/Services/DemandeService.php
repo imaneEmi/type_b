@@ -10,4 +10,5 @@ interface DemandeService
     public function update($demande);
     public function delete($id);
     public function findByEtat($etat,$manifestationService);
+    public function countCoordonnateurDemandeByCurrentYear($user);
 }
