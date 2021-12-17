@@ -19,8 +19,8 @@ class UpdateManifestationsTable extends Migration
             $table->integer('nbr_etudiants_non_locaux');
             $table->unsignedBigInteger('file_manifestation_etudiants_locaux_id');
             $table->foreign('file_manifestation_etudiants_locaux_id')->references('id')->on('file_manifestations');
-            $table->unsignedBigInteger('file_manifestation_etudiants_non_id');
-            $table->foreign('file_manifestation_etudiants_non_id')->references('id')->on('file_manifestations');
+            $table->unsignedBigInteger('file_manifestation_enseignants_locaux_id');
+            $table->foreign('file_manifestation_enseignants_locaux_id')->references('id')->on('file_manifestations');
             $table->integer('nbr_enseignants_locaux');
             $table->integer('nbr_enseignants_non_locaux');
         });

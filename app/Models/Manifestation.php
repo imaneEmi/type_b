@@ -23,7 +23,7 @@ class Manifestation extends Model
         'nbr_etudiants_locaux',
         'nbr_etudiants_non_locaux',
         'file_manifestation_etudiants_locaux_id',
-        'file_manifestation_etudiants_non_id',
+        'file_manifestation_enseignants_locaux_id',
         'nbr_enseignants_locaux',
         'nbr_enseignants_non_locaux',
         'date_debut',

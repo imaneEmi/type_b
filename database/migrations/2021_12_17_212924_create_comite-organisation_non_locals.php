@@ -21,11 +21,12 @@ class CreateComiteOrganisationNonLocals extends Migration
             $table->string('prenom',50);
             $table->string('email',150);
             $table->string('tel',15);
-            $table->string('etablissement',15);
+            $table->string('universite',50);
+            $table->string('etablissement',50);
             $table->string('ville',15);
             $table->timestamps();
         });
-       
+
     }
 
     /**

@@ -14,9 +14,10 @@ class ComiteOrganisationNonLocal extends Model
         'prenom',
         'email',
         'tel',
+        'universite',
         'etablissement',
         'ville',
     ];
 
-  
+
 }
