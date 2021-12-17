@@ -14,14 +14,14 @@ class CreateDemandesTable extends Migration
     public function up()
     {
         //Schema::disableForeignKeyConstraints();
-        Schema::create('demandes', function (Blueprint $table) {
+        Schema::connection('mysql')->create('demandes', function (Blueprint $table) {
             $table->id();
             $table->string('code');
             $table->timestamp('date_envoie');
             $table->string('etat', 20);
             $table->string('remarques', 500);
             $table->unsignedBigInteger('coordonnateur_id');
-
+            $table->boolean('editable');
             $table->foreign('coordonnateur_id')->references('id')->on('users') ->onDelete('cascade');
             $table->index('coordonnateur_id');
             $table->timestamps();
@@ -35,6 +35,6 @@ class CreateDemandesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('demandes');
+        Schema::connection('mysql')->dropIfExists('demandes');
     }
 }

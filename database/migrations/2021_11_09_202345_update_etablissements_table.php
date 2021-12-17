@@ -13,7 +13,7 @@ class UpdateEtablissementsTable extends Migration
      */
     public function up()
     {
-        Schema::table('etablissements', function($table) {
+        Schema::connection('mysql')->table('etablissements', function($table) {
             $table->dropColumn('ville');
             $table->unsignedBigInteger('ville_id');
             $table->foreign('ville_id')->references('id')->on('villes');
@@ -27,6 +27,6 @@ class UpdateEtablissementsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('etablissements');
+        Schema::connection('mysql')->dropIfExists('etablissements');
     }
 }

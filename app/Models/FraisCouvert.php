@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class FraisCouvert extends Model
 {
     use HasFactory;
-
+    protected $connection = 'mysql';
     public $fillable = [
         'libelle',
         'forfait',

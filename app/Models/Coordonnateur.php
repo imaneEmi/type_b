@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Coordonnateur extends Model
 {
     use HasFactory;
+    protected $connection = 'mysql';
     public $fillable = [
         'nom',
         'prenom',

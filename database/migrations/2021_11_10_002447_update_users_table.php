@@ -14,7 +14,7 @@ class UpdateUsersTable extends Migration
     public function up()
     {
       
-        Schema::table('users', function($table) {
+        Schema::connection('mysql')->table('users', function($table) {
             $table->string('prenom',100);
             $table->string('profession',100);
             $table->string('tel',100);
@@ -29,7 +29,7 @@ class UpdateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::connection('mysql')->dropIfExists('users');
 
     }
 }

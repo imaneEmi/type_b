@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ManifestationComite extends Model
 {
     use HasFactory;
-
+    protected $connection = 'mysql';
     public $fillable = [
         'comite_organisation_id',
         'manifestation_id',

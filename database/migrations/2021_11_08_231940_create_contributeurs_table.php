@@ -13,7 +13,7 @@ class CreateContributeursTable extends Migration
      */
     public function up()
     {
-        Schema::create('contributeurs', function (Blueprint $table) {
+        Schema::connection('mysql')->create('contributeurs', function (Blueprint $table) {
             $table->id();
             $table->string('type',50);
             $table->string('nom',100);
@@ -30,6 +30,6 @@ class CreateContributeursTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('contributeurs');
+        Schema::connection('mysql')->dropIfExists('contributeurs');
     }
 }

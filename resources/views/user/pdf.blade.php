@@ -35,6 +35,62 @@
 
 <body>
 
+<div class="main-content">
+        <section class="section">
+          <div class="section-body">
+            <div class="invoice">
+              <div class="invoice-print">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="invoice-title">
+                    <img src="{{asset('assets/img/uca-logo.png')}}" alt="">
+                      <div class="invoice-number">Code: {{$demande->code}}</div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <address>
+                          <strong>Billed To:</strong><br>
+                            Ujang Maman<br>
+                            1234 Main<br>
+                            Apt. 4B<br>
+                            Bogor Barat, Indonesia
+                        </address>
+                      </div>
+                      <div class="col-md-6 text-md-right">
+                        <address>
+                          <strong>Shipped To:</strong><br>
+                          Muhamad Nauval Azhar<br>
+                          1234 Main<br>
+                          Apt. 4B<br>
+                          Bogor Barat, Indonesia
+                        </address>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <address>
+                          <strong>Payment Method:</strong><br>
+                          Visa ending **** 4242<br>
+                          ujang@maman.com
+                        </address>
+                      </div>
+                      <div class="col-md-6 text-md-right">
+                        <address>
+                          <strong>Order Date:</strong><br>
+                          September 19, 2018<br><br>
+                        </address>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr>
+            </div>
+          </div>
+        </section>
+      </div>
+
     <h3>Entité de recherche organisant la manifestation</h3>
 
     <table id="customers">

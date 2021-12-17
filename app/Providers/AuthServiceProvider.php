@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Demande;
+use App\Models\Manifestation;
+use App\Policies\DemandePolicy;
+use App\Policies\ManifestationPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -16,6 +20,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        Manifestation::class=>ManifestationPolicy::class,
+        Demande::class => DemandePolicy::class
     ];
 
     /**

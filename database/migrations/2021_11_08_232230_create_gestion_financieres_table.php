@@ -13,8 +13,8 @@ class CreateGestionFinancieresTable extends Migration
      */
     public function up()
     {
-        Schema::disableForeignKeyConstraints();
-        Schema::create('gestion_financieres', function (Blueprint $table) {
+        Schema::connection('mysql')->disableForeignKeyConstraints();
+        Schema::connection('mysql')->create('gestion_financieres', function (Blueprint $table) {
             $table->id();
             $table->string('libelle',100);
             $table->text('information');
@@ -33,6 +33,6 @@ class CreateGestionFinancieresTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('gestion_financieres');
+        Schema::connection('mysql')->dropIfExists('gestion_financieres');
     }
 }

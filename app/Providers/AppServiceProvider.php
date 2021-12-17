@@ -59,6 +59,13 @@ class AppServiceProvider extends ServiceProvider
             'App\Services\ServicesImpl\BudgetAnnuelServiceImpl'
         );
 
+        $this->app->bind(
+            'App\Services\ChercheurService',
+            'App\Services\ServicesImpl\ChercheurServiceImpl'
+        );
+
+        
+
 
 
     }

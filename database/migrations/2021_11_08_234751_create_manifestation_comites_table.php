@@ -13,8 +13,8 @@ class CreateManifestationComitesTable extends Migration
      */
     public function up()
     {
-        Schema::disableForeignKeyConstraints();
-        Schema::create('manifestation_comites', function (Blueprint $table) {
+        Schema::connection('mysql')->disableForeignKeyConstraints();
+        Schema::connection('mysql')->create('manifestation_comites', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('manifestation_id');
             $table->unsignedBigInteger('comite_organisation_id');
@@ -34,6 +34,6 @@ class CreateManifestationComitesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('manifestation_comites');
+        Schema::connection('mysql')->dropIfExists('manifestation_comites');
     }
 }

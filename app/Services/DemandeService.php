@@ -13,6 +13,7 @@ interface DemandeService
     public function update($demande);
     public function changeEtat($id, $etat);
     public function delete($id);
+    public function countCoordonnateurDemandeByCurrentYear($user);
     public function findByEtat($etat);
     public function getNbrDemandesParEtatAnneeCour($etat);
     public function getNbrDemandesAnneeCour();

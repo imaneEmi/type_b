@@ -14,7 +14,7 @@ class Update2UsersTable extends Migration
     public function up()
     {
       
-        Schema::table('users', function($table) {
+        Schema::connection('mysql')->table('users', function($table) {
             $table->unsignedBigInteger('etablissement_id')->nullable();
             $table->foreign('etablissement_id')->references('id')->on('etablissements');
 
@@ -28,7 +28,7 @@ class Update2UsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::connection('mysql')->dropIfExists('users');
 
     }
 }

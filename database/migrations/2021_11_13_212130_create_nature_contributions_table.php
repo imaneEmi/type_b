@@ -13,7 +13,7 @@ class CreateNatureContributionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('nature_contributions', function (Blueprint $table) {
+        Schema::connection('mysql')->create('nature_contributions', function (Blueprint $table) {
             $table->id();
             $table->string('libelle',100);
             $table->timestamps();
@@ -27,6 +27,6 @@ class CreateNatureContributionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('nature_contributions');
+        Schema::connection('mysql')->dropIfExists('nature_contributions');
     }
 }

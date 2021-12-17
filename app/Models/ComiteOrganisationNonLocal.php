@@ -5,21 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ComiteOrganisation extends Model
+class ComiteOrganisationNonLocal extends Model
 {
     use HasFactory;
-
-    protected $with=['etablissement'];
+    protected $connection = 'mysql';
     public $fillable = [
         'nom',
         'prenom',
         'email',
         'tel',
-        'etablissement_id',
+        'etablissement',
+        'ville',
     ];
 
-    public function etablissement()
-    {
-        return $this->belongsTo(Etablissement::class, 'etablissement_id');
-    }
+  
 }
