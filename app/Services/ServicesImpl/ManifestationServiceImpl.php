@@ -61,14 +61,7 @@ class ManifestationServiceImpl implements ManifestationService
             'etablissements' => $etablissements, 'contributeurs' => $contributeurs,
             'gestionFinanciere' => $gestionFinanciere, 'comiteOrganisations' => $comiteOrganisations
         ]);
-
         return $details;
     }
 
-    public function getMontantTotal($id)
-    {
-        $manifestation = $this->findById($id);
-        $montantTotal = $manifestation->soutienAccorde->sum('montant');
-        return $montantTotal;
-    }
 }

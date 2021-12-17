@@ -13,10 +13,11 @@ class CreateFraisCouvertsTable extends Migration
      */
     public function up()
     {
-        Schema::create('frais_couverts', function (Blueprint $table) {
+        Schema::connection('mysql')->create('frais_couverts', function (Blueprint $table) {
             $table->id();
             $table->string('libelle',100);
-            $table->string('forfait',100);
+            $table->double('forfait');
+            $table->string('unite',60);
             $table->string('limite',100);
             $table->text('description');
             $table->text('remarques');
@@ -31,6 +32,6 @@ class CreateFraisCouvertsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('frais_couverts');
+        Schema::connection('mysql')->dropIfExists('frais_couverts');
     }
 }

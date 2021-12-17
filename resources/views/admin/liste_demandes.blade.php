@@ -10,10 +10,6 @@
         @else
         <h1>Demandes refusées</h1>
         @endif
-        <div class="section-header-breadcrumb">
-            <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
-            <div class="breadcrumb-item">Activities</div>
-        </div>
     </div>
     <div class="section-body">
         <h2 class="section-title">{{ date('d-m-Y H:i') }}</h2>
@@ -33,9 +29,20 @@
                                         </th>
                                         <th>Intitule</th>
                                         <th>Coordonnateur</th>
-                                        <th>Montant demandé</th>
+                                        <th>
+                                            @if (Route::is('demandes.acceptees'))
+                                            Montant accordé
+                                            @else
+                                            Montant demandé
+                                            @endif
+                                        </th>
                                         <th>Date reçu</th>
-                                        <th>Modifier</th>
+                                        <th>@if (Route::is('demandes.courantes'))
+                                            Modifier
+                                            @else
+                                            Details
+                                            @endif
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -50,12 +57,23 @@
                                             }}
                                         </td>
                                         <td>
-                                            {{ $demande->manifestation->soutienSollicite->sum('montant') }}
+                                            @if (Route::is('demandes.acceptees'))
+                                            {{ $demande->manifestation->soutienAccorde()->sum('montant') }}
+                                            @else
+                                            {{ $demande->manifestation->soutienSollicite()->sum('montant') }}
+                                            @endif
                                         </td>
                                         <td>{{ $demande->created_at }}</td>
-                                        <td class="text-center"><a
-                                                href="{{ route('admin.edit.manifestation',['id'=>$demande->id]) }}"
-                                                class="text-job has-icon"><i class="fas fa-pen"></i></a></td>
+                                        <td class="text-center">
+                                            @if (Route::is('demandes.courantes'))
+                                            <a href="{{ route('admin.edit.manifestation',['id'=>$demande->id]) }}"
+                                                class="text-job has-icon"><i class="fas fa-pen"></i>
+                                            </a>
+                                            @else
+                                            <a href="{{ route('manifestation.details',['id'=>$demande->id]) }}" title="Plus de détails"><i class="fa fa-plus fa-lg"></i>
+                                            </a>
+                                            @endif
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>

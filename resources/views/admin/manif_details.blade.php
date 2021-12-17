@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>Forms &rsaquo; Advanced Forms &mdash; Stisla</title>
+    <title>Layout &rsaquo; Top Navigation &mdash; Stisla</title>
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -19,102 +19,285 @@
     <link rel="stylesheet" href="../assets/css/components.css">
 </head>
 
-<body>
+<body class="layout-3">
     <div id="app">
-        <div class="navbar-bg"></div>
-      <!--  <nav class="navbar navbar-expand-lg main-navbar">
-            <ul class="navbar-nav navbar-right">
-                <li class="dropdown"><a href="#" data-toggle="dropdown"
-                        class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                        <img alt="image" src="../assets/img/avatar/avatar-1.png" class="rounded-circle mr-1">
-                        <div class="d-sm-none d-lg-inline-block">Admin</div>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right">
-
-                        <a href="features-settings.html" class="dropdown-item has-icon">
-                            <i class="fas fa-cog"></i> Settings
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item has-icon text-danger">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </a>
-                    </div>
-                </li>
-            </ul>
-        </nav> -->
-        <div class="main-sidebar">
-            <aside id="sidebar-wrapper">
-                <div class="sidebar-brand">
-                    <a href="{{route('dashboard.admin')}}">uca</a>
+        <div class="main-wrapper container">
+            <div class="navbar-bg"></div>
+            <nav class="navbar navbar-expand-lg main-navbar">
+                <a href="index.html" class="navbar-brand sidebar-gone-hide">UCA</a>
+                <div class="navbar-nav">
+                    <a href="#" class="nav-link sidebar-gone-show" data-toggle="sidebar"><i class="fas fa-bars"></i></a>
                 </div>
-            </aside>
-        </div>
-        <!-- ------------------------------- MAIN ---------------------------- -->
-        <div class="main-content">
-            <section class="section mr-5">
-                <div class="section-header d-flex justify-content-between pl-2 pr-3">
+            </nav>
 
-                    <div class="d-inline"><label for="">Intitule: </label>&nbsp;<span> {{ $manifestation->intitule }} </span>
-                    </div>
-                    <div class="d-inline"><label for="">Type: </label>&nbsp;<span>{{ $manifestation->type }} </span></div>
-                    <div class="d-inline"><label for="">Lieu: </label>&nbsp;<span>{{ $manifestation->lieu }}</span></div>
-                    <div class="d-inline"><label for="">Date reçue: </label>&nbsp;<span> 14/11/2021</span></div>
-                    <div class="d-inline">
-                        <span>
-                            <a href="{{ route('admin.edit.manifestation',['id'=> $demande->id]) }}" title="Retour en arrière">
-                                <i class="fa fa-reply fa-lg"></i>
-                            </a>
-                        </span>
-                    </div>
+            <nav class="navbar navbar-secondary navbar-expand-lg">
+                <div class="container">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a href="#" data-toggle="dropdown" class="nav-link has-dropdown"><i
+                                    class="fas fa-fire"></i><span>Organisation</span></a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item"><a href="#entite" class="nav-link">Entité</a></li>
+                                <li class="nav-item"><a href="#coordonnateur" class="nav-link">Coordonnateur</a></li>
+                                <li class="nav-item"><a href="#comite" class="nav-link">Comité</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#contribution" class="nav-link"><i
+                                    class="fas fa-fire"></i><span>Contribution</span></a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a href="#soutienSollicite" class="nav-link"><i class="far fa-clone"></i><span>Soutien
+                                    sollicité</span></a>
+                        </li>
+                    </ul>
                 </div>
+            </nav>
 
-                <div class="section-body">
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-lg-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h4>Modification du montant sollicité</h4>
-                                </div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-md">
-                                            <tr>
-                                                <th class="text-center">Rubrique<th>
-                                                <th class="text-center">Nombre demandé</th>
-                                                <th class="text-center">Montant demandé</th>
-                                                <th class="text-center">Nombre accordé</th>
-                                                <th class="text-center">Montant accordé</th>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center">1</td>
-                                                <td class="text-center">Irwansyah Saputra</td>
-                                                <td class="text-center">0000 &nbsp;&nbsp;
-                                                    <i class="fa fa-info-circle" aria-hidden="true"
-                                                        data-container="body" data-toggle="popover"
-                                                        data-placement="right"
-                                                        data-content="Des remarques du coordonnateur." role="button">
-                                                    </i>
-                                                </td>
-                                                <td class="text-right"><input class="form-control" type="number" name=""
-                                                        id=""></td>
-                                                <td class="text-right"><input class="form-control" type="number" name=""
-                                                        id=""></td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
+            <!-- Main Content -->
+            <div class="main-content">
+                <section class="section">
+                    <div class="section-header">
+                        <h1>{{ $manifestation->intitule }}</h1>
+                        <div class="section-header-breadcrumb">
+                            <div class="d-inline">
+                                <span>
+                                    <a href="{{ url()->previous() }}" title="Retour en arrière">
+                                        <i class="fa fa-reply fa-lg"></i>
+                                    </a>
+                                </span>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </div>
-        <!-- ----------------------------------- END MAIN ----------------------------- -->
-        <footer class="main-footer">
-            <div class="footer-right">
-                Copyright &copy; Made with 🧡 by EL OUADI, KHADIM and EL AIMANI
+
+                    <div class="section-body">
+                        <h2 class="section-title">{{ $manifestation->type }}</h2>
+                        <p class="section-lead">This page is just an example for you to create your own page.</p>
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Informations concernant la manifestation</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="table-1">
+                                        <thead>
+                                            <tr>
+                                                <th>Type</th>
+                                                <th>Etendue</th>
+                                                <th>Lieu</th>
+                                                <th>Date début</th>
+                                                <th>Date fin</th>
+                                                <th>Nombre participants prévus</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>{{ $manifestation->type }}</td>
+                                                <td>{{ $manifestation->etendue }}</td>
+                                                <td>{{ $manifestation->lieu }}</td>
+                                                <td>{{ $manifestation->date_debut }}</td>
+                                                <td>{{ $manifestation->date_fin }}</td>
+                                                <td>{{ $manifestation->nbr_participants_prevus }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-whitesmoke">
+                                site web: <a href="{{ $manifestation->site_web}}"> {{ $manifestation->site_web}}</a>
+                            </div>
+                        </div>
+
+                        <div class="card" id="entite">
+                            <div class="card-header">
+                                <h4>Entité de recherche organisant la manifestation</h4>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-striped" id="table-1">
+                                    <thead>
+                                        <tr>
+                                            <th>Nom</th>
+                                            <th>Responsable</th>
+                                            <th>Etablissement</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{ $entiteOrganisatrice->nom }}</td>
+                                            <td>{{ $entiteOrganisatrice->responsable }}</td>
+                                            <td>{{ $entiteOrganisatrice->etablissement->libelle }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="card-footer bg-whitesmoke">
+                                @if ($manifestation->agence_organisatrice != null)
+                                <span>Organisation confié à l'agence: {{ $manifestation->agence_organisatrice }}</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="card" id="coordonnateur">
+                            <div class="card-header">
+                                <h4>Coordonnateur</h4>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-striped" id="table-1">
+                                    <thead>
+                                        <tr>
+                                            <th>Nom Prenom</th>
+                                            <th>Grade</th>
+                                            <th>Etablissement</th>
+                                            <th>E-mail</th>
+                                            <th>N° tel personnel</th>
+                                            <th>Fax</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{ $coordonnateur->name }}&nbsp;{{ $coordonnateur->prenom }}</td>
+                                            <td>{{ $coordonnateur->profession }}</td>
+                                            <td>{{ $coordonnateur->etablissement->libelle }}</td>
+                                            <td>{{ $coordonnateur->email }}</td>
+                                            <td>{{ $coordonnateur->tel }}</td>
+                                            <td>{{ $coordonnateur->fax }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="card-footer bg-whitesmoke">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" id="comite">
+                        <div class="card-header">
+                            <h4>Comité d'organisation</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped" id="table-1">
+                                <thead>
+                                    <tr>
+                                        <th>Nom Prénom</th>
+                                        <th>Etablissement</th>
+                                        <th>Contact</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($comiteOrganisations as $comiteOrganisation )
+                                    <tr>
+                                        <td>{{ $comiteOrganisation->nom }}&nbsp;{{ $comiteOrganisation->prenom }}</td>
+                                        <td>{{ $comiteOrganisation->etablissement->libelle }}</td>
+                                        <td>{{ $comiteOrganisation->email }}&nbsp;/{{ $comiteOrganisation->tel }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-footer bg-whitesmoke">
+                        </div>
+                    </div>
+
+                    <div class="card" id="contribution">
+                        <div class="card-header">
+                            <h4>Contribution</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped" id="table-1">
+                                <thead>
+                                    <tr>
+                                        <th>Catégorie</th>
+                                        <th>Nom</th>
+                                        <th>Montant</th>
+                                        <th>Nature</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($contributeurs as $contributeur )
+                                    <tr>
+                                        <td>{{ $contributeur->typeContributeur->libelle }}</td>
+                                        <td>
+                                            @if ($contributeur->nom !='')
+                                            {{ $contributeur->nom }}
+                                            @endif
+                                        </td>
+                                        <td>{{ $contributeur->montant }}&nbsp;DH</td>
+                                        <td>{{ $contributeur->natureContribution->libelle }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-footer bg-whitesmoke">
+                        </div>
+                    </div>
+
+                    <div class="card" id="soutienSollicite">
+                        <div class="card-header">
+                            <h4>Soutien sollicité</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-md">
+                                    <tr>
+                                        <th class="text-center">Rubrique</th>
+                                        <th class="text-center">Nombre demandé</th>
+                                        <th class="text-center">Montant demandé</th>
+                                        <th class="text-center">Nombre accordé</th>
+                                        <th class="text-center">Montant accordé</th>
+                                    </tr>
+                                    @for ($i = 0; $i < sizeof($soutienSollicite); $i++) <tr>
+                                        <td class="text-center">{{ $soutienSollicite[$i]->libelle }} &nbsp;({{
+                                            $soutienSollicite[$i]->forfait }})
+                                        </td>
+                                        <td class="">{{ $soutienSollicite[$i]->pivot->nbr }}</td>
+                                        <td class="text-center">{{ $soutienSollicite[$i]->pivot->montant }} &nbsp;&nbsp;
+                                            <i class="fa fa-info-circle" aria-hidden="true" data-container="body"
+                                                data-toggle="popover" data-placement="right"
+                                                data-content="{{ $soutienSollicite[$i]->pivot->remarques }}"
+                                                role="button">
+                                            </i>
+                                        </td>
+                                        <td class="text-right"><input class="form-control text-right" type="number"
+                                                disabled name="" id="" value="{ $soutienAccorde[$i]->pivot->nbr }}">
+                                        </td>
+                                        <td class="text-right"><input class="form-control montantOk text-right"
+                                                type="number" disabled id=""
+                                                value="{ $soutienAccorde[$i]->pivot->montant }}">
+                                        </td>
+                                        </tr>
+                                        @endfor
+
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-whitesmoke">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-md">
+                                    <tr>
+                                        <th>Total demandé</th>
+                                        <th class="text-right"><input class="form-control" disabled type="number"
+                                                name="" id=""
+                                                value="{{ $demande->manifestation->soutienSollicite()->sum('montant') }}">
+                                        </th>
+                                        <th>Total accordé</th>
+                                        <th class="text-right"><input class="form-control totalmontant text-right"
+                                                disabled type="number" name="totalmontant" id="totalmontant"
+                                                value="{{ $demande->manifestation->soutienAccorde()->sum('montant') }}">
+                                        </th>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
-        </footer>
+            <footer class="main-footer">
+                <div class="footer-right">
+                    Copyright &copy; Made with 🧡 by EL OUADI, KHADIM and EL AIMANI
+                </div>
+            </footer>
+        </div>
     </div>
 
     <!-- General JS Scripts -->
@@ -132,13 +315,11 @@
 
     <!-- JS Libraies -->
 
+    <!-- Page Specific JS File -->
+
     <!-- Template JS File -->
     <script src="../assets/js/scripts.js"></script>
     <script src="../assets/js/custom.js"></script>
-
-    <!-- Page Specific JS File -->
-
-
 </body>
 
 </html>

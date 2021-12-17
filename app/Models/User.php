@@ -12,12 +12,13 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
-
+    protected $connection = 'mysql';
     /**
      * The attributes that are mass assignable.
      *
      * @var string[]
      */
+    protected $with=['etablissement'];
     protected $fillable = [
         'name',
         'email',
@@ -28,7 +29,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'fax',
         'etablissement_id'
 
-        
+
     ];
 
     /**

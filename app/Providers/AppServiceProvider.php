@@ -21,7 +21,14 @@ class AppServiceProvider extends ServiceProvider
             'App\Services\DemandeService',
             'App\Services\ServicesImpl\DemandeServiceImpl'
         );
-
+        $this->app->bind(
+            'App\Services\UserService',
+            'App\Services\ServicesImpl\UserServiceImpl'
+        );
+        $this->app->bind(
+            'App\Services\PieceDemandeService',
+            'App\Services\ServicesImpl\PieceDemandeServiceImpl'
+        );
         $this->app->bind(
             'App\Services\TypeContributeurService',
             'App\Services\ServicesImpl\TypeContributeurServiceImpl'
@@ -38,18 +45,29 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             'App\Services\FraisCouvertService',
             'App\Services\ServicesImpl\FraisCouvetServiceImpl'
-        );  
+        );
         $this->app->bind(
             'App\Services\ManifestationComiteService',
             'App\Services\ServicesImpl\ManifestationComiteServiceImpl'
-        ); 
+        );
         $this->app->bind(
             'App\Services\ManifestationContributeurService',
             'App\Services\ServicesImpl\ManifestationContributeurServiceImpl'
         );
-    
+        $this->app->bind(
+            'App\Services\BudgetAnnuelService',
+            'App\Services\ServicesImpl\BudgetAnnuelServiceImpl'
+        );
+
+        $this->app->bind(
+            'App\Services\ChercheurService',
+            'App\Services\ServicesImpl\ChercheurServiceImpl'
+        );
 
         
+
+
+
     }
 
     /**

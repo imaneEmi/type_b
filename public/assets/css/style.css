@@ -80,7 +80,7 @@ a:not(.btn-social-icon):not(.btn-social):not(.page-link) .fab {
 }
 
 .bg-primary {
-    background-color: #a34f23 !important;
+    background-color: #6777ef !important;
 }
 
 .bg-secondary {
@@ -750,7 +750,7 @@ select.form-control:not([size]):not([multiple]) {
     color: #fff;
 }
 .alert.alert-primary {
-    background-color: #a34f23;
+    background-color: #6777ef;
 }
 .alert.alert-secondary {
     background-color: #cdd3d8;
@@ -2665,7 +2665,7 @@ ul.nav-tabs li.nav-item a.nav-link.active i {
 
 /* 3.21 Progress Bar */
 .progress-bar {
-    background-color: #a34f23;
+    background-color: #6777ef;
 }
 
 /* 3.22 Jumbotron */
@@ -2745,8 +2745,6 @@ a.bb {
     display: inline;
     margin: 0 4px;
 }
-
-
 
 .slash:after {
     content: "/";
@@ -3227,6 +3225,9 @@ pre {
     background-color: #a34f23;
     color: #fff;
 }
+.section-date {
+    margin: 10px 0 10px 0;
+}
 .section .section-header .section-header-button {
     margin-left: 20px;
 }
@@ -3248,6 +3249,7 @@ pre {
     position: relative;
     margin: 30px 0 25px 0;
 }
+
 .section .section-title:before {
     content: " ";
     border-radius: 5px;

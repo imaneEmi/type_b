@@ -35,12 +35,11 @@ Route::middleware(['verified'])->group(function () {
     Route::get('/dashboard-user/create-request', [App\Http\Controllers\User\DashboardController::class, 'createRequest'])->name('create.request.form');
     Route::post('/dashboard-user/create-request', [App\Http\Controllers\User\DashboardController::class, 'createRequest'])->name('create.request.store');
     Route::get('/dashboard-user/demande/{id}/pdf', [App\Http\Controllers\User\DashboardController::class, 'generatePDF'])->name('request.pdf');
-
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 // ********* Admin's routes *******
-Route::group(['middleware' => ['auth', 'admin']], function () {
+Route::group(['middleware' => ['auth']], function () {
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard-admin', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard.admin');
     Route::get('/admin_edit_form/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'getManifestation'])
@@ -53,5 +52,12 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
         ->name('demandes.acceptees');
     Route::get('/demandes-refusees', [App\Http\Controllers\Admin\AdminsController::class, 'getDemandesResfusees'])
         ->name('demandes.refusees');
-    Route::post('/delete_demande', [App\Http\Controllers\Admin\AdminsController::class, 'delete'])->name('delete.demande');
+    Route::get('/archive', [App\Http\Controllers\Admin\AdminsController::class, 'archive'])
+        ->name('archive');
+    Route::post('/accept-demande', [App\Http\Controllers\Admin\AdminsController::class, 'accept'])->name('accept.demande');
+    Route::post('/delete-demande', [App\Http\Controllers\Admin\AdminsController::class, 'delete'])->name('delete.demande');
+    Route::get('/edit-profile', [App\Http\Controllers\Admin\AdminsController::class, 'profile'])->name('edit.profile');
+    Route::get('/edit-pieces', [App\Http\Controllers\Admin\AdminsController::class, 'pieceDemandee'])->name('edit.pieces');
+    Route::get('/edit-frais', [App\Http\Controllers\Admin\AdminsController::class, 'fraisCouverts'])->name('edit.frais');
+    Route::get('/edit-budgetFixe', [App\Http\Controllers\Admin\AdminsController::class, 'budgetFixe'])->name('edit.budgetFixe');
 });

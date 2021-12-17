@@ -13,9 +13,9 @@ class CreateBudgetAnnuelsTable extends Migration
      */
     public function up()
     {
-        Schema::create('budget_annuels', function (Blueprint $table) {
+        Schema::connection('mysql')->create('budget_annuels', function (Blueprint $table) {
             $table->id();
-            $table->year('annee');
+            $table->year('annee')->unique()->nullable(false);
             $table->double('budget_fixe');
             $table->double('budget_restant');
             $table->timestamps();
@@ -29,6 +29,6 @@ class CreateBudgetAnnuelsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('budget_annuels');
+        Schema::connection('mysql')->dropIfExists('budget_annuels');
     }
 }

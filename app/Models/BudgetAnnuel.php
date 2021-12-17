@@ -8,8 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class BudgetAnnuel extends Model
 {
     use HasFactory;
+    protected $connection = 'mysql';
     public $fillable = [
         'annee',
         'budget_fixe',
+        'budget_restant'
     ];
 }

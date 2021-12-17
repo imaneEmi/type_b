@@ -13,12 +13,12 @@ class CreateSoutienAccordesTable extends Migration
      */
     public function up()
     {
-        Schema::disableForeignKeyConstraints();
-        Schema::create('soutien_accordes', function (Blueprint $table) {
+        Schema::connection('mysql')->disableForeignKeyConstraints();
+        Schema::connection('mysql')->create('soutien_accordes', function (Blueprint $table) {
             $table->id();
             $table->integer('nbr');
             $table->double('montant');
-            $table->string('remarques', 200);
+            $table->string('remarques', 200)->nullable();
             $table->unsignedBigInteger('manifestation_id');
             $table->unsignedBigInteger('frais_couvert_id');
 
@@ -37,6 +37,6 @@ class CreateSoutienAccordesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('soutien_accordes');
+        Schema::connection('mysql')->dropIfExists('soutien_accordes');
     }
 }

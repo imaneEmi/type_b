@@ -99,3 +99,26 @@ $('.oh-my-modal').fireModal({
   title: 'My Modal',
   body: 'This is cool plugin!'
 });
+
+$("#accepter-demande").fireModal({
+    body: "<p>Êtes-vous sûr de vouloir accepter cette demande?</p><p>Un email sera envoyé à la personne concerné.</p>",
+    title:'Accepter cette demande',
+    buttons: [
+        {
+            text: 'Accepter',
+            submit: true,
+            class: 'btn btn-success btn-shadow',
+            handler: function () {
+                $('form[name="accepter-demande"').submit();
+            }
+        },
+        {
+            text: 'Annuler',
+            submit: true,
+            class: 'btn btn-danger btn-shadow',
+            handler: function (modal) {
+                modal.modal('toggle');
+            }
+        }
+    ]
+});

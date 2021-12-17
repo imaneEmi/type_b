@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class PieceDemande extends Model
 {
     use HasFactory;
-
+    protected $connection = 'mysql';
     protected $fillable = [
         'libelle',
         'description',

@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ComiteOrganisation;
 use App\Models\Contributeur;
 use App\Models\Demande;
+use App\Models\Dto\Departement;
 use App\Models\EntiteOrganisatrice;
 use App\Models\GestionFinanciere;
 use App\Models\Manifestation;
@@ -15,6 +16,7 @@ use App\Models\ManifestationComite;
 use App\Models\ManifestationContributeur;
 use App\Models\ManifestationEtablissement;
 use App\Models\SoutienSollicite;
+use App\Services\ChercheurService;
 use App\Services\DemandeService;
 use App\Services\EtablissementService;
 use App\Services\FraisCouvertService;
@@ -36,6 +38,7 @@ class DashboardController extends Controller
     private FraisCouvertService $fraisCouvertService;
     private   ManifestationComiteService $manifestationComiteService;
     private ManifestationContributeurService $manifestationContributeurService;
+    private ChercheurService $chercheurService;
     /**
      * Create a new controller instance.
      *
@@ -47,8 +50,10 @@ class DashboardController extends Controller
     NatureContributionService $natureContributionService,
     FraisCouvertService $fraisCouvertService,
     ManifestationComiteService $manifestationComiteService,
-    ManifestationContributeurService $manifestationContributeurService
+    ManifestationContributeurService $manifestationContributeurService,
+    ChercheurService $chercheurService
     ){
+        
         $this->demandeService  =$demandeService;
         $this->etablissementService  =$etablissementService;
         $this->natureContributionService  =$natureContributionService;
@@ -56,6 +61,7 @@ class DashboardController extends Controller
         $this->fraisCouvertService  =$fraisCouvertService;
         $this->manifestationComiteService  =$manifestationComiteService;
         $this->manifestationContributeurService  =$manifestationContributeurService;
+        $this->chercheurService =$chercheurService;
     }
 
     /**
@@ -63,8 +69,10 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {  
+       // dd($this->chercheurService->findByEmail($request->user()->email));
+      // dd($this->chercheurService->findByEmail($request->user()->email));
         $demandes = $this->demandeService->findAll();
         return view('user/list-request',['demandes'=>$demandes]);
     }

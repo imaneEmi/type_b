@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Manifestation extends Model
 {
     use HasFactory;
-
-    protected $with=['soutienSollicite'];
+    protected $connection = 'mysql';
+    protected $with = [];
 
     public $fillable = [
         'intitule',
@@ -20,6 +20,12 @@ class Manifestation extends Model
         'agence_organisatrice',
         'partenaires',
         'nbr_participants_prevus',
+        'nbr_etudiants_locaux',
+        'nbr_etudiants_non_locaux',
+        'file_manifestation_etudiants_locaux_id',
+        'file_manifestation_etudiants_non_id',
+        'nbr_enseignants_locaux',
+        'nbr_enseignants_non_locaux',
         'date_debut',
         'date_fin',
         'demande_id',

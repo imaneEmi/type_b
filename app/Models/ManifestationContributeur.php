@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ManifestationContributeur extends Model
 {
     use HasFactory;
-
+    protected $connection = 'mysql';
     public $fillable = [
         'contributeur_id',
         'manifestation_id',

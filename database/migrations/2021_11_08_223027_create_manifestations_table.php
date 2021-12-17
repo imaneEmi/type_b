@@ -13,8 +13,8 @@ class CreateManifestationsTable extends Migration
      */
     public function up()
     {
-        Schema::disableForeignKeyConstraints();
-        Schema::create('manifestations', function (Blueprint $table) {
+        Schema::connection('mysql')->disableForeignKeyConstraints();
+        Schema::connection('mysql')->create('manifestations', function (Blueprint $table) {
             $table->id();
             $table->string('intitule', 100);
             $table->string('type', 100);
@@ -45,6 +45,6 @@ class CreateManifestationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('manifestations');
+        Schema::connection('mysql')->dropIfExists('manifestations');
     }
 }
