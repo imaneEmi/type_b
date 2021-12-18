@@ -100,7 +100,6 @@ class DashboardController extends Controller
         $typeContributeurs = $this->typeContributeurService->findAll();
         $fraisCouvert = $this->fraisCouvertService->findAll();
         $natureContributions  = $this->natureContributionService->findAll();
-
         if ($request->isMethod('post')) {
             $data = $request->all();
             
@@ -119,12 +118,13 @@ class DashboardController extends Controller
             // $entiteOrganisatrice->etablissement_id = $data['etablissement_entite_organisatrice'];
             // $entiteOrganisatrice = EntiteOrganisatrice::create($entiteOrganisatrice->getAttributes());
 
+            $chercheur = $this->chercheurService->findByEmail($request->user()->email);
+
             $demande = new Demande();
-            $demande->code = $user->id  . "/" . $this->demandeService->countCoordonnateurDemandeByCurrentYear($user) . "/" . date('Y');
+            $demande->code = $chercheur->id_cher  . "/" . $this->demandeService->countCoordonnateurDemandeByCurrentYear($user)+1 . "/" . date('Y');
             $demande->date_envoie = date('Y-m-d H:i:s');
             $demande->etat = 'PENDING';
-            $demande->remarques = 'PENDING';
-            $demande->coordonnateur_id = $user->id;
+            $demande->coordonnateur_id = $chercheur->id_cher;
             $demande = Demande::create($demande->getAttributes());
 
             $manifestation = new Manifestation();
@@ -143,7 +143,6 @@ class DashboardController extends Controller
             $manifestation->date_debut = $data['date_debut'];
             $manifestation->date_fin = $data['date_fin'];
 
-            $chercheur = $this->chercheurService->findByEmail($request->user()->email);
             $manifestation->entite_organisatrice_id = $chercheur->laboratoire->getAttributes()["id_labo"];
             $manifestation->demande_id = $demande->getAttributes()["id"];
 

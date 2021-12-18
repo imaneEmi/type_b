@@ -113,7 +113,7 @@
                         <label>Liste des etudiants locaux </label>
                         <div class="custom-file">
                           
-                          <input type="file" class="custom-file-input" id="customFile" name="file_nbr_etudiants_locaux" required="">
+                          <input type="file" class="custom-file-input" id="customFile" name="file_nbr_etudiants_locaux" required >
                           <label class="custom-file-label" for="customFile">Choose file</label>
                         </div>
                       </div>
@@ -128,7 +128,7 @@
                       <div class="col-6">
                         <label>Liste des enseignants locaux </label>
                         <div class="custom-file">
-                          <input type="file" class="custom-file-input" id="customFile" name="file_nbr_enseignants_locaux" required="">
+                          <input type="file" class="custom-file-input" id="customFile" name="file_nbr_enseignants_locaux" required >
                           <label class="custom-file-label" for="customFile">Choose file</label>
                         </div>
                       </div>

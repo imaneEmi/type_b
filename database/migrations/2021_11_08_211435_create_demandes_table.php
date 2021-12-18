@@ -19,11 +19,9 @@ class CreateDemandesTable extends Migration
             $table->string('code');
             $table->timestamp('date_envoie');
             $table->string('etat', 20);
-            $table->string('remarques', 500);
+            $table->string('remarques', 500)->nullable();
             $table->unsignedBigInteger('coordonnateur_id');
             $table->boolean('editable');
-            $table->foreign('coordonnateur_id')->references('id')->on('users') ->onDelete('cascade');
-            $table->index('coordonnateur_id');
             $table->timestamps();
         });
     }
