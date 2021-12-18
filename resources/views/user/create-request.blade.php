@@ -380,8 +380,8 @@
             </div>
 
           </div>
-         <div class="page">
-             <!-- <div class="col-12 col-md-12 col-lg-12">
+          <div class="page">
+            <!-- <div class="col-12 col-md-12 col-lg-12">
               <div class="card">
                 <div class="card-header">
                   <h4>Comité d'organisation</h4>
@@ -471,6 +471,24 @@
 
                   </div>
                 </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-12 col-lg-12">
+
+              <div class="card">
+                <div class="card-header">
+                  <h4>Pièces</h4>
+                </div>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label>Liste des pieces </label>
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="customFile" name="pieces[]"  multiple required>
+                      <label class="custom-file-label" for="customFile">Choose files</label>
+                    </div>
+                  </div>
+                </div>
                 <div class="card-footer text-right">
                   <p class="btn btn-primary prev-3 prev">Previous </p>
                   <button class="btn btn-primary">Créer </button>
@@ -478,7 +496,7 @@
               </div>
             </div>
 
-          </div> 
+          </div>
         </form>
       </div>
     </div>

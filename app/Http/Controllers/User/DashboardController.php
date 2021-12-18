@@ -105,10 +105,10 @@ class DashboardController extends Controller
         $natureContributions  = $this->natureContributionService->findAll();
         if ($request->isMethod('post')) {
             $data = $request->all();
-           
-           
-          //  dd($data);
-           
+
+
+            //dd($data);
+
             // $user->etablissement_id =  $data['etablissment_coordonnateur_manifestation'];
             // $user->tel =  $data['tel_coordonnateur_manifestation'];
             // $user->fax =  $data['fax_coordonnateur_manifestation'];
@@ -127,7 +127,7 @@ class DashboardController extends Controller
             $chercheur = $this->chercheurService->findByEmail($request->user()->email);
 
             $demande = new Demande();
-            $demande->code = $chercheur->id_cher  . "/" . $this->demandeService->countCoordonnateurDemandeByCurrentYear($chercheur)+1 . "/" . date('Y');
+            $demande->code = $chercheur->id_cher  . "/" . $this->demandeService->countCoordonnateurDemandeByCurrentYear($chercheur) + 1 . "/" . date('Y');
             $demande->date_envoie = date('Y-m-d H:i:s');
             $demande->etat = 'PENDING';
             $demande->coordonnateur_id = $chercheur->id_cher;
@@ -141,7 +141,7 @@ class DashboardController extends Controller
             $manifestation->site_web = $data['site_web'];
             $manifestation->agence_organisatrice = $data['agence_organisatrice'];
             $manifestation->partenaires = $data['partenaires'];
-            $manifestation->nbr_participants_prevus = $data['nbr_etudiants_locaux'] +$data['nbr_etudiants_non_locaux']+ $data['nbr_enseignants_locaux']+$data['nbr_enseignants_non_locaux'];
+            $manifestation->nbr_participants_prevus = $data['nbr_etudiants_locaux'] + $data['nbr_etudiants_non_locaux'] + $data['nbr_enseignants_locaux'] + $data['nbr_enseignants_non_locaux'];
             $manifestation->nbr_etudiants_locaux = $data['nbr_etudiants_locaux'];
             $manifestation->nbr_etudiants_non_locaux = $data['nbr_etudiants_non_locaux'];
             $manifestation->nbr_enseignants_locaux = $data['nbr_enseignants_locaux'];
@@ -230,6 +230,15 @@ class DashboardController extends Controller
                     $soutienSollicite->frais_couvert_id = $fraisCouvert[$i]->id;
                     SoutienSollicite::create($soutienSollicite->getAttributes());
                 }
+            }
+
+            $pieces = $data['pieces'];
+            for ($i = 0; $i < count($pieces); $i++) {
+                $path =   Storage::disk('local')->put("manifestation_files", $pieces[$i]);
+                $fileManifestation = new FileManifestation();
+                $fileManifestation->url = $path;
+                $fileManifestation->manifestation_id = $manifestation->getAttributes()["id"];
+                FileManifestation::create($fileManifestation->getAttributes());
             }
 
             return redirect()->route('dashboard.user');
