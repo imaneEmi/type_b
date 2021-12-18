@@ -18,7 +18,6 @@ class CreateFileManifestationsTable extends Migration
             $table->string('url', 200);
             $table->unsignedBigInteger('manifestation_id');
             $table->foreign('manifestation_id')->references('id')->on('manifestations');
-            $table->index('manifestation_id');
             $table->timestamps();
         });
     }

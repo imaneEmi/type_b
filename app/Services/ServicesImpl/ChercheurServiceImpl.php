@@ -20,6 +20,6 @@ class ChercheurServiceImpl implements ChercheurService
     }
     public  function findByEmail($email)
     {
-        return Chercheur::where("email",$email)->with('laboratoire')->get();
+        return Chercheur::where("email",$email)->with('laboratoire')->first();
     }
 }

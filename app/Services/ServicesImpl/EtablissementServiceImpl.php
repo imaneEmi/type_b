@@ -2,7 +2,7 @@
 
 namespace App\Services\ServicesImpl;
 
-use App\Models\Etablissement;
+use App\Models\Dto\Etablissement;
 use App\Services\EtablissementService;
 
 class EtablissementServiceImpl implements EtablissementService{

@@ -55,7 +55,7 @@
 
     <div class="container">
       <div class="form-outer">
-        <form method="POST" action="{{ route('create.request.store') }}" id="form">
+        <form method="POST" enctype="multipart/form-data" action="{{ route('create.request.store') }}" id="form">
           @csrf
           <div class="page slide-page">
             <div class="row">
@@ -98,13 +98,54 @@
                       <label>Etablissement(s) de l’UCAM impliqué(s) dans l’organisation </label>
                       <select class="custom-select" name="etablissements_organisateur[]" id="etablissements_organisateur" multiple="multiple" data-height="100%">
                         @foreach ($etablissements as $etablissement)
-                        <option value="{{$etablissement->id}}" id="{{$etablissement->libelle}}" selected>{{$etablissement->libelle}}</option>
+                        <option value="{{$etablissement->id}}" id="{{$etablissement->id}}" selected>{{$etablissement->nom}}</option>
                         @endforeach
                       </select>
                     </div>
-                    <div class="form-group">
-                      <label>Numbre participants prevus </label>
-                      <input type="number" class="form-control" name="nbr_participants_prevus" min="0" required="">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="form-group">
+                          <label>Numbre etudiants locaux </label>
+                          <input type="number" class="form-control" name="nbr_etudiants_locaux" min="0" required="">
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <label>Liste des etudiants locaux </label>
+                        <div class="custom-file">
+                          
+                          <input type="file" class="custom-file-input" id="customFile" name="file_nbr_etudiants_locaux" required="">
+                          <label class="custom-file-label" for="customFile">Choose file</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="form-group">
+                          <label>Numbre enseignants locaux </label>
+                          <input type="number" class="form-control" name="nbr_enseignants_locaux" min="0" required="">
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <label>Liste des enseignants locaux </label>
+                        <div class="custom-file">
+                          <input type="file" class="custom-file-input" id="customFile" name="file_nbr_enseignants_locaux" required="">
+                          <label class="custom-file-label" for="customFile">Choose file</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="form-group">
+                          <label>Numbre enseignants non locaux </label>
+                          <input type="number" class="form-control" name="nbr_enseignants_non_locaux" min="0" required="">
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="form-group">
+                          <label>Numbre etudiants non locaux </label>
+                          <input type="number" class="form-control" name="nbr_etudiants_non_locaux" min="0" required="">
+                        </div>
+                      </div>
                     </div>
                     <div class="form-group">
                       <label>Date debut</label>
@@ -119,17 +160,13 @@
                   </div>
                   <div class="card-footer text-right">
                     <button class="btn btn-primary firstNext next"> Next </button>
+                    <button class="btn btn-primary">Créer </button>
                   </div>
                 </div>
-
-
-
               </div>
-
             </div>
-
           </div>
-          <div class="page">
+          <!-- <div class="page">
             <div class="col-12 col-md-12 col-lg-12">
               <div class="card">
                 <div class="card-header">
@@ -394,7 +431,7 @@
               </div>
             </div>
 
-          </div>
+          </div> -->
         </form>
       </div>
     </div>
