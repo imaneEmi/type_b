@@ -29,6 +29,7 @@ use App\Services\ManifestationContributeurService;
 use App\Services\ManifestationService;
 use App\Services\NatureContributionService;
 use App\Services\TypeContributeurService;
+use App\Services\util\Common;
 use Illuminate\Http\Request;
 use PDF;
 use Illuminate\Support\Facades\Gate;
@@ -82,8 +83,7 @@ class DashboardController extends Controller
      */
     public function index(Request $request)
     {
-        // dd($this->chercheurService->findByEmail($request->user()->email));
-        // dd($this->chercheurService->findByEmail($request->user()->email));
+
         $demandes = $this->demandeService->findAll();
         return view('user/list-request', ['demandes' => $demandes]);
     }
@@ -267,7 +267,7 @@ class DashboardController extends Controller
         $demande = $request->all()['demande'];
         $file = $request->file('rapport');
 
-     
+
         $manifestation = $this->manifestationService->findByDemandeId($demande);
 
         $fileEtudiantsLocauxPath =   Storage::disk('local')->put("manifestation_files", $file);
@@ -284,5 +284,15 @@ class DashboardController extends Controller
                 'code' => 200,
                 'message' => "rapport téléchargé!"
             ]);
+    }
+
+    public function readRapport(Request $request)
+    {
+
+        $url = $request->route('url');
+        $url =str_replace('-','/',$url);
+        $response = Common::readFileFromLocalStorage($url);
+        if ($response == null)  return redirect()->route('dashboard.user');
+        return $response;
     }
 }

@@ -71,7 +71,19 @@
                         @endif
 
                       </td>
-                      <td><button class="btn btn-primary" id="modal-5{{$demande->id}}">upload</button></td>
+                      <td>
+                        <button class="btn btn-primary" id="modal-5{{$demande->id}}">
+                          @if ($demande->manifestation->rapport !=null)
+                          éditer
+                          @else
+                          télécharger
+                          @endif
+                        </button>
+                        @if ($demande->manifestation->rapport !=null)
+                        <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->rapport->url)])}}" class="btn btn-primary">voir</a>
+                        @endif
+
+                      </td>
                       <td><a href="{{route('request.pdf',['id'=>$demande->id])}}" class="btn btn-secondary">Detail</a></td>
                     </tr>
                     @endforeach
@@ -161,10 +173,10 @@
             response = JSON.parse(response);
             form.stopProgress();
             if (response.code === 200) {
-              modal.find('.modal-body').prepend('<div class="alert alert-info">'+response.message+'</div>')
+              modal.find('.modal-body').prepend('<div class="alert alert-info">' + response.message + '</div>')
 
             } else {
-              modal.find('.modal-body').prepend('<div class="alert alert-danger">'+response.message+'</div>')
+              modal.find('.modal-body').prepend('<div class="alert alert-danger">' + response.message + '</div>')
 
             }
           },

@@ -9,7 +9,7 @@ class Manifestation extends Model
 {
     use HasFactory;
     protected $connection = 'mysql';
-    protected $with = [];
+    protected $with = ['rapport'];
 
     public $fillable = [
         'intitule',
@@ -32,6 +32,11 @@ class Manifestation extends Model
         'demande_id',
         'entite_organisatrice_id',
     ];
+
+    public function rapport()
+    {
+        return $this->belongsTo(FileManifestation::class, 'file_manifestation_rapport_id');
+    }
 
     public function entiteOrganisatrice()
     {
