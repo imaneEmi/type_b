@@ -74,6 +74,11 @@
                             <a href="{{ route('dashboard.admin') }}" class="nav-link"><i class="fas fa-fire"></i><span>Tableau de bord</span></a>
 
                         </li>
+                        <li @if (Route::is('dashboard.admin')) class="nav-item dropdown" @endif>
+                            <a href="{{ route('statistiques.admin') }}" class="nav-link"><i class="fas fa-fire"></i><span>Statistiques</span></a>
+
+                        </li>
+
                         <li class="menu-header">Liste des Demandes</li>
                         <li class="nav-item dropdown {{Route::is('demandes.courantes')?'active':''}}"><a class="" href="{{ route('demandes.courantes') }}">
                                 <i class="fas fa-folder-open"></i>

@@ -32,11 +32,12 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $collection = $this->budgetAnnuelService->findAll();
+        $collection = $this->budgetAnnuelService->findAllWithLimit(4);
         $anneesarray = $collection->pluck('annee');
         $budgetsAnnuelsFixes = $collection->pluck('budget_fixe');
         $budgetsAnnuelsRestant = $collection->pluck('budget_restant');
         $annee = Carbon::now()->format('Y');
+        // dd($collection);
         return view('admin/index', [
             'nbrTotal' => $this->demandeService->getNbrDemandesAnneeCour(),
             'nbrTotalCourant' => $this->demandeService->getNbrDemandesParEtatAnneeCour(Config::$COURANTE),

@@ -11,7 +11,10 @@ class BudgetAnnuelServiceImpl implements BudgetAnnuelService
     {
         return BudgetAnnuel::all()->sortBy('annee');
     }
-
+    public   function findAllWithLimit($limit)
+    {
+        return BudgetAnnuel::orderBy('annee', 'desc')->take($limit)->get()->reverse();
+    }
     public  function findBudgetParAnneeAndType($annee, $type)
     {
         return BudgetAnnuel::select($type)->where('annee', $annee)->first()->$type;
@@ -19,5 +22,9 @@ class BudgetAnnuelServiceImpl implements BudgetAnnuelService
     public  function findBudgetParAnnee($annee)
     {
         return BudgetAnnuel::where('annee', $annee)->first();
+    }
+    public  function findAllAnnee()
+    {
+        return BudgetAnnuel::select('annee')->get();
     }
 }
