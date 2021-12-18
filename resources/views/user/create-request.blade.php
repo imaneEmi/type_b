@@ -55,7 +55,7 @@
 
     <div class="container">
       <div class="form-outer">
-        <form method="POST" enctype="multipart/form-data" action="{{ route('create.request.store') }}" id="form">
+        <form method="POST" enctype="multipart/form-data" action="{{ route('create.request.store') }}" id="manifestationForm">
           @csrf
           <div class="page slide-page">
             <div class="row">
@@ -112,8 +112,8 @@
                       <div class="col-6">
                         <label>Liste des etudiants locaux </label>
                         <div class="custom-file">
-                          
-                          <input type="file" class="custom-file-input" id="customFile" name="file_nbr_etudiants_locaux" required >
+
+                          <input type="file" class="custom-file-input" id="customFile" name="file_nbr_etudiants_locaux" required>
                           <label class="custom-file-label" for="customFile">Choose file</label>
                         </div>
                       </div>
@@ -128,7 +128,7 @@
                       <div class="col-6">
                         <label>Liste des enseignants locaux </label>
                         <div class="custom-file">
-                          <input type="file" class="custom-file-input" id="customFile" name="file_nbr_enseignants_locaux" required >
+                          <input type="file" class="custom-file-input" id="customFile" name="file_nbr_enseignants_locaux" required>
                           <label class="custom-file-label" for="customFile">Choose file</label>
                         </div>
                       </div>
@@ -160,14 +160,13 @@
                   </div>
                   <div class="card-footer text-right">
                     <button class="btn btn-primary firstNext next"> Next </button>
-                    <button class="btn btn-primary">Créer </button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <!-- <div class="page">
-            <div class="col-12 col-md-12 col-lg-12">
+          <div class="page">
+            <!-- <div class="col-12 col-md-12 col-lg-12">
               <div class="card">
                 <div class="card-header">
                   <h4>Entité de recherche organisant la manifestation</h4>
@@ -192,7 +191,7 @@
                 </div>
 
               </div>
-            </div>
+            </div> -->
             <div class="col-12 col-md-12 col-lg-12">
               <div class="card">
                 <div class="card-header">
@@ -203,11 +202,11 @@
 
                   <div class="form-group">
                     <label>Libelle</label>
-                    <input type="text" class="form-control" id='libelle_gestion_financiere' name="libelle_gestion_financiere">
+                    <input type="text" class="form-control" id='libelle_gestion_financiere'>
                   </div>
                   <div class="form-group">
                     <label>Information</label>
-                    <input type="text" min="0" class="form-control" id='information_gestion_financiere' name="information_gestion_financiere">
+                    <input type="text" min="0" class="form-control" id='information_gestion_financiere'>
                   </div>
                 </div>
                 <div class="card-footer text-right">
@@ -228,8 +227,68 @@
                   </table>
                 </div>
               </div>
+
             </div>
             <div class="col-12 col-md-12 col-lg-12">
+              <div class="card">
+                <div class="card-header">
+                  <h4>Contributeurs(Sponsors,établissements)</h4>
+                </div>
+                <div class="card-body">
+
+                    <!-- <div class="section-title mt-0">Type</div>
+                    <div class="form-group">
+                      <select class="custom-select" id="type_contributeur" name="type_contributeur">
+                        @foreach ($typeContributeurs as $typeContributeur)
+                        <option value="{{$typeContributeur->id}}" id="{{$typeContributeur->libelle}}" selected>{{$typeContributeur->libelle}}</option>
+                        @endforeach
+                      </select>
+                    </div> -->
+                  <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" class="form-control" id='nom_contributeur' name="nom_contributeur">
+                  </div>
+                  <div class="form-group">
+                    <label>Montant</label>
+                    <input type="number" min="0" class="form-control" id='montant_contributeur' name="montant_contributeur">
+                  </div>
+
+                  <div class="section-title mt-0">Nature</div>
+                  <div class="form-group">
+                    <select class="custom-select" id="nature_contributeur" name="nature_contributeur">
+                      @foreach ($natureContributions as $natureContribution)
+                      <option value="{{$natureContribution->id}}" id="{{$natureContribution->libelle}}" selected>{{$natureContribution->libelle}}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+                <div class="card-footer text-right">
+                  <p style="cursor:pointer" class="btn btn-primary" onclick="addContributeur(document.getElementById('nom_contributeur').value,document.getElementById('montant_contributeur').value,$('#nature_contributeur').children(':selected').attr('id'),document.getElementById('nature_contributeur').value );">+</p>
+                </div>
+                <div style="overflow-x:auto;">
+                  <table class="table " id="contributeurs_table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Montant</th>
+                        <th scope="col">Nature</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                  </table>
+                </div>
+                <div class="card-footer text-right">
+                  <p class="btn btn-primary prev-1 prev"> Previous </p>
+                  <p class="btn btn-primary next-1 next"> Next </p>
+                  <button class="btn btn-primary">Créer </button>
+                </div>
+
+              </div>
+            </div>
+            <!-- <div class="col-12 col-md-12 col-lg-12">
               <div class="card">
                 <div class="card-header">
                   <h4>Coordonnateur de la manifestation</h4>
@@ -264,14 +323,13 @@
                 <div class="card-footer text-right">
                   <p class="btn btn-primary prev-1 prev"> Previous </p>
                   <p class="btn btn-primary next-1 next"> Next </p>
-
+                  <button class="btn btn-primary">Créer </button>
                 </div>
               </div>
-
-            </div>
+            </div> -->
 
           </div>
-          <div class="page">
+          <!--  <div class="page">
             <div class="col-12 col-md-12 col-lg-12">
               <div class="card">
                 <div class="card-header">
@@ -483,22 +541,20 @@
 
   }
 
-  function addContributeur(nom_contributeur, type_contributeur, id_type_contributeur, montant_contributeur, nature_contributeur, id_nature_contributeur) {
+  function addContributeur(nom_contributeur, montant_contributeur, nature_contributeur, id_nature_contributeur) {
     nom_contributeur = nom_contributeur.trim()
-    type_contributeur = type_contributeur.trim()
     montant_contributeur = montant_contributeur.trim()
     nature_contributeur = nature_contributeur.trim()
 
-    if (nature_contributeur != "" && montant_contributeur != "" && type_contributeur != "" && nom_contributeur != "") {
+    if (nature_contributeur != "" && montant_contributeur != ""  && nom_contributeur != "") {
       var contributeur = {
         nom: nom_contributeur,
-        type_contributeur_id: id_type_contributeur,
         montant: montant_contributeur,
         nature_contribution_id: id_nature_contributeur,
       }
       contributeurs[contributeurCount] = contributeur;
       contributeurCount = contributeurCount + 1
-      var HtmlContent = " <tr><td>" + type_contributeur + "</td><td> " + nom_contributeur + " </td> <td>" + montant_contributeur + " </td><td>" + nature_contributeur + " </td><td> <button  class='btn btn-icon btn-danger' onClick='deleteContributeurRow(this);'><i class='fas fa-times'></i></button> </td></tr>"
+      var HtmlContent = " <tr><td>" +nom_contributeur + " </td> <td>" + montant_contributeur + " </td><td>" + nature_contributeur + " </td><td> <button  class='btn btn-icon btn-danger' onClick='deleteContributeurRow(this);'><i class='fas fa-times'></i></button> </td></tr>"
       var tableRef = document.getElementById('contributeurs_table').getElementsByTagName('tbody')[0];
       var newRow = tableRef.insertRow(tableRef.rows.length);
       newRow.innerHTML = HtmlContent;
@@ -578,21 +634,22 @@
       });
 
 
-    $("#form").submit(function(eventObj) {
-      $("<input />").attr("type", "hidden")
-        .attr("name", "comiteOrganisation")
-        .attr("value", JSON.stringify(comiteOrganisation))
-        .appendTo("#form");
-      $("<input />").attr("type", "hidden")
-        .attr("name", "contributeurs")
-        .attr("value", JSON.stringify(contributeurs))
-        .appendTo("#form");
-      $("<input />").attr("type", "hidden")
-        .attr("name", "gestionFinanciere")
-        .attr("value", JSON.stringify(gestionFinanciere))
-        .appendTo("#form");
-      return true;
-    });
   }
+  $("#manifestationForm").submit(function(eventObj) {
+    console.log("dddddd");
+    $("<input />").attr("type", "hidden")
+      .attr("name", "comiteOrganisation")
+      .attr("value", JSON.stringify(comiteOrganisation))
+      .appendTo("#manifestationForm");
+    $("<input />").attr("type", "hidden")
+      .attr("name", "contributeurs")
+      .attr("value", JSON.stringify(contributeurs))
+      .appendTo("#manifestationForm");
+    $("<input />").attr("type", "hidden")
+      .attr("name", "gestionFinanciere")
+      .attr("value", JSON.stringify(gestionFinanciere))
+      .appendTo("#manifestationForm");
+    return true;
+  });
 </script>
 @endsection
