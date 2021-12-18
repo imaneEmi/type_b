@@ -236,7 +236,7 @@
                 </div>
                 <div class="card-body">
 
-                    <!-- <div class="section-title mt-0">Type</div>
+                  <!-- <div class="section-title mt-0">Type</div>
                     <div class="form-group">
                       <select class="custom-select" id="type_contributeur" name="type_contributeur">
                         @foreach ($typeContributeurs as $typeContributeur)
@@ -283,7 +283,6 @@
                 <div class="card-footer text-right">
                   <p class="btn btn-primary prev-1 prev"> Previous </p>
                   <p class="btn btn-primary next-1 next"> Next </p>
-                  <button class="btn btn-primary">Créer </button>
                 </div>
 
               </div>
@@ -329,51 +328,41 @@
             </div> -->
 
           </div>
-          <!--  <div class="page">
+          <div class="page">
             <div class="col-12 col-md-12 col-lg-12">
               <div class="card">
                 <div class="card-header">
-                  <h4>Contributeurs</h4>
+                  <h4>Contribution des participants</h4>
                 </div>
                 <div class="card-body">
 
-                  <div class="section-title mt-0">Type</div>
                   <div class="form-group">
-                    <select class="custom-select" id="type_contributeur" name="type_contributeur">
+                    <div class="section-title mt-0"></div>
+                    <label> Les frais d’inscription couvrent </label>
+                    <select class="custom-select" name="typeContributeurs[]" id="type_contributeurs" multiple="multiple" data-height="100%">
                       @foreach ($typeContributeurs as $typeContributeur)
-                      <option value="{{$typeContributeur->id}}" id="{{$typeContributeur->libelle}}" selected>{{$typeContributeur->libelle}}</option>
+                      <option value="{{$typeContributeur->id}}" id="{{$typeContributeur->id}}" selected>{{$typeContributeur->libelle}}</option>
                       @endforeach
                     </select>
                   </div>
                   <div class="form-group">
                     <label>Nom</label>
-                    <input type="text" class="form-control" id='nom_contributeur' name="nom_contributeur">
+                    <input type="text" class="form-control" id='nom_contribution_participant'>
                   </div>
                   <div class="form-group">
                     <label>Montant</label>
-                    <input type="number" min="0" class="form-control" id='montant_contributeur' name="montant_contributeur">
-                  </div>
-
-                  <div class="section-title mt-0">Nature</div>
-                  <div class="form-group">
-                    <select class="custom-select" id="nature_contributeur" name="nature_contributeur">
-                      @foreach ($natureContributions as $natureContribution)
-                      <option value="{{$natureContribution->id}}" id="{{$natureContribution->libelle}}" selected>{{$natureContribution->libelle}}</option>
-                      @endforeach
-                    </select>
+                    <input type="number" min="0" class="form-control" id='montant_contribution_participant'>
                   </div>
                 </div>
                 <div class="card-footer text-right">
-                  <p style="cursor:pointer" class="btn btn-primary" onclick="addContributeur(document.getElementById('nom_contributeur').value,$('#type_contributeur').children(':selected').attr('id'),document.getElementById('type_contributeur').value ,document.getElementById('montant_contributeur').value,$('#nature_contributeur').children(':selected').attr('id'),document.getElementById('nature_contributeur').value );">+</p>
+                  <p style="cursor:pointer" class="btn btn-primary" onclick="addContributionParticipant(document.getElementById('nom_contribution_participant').value ,document.getElementById('montant_contribution_participant').value );">+</p>
                 </div>
                 <div style="overflow-x:auto;">
-                  <table class="table " id="contributeurs_table">
+                  <table class="table " id="contribution_participants_table">
                     <thead>
                       <tr>
-                        <th scope="col">Type</th>
                         <th scope="col">Nom</th>
                         <th scope="col">Montant</th>
-                        <th scope="col">Nature</th>
                         <th scope="col">Action</th>
                       </tr>
                     </thead>
@@ -385,13 +374,14 @@
                 <div class="card-footer text-right">
                   <p class="btn btn-primary prev-2 prev"> Previous </p>
                   <p class="btn btn-primary next-2 next"> Next </p>
+                  <button class="btn btn-primary">Créer </button>
                 </div>
 
               </div>
             </div>
 
           </div>
-          <div class="page">
+          <!-- <div class="page">
             <div class="col-12 col-md-12 col-lg-12">
               <div class="card">
                 <div class="card-header">
@@ -505,8 +495,10 @@
   var comiteOrganisation = []
   var contributeurs = []
   var gestionFinanciere = []
+  var contributionParticipants = []
   var comiteOrganisationCount = 0
   var contributeurCount = 0
+  var contributionParticipantsCount = 0
   var gestionFinanciereCount = 0
 
   function addOrganisateur(tel_organisateur, nom_organisateur, prenom_organisateur, email_organisateur, etablissement_organisateur, id_etablissement_organisateur) {
@@ -546,7 +538,7 @@
     montant_contributeur = montant_contributeur.trim()
     nature_contributeur = nature_contributeur.trim()
 
-    if (nature_contributeur != "" && montant_contributeur != ""  && nom_contributeur != "") {
+    if (nature_contributeur != "" && montant_contributeur != "" && nom_contributeur != "") {
       var contributeur = {
         nom: nom_contributeur,
         montant: montant_contributeur,
@@ -554,13 +546,38 @@
       }
       contributeurs[contributeurCount] = contributeur;
       contributeurCount = contributeurCount + 1
-      var HtmlContent = " <tr><td>" +nom_contributeur + " </td> <td>" + montant_contributeur + " </td><td>" + nature_contributeur + " </td><td> <button  class='btn btn-icon btn-danger' onClick='deleteContributeurRow(this);'><i class='fas fa-times'></i></button> </td></tr>"
+      var HtmlContent = " <tr><td>" + nom_contributeur + " </td> <td>" + montant_contributeur + " </td><td>" + nature_contributeur + " </td><td> <button  class='btn btn-icon btn-danger' onClick='deleteContributeurRow(this);'><i class='fas fa-times'></i></button> </td></tr>"
       var tableRef = document.getElementById('contributeurs_table').getElementsByTagName('tbody')[0];
       var newRow = tableRef.insertRow(tableRef.rows.length);
       newRow.innerHTML = HtmlContent;
 
       $('#nom_contributeur').val('')
       $('#montant_contributeur').val('')
+
+    } else {
+
+    }
+
+  }
+
+  function addContributionParticipant(nom_contributeur, montant_contributeur) {
+    nom_contributeur = nom_contributeur.trim()
+    montant_contributeur = montant_contributeur.trim()
+
+    if (montant_contributeur != "" && nom_contributeur != "") {
+      var contributeur = {
+        nom: nom_contributeur,
+        montant: montant_contributeur,
+      }
+      contributionParticipants[contributionParticipantsCount] = contributeur;
+      contributionParticipantsCount = contributionParticipantsCount + 1
+      var HtmlContent = " <tr><td>" + nom_contributeur + " </td> <td>" + montant_contributeur + " </td><td> <button  class='btn btn-icon btn-danger' onClick='deleteContributionParticipantRow(this);'><i class='fas fa-times'></i></button> </td></tr>"
+      var tableRef = document.getElementById('contribution_participants_table').getElementsByTagName('tbody')[0];
+      var newRow = tableRef.insertRow(tableRef.rows.length);
+      newRow.innerHTML = HtmlContent;
+
+      $('#nom_contribution_participant').val('')
+      $('#montant_contribution_participant').val('')
 
     } else {
 
@@ -606,6 +623,12 @@
     document.getElementById('contributeurs_table').deleteRow(i);
   }
 
+  function deleteContributionParticipantRow(row) {
+    var i = row.parentNode.parentNode.rowIndex;
+    contributeurs.splice((i - 1), 1)
+    document.getElementById('contribution_participants_table').deleteRow(i);
+  }
+
   function deleteGestionFinanciereRow(row) {
     var i = row.parentNode.parentNode.rowIndex;
     gestionFinanciere.splice((i - 1), 1)
@@ -648,6 +671,10 @@
     $("<input />").attr("type", "hidden")
       .attr("name", "gestionFinanciere")
       .attr("value", JSON.stringify(gestionFinanciere))
+      .appendTo("#manifestationForm");
+    $("<input />").attr("type", "hidden")
+      .attr("name", "contributionParticipants")
+      .attr("value", JSON.stringify(contributionParticipants))
       .appendTo("#manifestationForm");
     return true;
   });

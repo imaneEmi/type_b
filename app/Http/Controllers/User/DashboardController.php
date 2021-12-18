@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 
 use App\Models\ComiteOrganisation;
 use App\Models\Contributeur;
+use App\Models\ContributionParticipant;
 use App\Models\Demande;
 use App\Models\Dto\Departement;
 use App\Models\EntiteOrganisatrice;
@@ -15,7 +16,9 @@ use App\Models\GestionFinanciere;
 use App\Models\Manifestation;
 use App\Models\ManifestationComite;
 use App\Models\ManifestationContributeur;
+use App\Models\ManifestationContributionParticipant;
 use App\Models\ManifestationEtablissement;
+use App\Models\ManifestationTypeContributeur;
 use App\Models\SoutienSollicite;
 use App\Services\ChercheurService;
 use App\Services\DemandeService;
@@ -102,6 +105,10 @@ class DashboardController extends Controller
         $natureContributions  = $this->natureContributionService->findAll();
         if ($request->isMethod('post')) {
             $data = $request->all();
+           
+           
+          //  dd($data);
+           
             // $user->etablissement_id =  $data['etablissment_coordonnateur_manifestation'];
             // $user->tel =  $data['tel_coordonnateur_manifestation'];
             // $user->fax =  $data['fax_coordonnateur_manifestation'];
@@ -170,13 +177,21 @@ class DashboardController extends Controller
                 GestionFinanciere::create($gestionFinanciere[$i]);
             }
 
-            // $etablissementsOrganisateur = $data['etablissements_organisateur'];
-            // for ($i = 0; $i < count($etablissementsOrganisateur); $i++) {
-            //     $manifestationEtablissement = new ManifestationEtablissement();
-            //     $manifestationEtablissement->manifestation_id = $manifestation->getAttributes()["id"];
-            //     $manifestationEtablissement->etablissement_id = $etablissementsOrganisateur[$i];
-            //     ManifestationEtablissement::create($manifestationEtablissement->getAttributes());
-            // }
+            $etablissementsOrganisateur = $data['etablissements_organisateur'];
+            for ($i = 0; $i < count($etablissementsOrganisateur); $i++) {
+                $manifestationEtablissement = new ManifestationEtablissement();
+                $manifestationEtablissement->manifestation_id = $manifestation->getAttributes()["id"];
+                $manifestationEtablissement->etablissement_id = $etablissementsOrganisateur[$i];
+                ManifestationEtablissement::create($manifestationEtablissement->getAttributes());
+            }
+
+            $typeContributeurs = $data['typeContributeurs'];
+            for ($i = 0; $i < count($typeContributeurs); $i++) {
+                $ManifestationTypeContributeur = new ManifestationTypeContributeur();
+                $ManifestationTypeContributeur->manifestation_id = $manifestation->getAttributes()["id"];
+                $ManifestationTypeContributeur->type_contributeur_id = $typeContributeurs[$i];
+                ManifestationTypeContributeur::create($ManifestationTypeContributeur->getAttributes());
+            }
 
             // $comiteOrganisation = json_decode($data['comiteOrganisation'], true);
             // for ($i = 0; $i < count($comiteOrganisation); $i++) {
@@ -194,6 +209,15 @@ class DashboardController extends Controller
                 $manifestationContributeur->contributeur_id = $contributeur->getAttributes()['id'];
                 $manifestationContributeur->manifestation_id  = $manifestation->getAttributes()["id"];
                 $manifestationContributeur = ManifestationContributeur::create($manifestationContributeur->getAttributes());
+            }
+
+            $contributionParticipants = json_decode($data['contributionParticipants'], true);
+            for ($i = 0; $i < count($contributionParticipants); $i++) {
+                $contributeurParticipant = ContributionParticipant::create($contributionParticipants[$i]);
+                $manifestationContributionParticipant = new ManifestationContributionParticipant();
+                $manifestationContributionParticipant->cont_par_id = $contributeurParticipant->getAttributes()['id'];
+                $manifestationContributionParticipant->manifestation_id  = $manifestation->getAttributes()["id"];
+                $manifestationContributionParticipant = ManifestationContributionParticipant::create($manifestationContributionParticipant->getAttributes());
             }
 
             // for ($i = 0; $i < count($fraisCouvert); $i++) {

@@ -10,7 +10,7 @@ class ManifestationContributionParticipant extends Model
     use HasFactory;
     protected $connection = 'mysql';
     public $fillable = [
-        'contribution_participant_id',
+        'cont_par_id',
         'manifestation_id',
     ];
 
