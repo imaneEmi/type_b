@@ -220,17 +220,17 @@ class DashboardController extends Controller
                 $manifestationContributionParticipant = ManifestationContributionParticipant::create($manifestationContributionParticipant->getAttributes());
             }
 
-            // for ($i = 0; $i < count($fraisCouvert); $i++) {
-            //     if ($request->has("frais-ouvert-" . $fraisCouvert[$i]->id)) {
-            //         $soutienSollicite = new SoutienSollicite();
-            //         $soutienSollicite->nbr = $data["nombre_frais_ouvert_" . $fraisCouvert[$i]->id];
-            //         $soutienSollicite->montant = $data["montant_frais_ouvert_" . $fraisCouvert[$i]->id];
-            //         $soutienSollicite->remarques = $data["remarques_frais_ouvert_" . $fraisCouvert[$i]->id];
-            //         $soutienSollicite->manifestation_id = $manifestation->getAttributes()["id"];
-            //         $soutienSollicite->frais_couvert_id = $fraisCouvert[$i]->id;
-            //         SoutienSollicite::create($soutienSollicite->getAttributes());
-            //     }
-            // }
+            for ($i = 0; $i < count($fraisCouvert); $i++) {
+                if ($request->has("frais-ouvert-" . $fraisCouvert[$i]->id)) {
+                    $soutienSollicite = new SoutienSollicite();
+                    $soutienSollicite->nbr = $data["nombre_frais_ouvert_" . $fraisCouvert[$i]->id];
+                    $soutienSollicite->montant = $data["montant_frais_ouvert_" . $fraisCouvert[$i]->id];
+                    $soutienSollicite->remarques = $data["remarques_frais_ouvert_" . $fraisCouvert[$i]->id];
+                    $soutienSollicite->manifestation_id = $manifestation->getAttributes()["id"];
+                    $soutienSollicite->frais_couvert_id = $fraisCouvert[$i]->id;
+                    SoutienSollicite::create($soutienSollicite->getAttributes());
+                }
+            }
 
             return redirect()->route('dashboard.user');
         }

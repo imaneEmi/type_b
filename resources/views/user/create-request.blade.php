@@ -374,15 +374,14 @@
                 <div class="card-footer text-right">
                   <p class="btn btn-primary prev-2 prev"> Previous </p>
                   <p class="btn btn-primary next-2 next"> Next </p>
-                  <button class="btn btn-primary">Créer </button>
                 </div>
 
               </div>
             </div>
 
           </div>
-          <!-- <div class="page">
-            <div class="col-12 col-md-12 col-lg-12">
+         <div class="page">
+             <!-- <div class="col-12 col-md-12 col-lg-12">
               <div class="card">
                 <div class="card-header">
                   <h4>Comité d'organisation</h4>
@@ -435,7 +434,7 @@
                 </div>
 
               </div>
-            </div>
+            </div>-->
             <div class="col-12 col-md-12 col-lg-12">
 
               <div class="card">
@@ -479,7 +478,7 @@
               </div>
             </div>
 
-          </div> -->
+          </div> 
         </form>
       </div>
     </div>
