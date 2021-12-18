@@ -13,7 +13,7 @@ class CreateEtablissementsTable extends Migration
      */
     public function up()
     {
-        Schema::create('etablissements', function (Blueprint $table) {
+        Schema::connection('mysql')->create('etablissements', function (Blueprint $table) {
             $table->id();
             $table->string('libelle',50);
             $table->string('intitule',100);
@@ -30,6 +30,6 @@ class CreateEtablissementsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('etablissements');
+        Schema::connection('mysql')->dropIfExists('etablissements');
     }
 }

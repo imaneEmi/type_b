@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class EntiteOrganisatrice extends Model
 {
     use HasFactory;
-
+    protected $connection = 'mysql';
     protected $with=['etablissement'];
 
     public $fillable = [

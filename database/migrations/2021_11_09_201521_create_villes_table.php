@@ -13,7 +13,7 @@ class CreateVillesTable extends Migration
      */
     public function up()
     {
-        Schema::create('villes', function (Blueprint $table) {
+        Schema::connection('mysql')->create('villes', function (Blueprint $table) {
             $table->id();
             $table->string('nom',50);
             $table->timestamps();
@@ -27,6 +27,6 @@ class CreateVillesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('villes');
+        Schema::connection('mysql')->dropIfExists('villes');
     }
 }

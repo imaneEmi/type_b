@@ -8,13 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Demande extends Model
 {
     use HasFactory;
-
+    protected $connection = 'mysql';
     protected $with = ['coordonnateur','manifestation'];
 
     public $fillable = [
         'code',
         'date_envoie',
         'etat',
+        'editable',
         'remarques',
         'coordonnateur_id',
     ];

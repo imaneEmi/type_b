@@ -76,4 +76,8 @@ class DemandeServiceImpl implements DemandeService
             ->select('libelle', DB::raw('count(*) as total'))
             ->groupBy('libelle')->get();
     }
+
+    public function countCoordonnateurDemandeByCurrentYear($chercheur){
+       return Demande::where("date_envoie",date('Y-m-d '))->orWhere("coordonnateur_id", 'like', '%'.$chercheur->id_cher. '%')->count();
+    }
 }

@@ -13,7 +13,7 @@ class CreatePieceDemandesTable extends Migration
      */
     public function up()
     {
-        Schema::create('piece_demandes', function (Blueprint $table) {
+        Schema::connection('mysql')->create('piece_demandes', function (Blueprint $table) {
             $table->id();
             $table->string('libelle',100);
             $table->text('description');
@@ -29,6 +29,6 @@ class CreatePieceDemandesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('piece_demandes');
+        Schema::connection('mysql')->dropIfExists('piece_demandes');
     }
 }

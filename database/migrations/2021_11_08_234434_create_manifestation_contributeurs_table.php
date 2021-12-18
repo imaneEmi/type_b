@@ -13,8 +13,8 @@ class CreateManifestationContributeursTable extends Migration
      */
     public function up()
     {
-        Schema::disableForeignKeyConstraints();
-        Schema::create('manifestation_contributeurs', function (Blueprint $table) {
+        Schema::connection('mysql')->disableForeignKeyConstraints();
+        Schema::connection('mysql')->create('manifestation_contributeurs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('manifestation_id');
             $table->unsignedBigInteger('contributeur_id');
@@ -22,7 +22,6 @@ class CreateManifestationContributeursTable extends Migration
             $table->foreign('manifestation_id')->references('id')->on('manifestations') ->onDelete('cascade');
             $table->index('manifestation_id');
             $table->foreign('contributeur_id')->references('id')->on('contributeurs') ->onDelete('cascade');
-            $table->index('contributeur_id');
             $table->timestamps();
         });
     }
@@ -34,6 +33,6 @@ class CreateManifestationContributeursTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('manifestation_contributeurs');
+        Schema::connection('mysql')->dropIfExists('manifestation_contributeurs');
     }
 }

@@ -13,8 +13,8 @@ class CreateEntiteOrganisatricesTable extends Migration
      */
     public function up()
     {
-        Schema::disableForeignKeyConstraints();
-        Schema::create('entite_organisatrices', function (Blueprint $table) {
+        Schema::connection('mysql')->disableForeignKeyConstraints();
+        Schema::connection('mysql')->create('entite_organisatrices', function (Blueprint $table) {
             $table->id();
             $table->string('nom',100);
             $table->text('responsable');
@@ -33,6 +33,6 @@ class CreateEntiteOrganisatricesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('entite_organisatrices');
+        Schema::connection('mysql')->dropIfExists('entite_organisatrices');
     }
 }

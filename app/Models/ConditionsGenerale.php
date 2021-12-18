@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ConditionsGenerale extends Model
 {
     use HasFactory;
-
+    protected $connection = 'mysql';
     public $fillable = [
         'libelle',
         'description',

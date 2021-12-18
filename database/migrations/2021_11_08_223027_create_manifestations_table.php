@@ -13,8 +13,8 @@ class CreateManifestationsTable extends Migration
      */
     public function up()
     {
-        Schema::disableForeignKeyConstraints();
-        Schema::create('manifestations', function (Blueprint $table) {
+        Schema::connection('mysql')->disableForeignKeyConstraints();
+        Schema::connection('mysql')->create('manifestations', function (Blueprint $table) {
             $table->id();
             $table->string('intitule', 100);
             $table->string('type', 100);
@@ -32,8 +32,7 @@ class CreateManifestationsTable extends Migration
             $table->foreign('demande_id')->references('id')->on('demandes') ->onDelete('cascade');
             $table->index('demande_id');
 
-            $table->foreign('entite_organisatrice_id')->references('id')->on('entite_organisatrices')->onDelete('cascade');
-            $table->index('entite_organisatrice_id');
+   
             $table->timestamps();
         });
     }
@@ -45,6 +44,6 @@ class CreateManifestationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('manifestations');
+        Schema::connection('mysql')->dropIfExists('manifestations');
     }
 }

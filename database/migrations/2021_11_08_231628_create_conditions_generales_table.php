@@ -13,7 +13,7 @@ class CreateConditionsGeneralesTable extends Migration
      */
     public function up()
     {
-        Schema::create('conditions_generales', function (Blueprint $table) {
+        Schema::connection('mysql')->create('conditions_generales', function (Blueprint $table) {
             $table->id();
             $table->string('libelle',100);
             $table->string('description');
@@ -28,6 +28,6 @@ class CreateConditionsGeneralesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('conditions_generales');
+        Schema::connection('mysql')->dropIfExists('conditions_generales');
     }
 }

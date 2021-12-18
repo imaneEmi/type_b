@@ -13,7 +13,7 @@ class CreateTypeContributeursTable extends Migration
      */
     public function up()
     {
-        Schema::create('type_contributeurs', function (Blueprint $table) {
+        Schema::connection('mysql')->create('type_contributeurs', function (Blueprint $table) {
             $table->id();
             $table->string('libelle',100);
             $table->timestamps();
@@ -27,6 +27,6 @@ class CreateTypeContributeursTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('type_contributeurs');
+        Schema::connection('mysql')->dropIfExists('type_contributeurs');
     }
 }
