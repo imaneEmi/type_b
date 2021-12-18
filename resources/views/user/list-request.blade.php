@@ -41,9 +41,9 @@
                         <i class="fas fa-th"></i>
                       </th>
                       <th>Code</th>
-                      <th>Date envoie</th>
-                      <th>remarques</th>
-                      <th>etat</th>
+                      <th>Date d'envoi</th>
+                      <th>Remarques</th>
+                      <th>état</th>
                       <th>Rapport</th>
                       <th>Action</th>
                     </tr>
@@ -71,7 +71,7 @@
                         @endif
 
                       </td>
-                      <td><button class="btn btn-primary" id="modal-5">upload</button></td>
+                      <td><button class="btn btn-primary" id="modal-5{{$demande->id}}">upload</button></td>
                       <td><a href="{{route('request.pdf',['id'=>$demande->id])}}" class="btn btn-secondary">Detail</a></td>
                     </tr>
                     @endforeach
@@ -84,39 +84,109 @@
       </div>
     </div>
   </div>
+  <meta name="_token" content="{{ csrf_token() }}">
 </section>
 
 @endsection
+@section('scripts')
+<script>
+  demandes = @json($demandes);
+  for (var i = 0; i < demandes.length; i < i++) {
+
+    var form = document.createElement("form");
+    form.setAttribute("method", "post");
+    form.setAttribute("enctype", "multipart/form-data");
+    form.classList.add('modal-part')
+
+    var hideInput = document.createElement("input");
+    hideInput.setAttribute("name", "demande");
+    hideInput.value = demandes[i].id
+    hideInput.style.visibility = "hidden";
 
 
-<form class="modal-part" id="modal-upload-part" >
-    <p>This login form is taken from elements with <code>#modal-login-part</code> id.</p>
-    <div class="form-group">
-        <label>Username</label>
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <div class="input-group-text">
-                    <i class="fas fa-envelope"></i>
-                </div>
-            </div>
-            <input type="text" class="form-control" placeholder="Email" name="email">
-        </div>
-    </div>
-    <div class="form-group">
-        <label>Password</label>
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <div class="input-group-text">
-                    <i class="fas fa-lock"></i>
-                </div>
-            </div>
-            <input type="password" class="form-control" placeholder="Password" name="password">
-        </div>
-    </div>
-    <div class="form-group mb-0">
-        <div class="custom-control custom-checkbox">
-            <input type="checkbox" name="remember" class="custom-control-input" id="remember-me">
-            <label class="custom-control-label" for="remember-me">Remember Me</label>
-        </div>
-    </div>
-</form>
+    var div1 = document.createElement("div");
+    div1.classList.add('form-group')
+
+    var div2 = document.createElement("div");
+    div2.classList.add('custom-file')
+
+    var input = document.createElement("input");
+    input.setAttribute("type", "file");
+    input.setAttribute("id", "customFile");
+    input.setAttribute("name", "rapport");
+    input.setAttribute("required", true);
+    input.classList.add('custom-file-input')
+
+    var label = document.createElement("label");
+    label.setAttribute("type", "file");
+    label.setAttribute("id", "customFile");
+    label.setAttribute("for", "customFile");
+    label.classList.add('custom-file-label');
+    label.innerHTML = 'Choose files'
+
+    form.appendChild(div1);
+    form.appendChild(hideInput);
+    div1.appendChild(div2);
+    div2.appendChild(input);
+    div2.appendChild(label);
+
+
+
+    $("#modal-5" + demandes[i].id).fireModal({
+      title: 'Upload Rapport',
+      body: $(form),
+      footerClass: 'bg-whitesmoke',
+      autoFocus: false,
+      onFormSubmit: function(modal, e, form) {
+        // Form Data
+
+        let repport = e.target[0].files[0];
+        let demande = e.target[1].value;
+        var form_data = new FormData();
+        form_data.append('rapport', repport);
+        form_data.append('demande', demande);
+        url = "{{route('manifestation.upload.rapport')}}"
+        $.ajax({
+          url: url,
+          dataType: 'text', // what to expect back from the PHP script, if anything
+          cache: false,
+          contentType: false,
+          processData: false,
+          data: form_data,
+          type: 'POST',
+          headers: {
+            'X-CSRF-Token': $('meta[name="_token"]').attr('content')
+          },
+          success: function(response) {
+            response = JSON.parse(response);
+            form.stopProgress();
+            if (response.code === 200) {
+              modal.find('.modal-body').prepend('<div class="alert alert-info">'+response.message+'</div>')
+
+            } else {
+              modal.find('.modal-body').prepend('<div class="alert alert-danger">'+response.message+'</div>')
+
+            }
+          },
+          error: function(error) {
+            console.log("error", error);
+            form.stopProgress();
+            modal.find('.modal-body').prepend('<div class="alert alert-danger">Please try again!</div>')
+          }
+        });
+        e.preventDefault();
+      },
+      shown: function(modal, form) {
+        console.log(form)
+      },
+      buttons: [{
+        text: 'Upload',
+        submit: true,
+        class: 'btn btn-primary btn-shadow',
+        handler: function(modal) {}
+      }]
+    });
+
+  }
+</script>
+@endsection

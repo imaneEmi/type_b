@@ -26,6 +26,7 @@ use App\Services\EtablissementService;
 use App\Services\FraisCouvertService;
 use App\Services\ManifestationComiteService;
 use App\Services\ManifestationContributeurService;
+use App\Services\ManifestationService;
 use App\Services\NatureContributionService;
 use App\Services\TypeContributeurService;
 use Illuminate\Http\Request;
@@ -45,12 +46,14 @@ class DashboardController extends Controller
     private   ManifestationComiteService $manifestationComiteService;
     private ManifestationContributeurService $manifestationContributeurService;
     private ChercheurService $chercheurService;
+    private  ManifestationService $manifestationService;
     /**
      * Create a new controller instance.
      *
      * @return void
      */
     public function __construct(
+        ManifestationService $manifestationService,
         DemandeService $demandeService,
         EtablissementService $etablissementService,
         TypeContributeurService $typeContributeurService,
@@ -69,6 +72,7 @@ class DashboardController extends Controller
         $this->manifestationComiteService  = $manifestationComiteService;
         $this->manifestationContributeurService  = $manifestationContributeurService;
         $this->chercheurService = $chercheurService;
+        $this->manifestationService = $manifestationService;
     }
 
     /**
@@ -245,5 +249,40 @@ class DashboardController extends Controller
         }
 
         return view('user/create-request', ["natureContributions" => $natureContributions, "typeContributeurs" => $typeContributeurs, "etablissements" => $etablissements, 'user' => $user, 'fraisCouvert' => $fraisCouvert]);
+    }
+
+    public  function uploadRapport(Request $request)
+    {
+
+
+
+        if (!$request->hasFile('rapport')) {
+            return  response()
+                ->json([
+                    'code' => 500,
+                    'message' => 'le rapport est requis! '
+                ]);
+        }
+
+        $demande = $request->all()['demande'];
+        $file = $request->file('rapport');
+
+     
+        $manifestation = $this->manifestationService->findByDemandeId($demande);
+
+        $fileEtudiantsLocauxPath =   Storage::disk('local')->put("manifestation_files", $file);
+        $fileManifestation = new FileManifestation();
+        $fileManifestation->url = $fileEtudiantsLocauxPath;
+        $fileManifestation->manifestation_id = $manifestation->getAttributes()["id"];
+        $fileManifestation = FileManifestation::create($fileManifestation->getAttributes());
+
+        $manifestation->file_manifestation_rapport_id = $fileManifestation->getAttributes()["id"];
+        $manifestation->update($manifestation->getAttributes());
+
+        return response()
+            ->json([
+                'code' => 200,
+                'message' => "rapport téléchargé!"
+            ]);
     }
 }
