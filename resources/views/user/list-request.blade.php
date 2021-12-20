@@ -74,20 +74,20 @@
                       </td>
                       <td>
                         <button class="btn btn-primary" id="modal-5{{$demande->id}}">
-                          @if ($demande->manifestation->rapport !=null)
+                          @if (!is_null($demande->manifestation->rapport))
                           éditer
                           @else
                           upload
                           @endif
                         </button>
-                        @if ($demande->manifestation->rapport !=null)
-                        <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->lettreAcceptation->url)])}}" class="btn btn-primary"> voir </a>
+                        @if (!is_null($demande->manifestation->rapport))
+                        <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->rapport->url)])}}" class="btn btn-primary"> voir </a>
                         @endif
 
                       </td>
                       <td>
-                        @if ($demande->manifestation->lettreAcceptation !=null )
-                        <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->rapport->url)])}}" class="btn btn-primary">voir</a>
+                        @if (!is_null($demande->manifestation->lettreAcceptation) )
+                        <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->lettreAcceptation->url)])}}" class="btn btn-primary">voir</a>
                         @else
                         indisponible pour le moment
                         @endif

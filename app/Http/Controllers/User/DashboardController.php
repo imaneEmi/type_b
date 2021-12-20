@@ -85,6 +85,7 @@ class DashboardController extends Controller
     {
 
         $demandes = $this->demandeService->findAll();
+       // dd($demandes[0]->manifestation->lettreAcceptation);
         return view('user/list-request', ['demandes' => $demandes]);
     }
 
