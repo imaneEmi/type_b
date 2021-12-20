@@ -45,6 +45,7 @@
                       <th>Remarques</th>
                       <th>état</th>
                       <th>Rapport</th>
+                      <th>lettre d'acceptation</th>
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -76,13 +77,20 @@
                           @if ($demande->manifestation->rapport !=null)
                           éditer
                           @else
-                          télécharger
+                          upload
                           @endif
                         </button>
                         @if ($demande->manifestation->rapport !=null)
-                        <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->rapport->url)])}}" class="btn btn-primary">voir</a>
+                        <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->lettreAcceptation->url)])}}" class="btn btn-primary"> voir </a>
                         @endif
 
+                      </td>
+                      <td>
+                        @if ($demande->manifestation->lettreAcceptation !=null )
+                        <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->rapport->url)])}}" class="btn btn-primary">voir</a>
+                        @else
+                        indisponible pour le moment
+                        @endif
                       </td>
                       <td><a href="{{route('request.pdf',['id'=>$demande->id])}}" class="btn btn-secondary">Detail</a></td>
                     </tr>
