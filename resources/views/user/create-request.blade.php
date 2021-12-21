@@ -462,8 +462,124 @@
               </div>
             </div>
 
+            <div class="col-12 col-md-12 col-lg-12">
+              <div class="card">
+                <div class="card-header">
+                  <h4>Comité scientifique local</h4>
+                </div>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" class="form-control" id="nom_comite_scientifique_local">
+                  </div>
 
+                  <div class="form-group">
+                    <label> Prenom</label>
+                    <input type="text" class="form-control" id="prenom_comite_scientifique_local">
+                  </div>
+                  <div class="form-group">
+                    <label> Tel</label>
+                    <input type="tel" class="form-control" id="tel_comite_scientifique_local">
+                  </div>
+                  <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-control" id="email_comite_scientifique_local">
+                  </div>
+                  <div class="form-group">
+                    <label> type de l'entité</label>
+                    <input type="text" class="form-control" id="type_entite_comite_scientifique_local">
+                  </div>
 
+                  <div class="form-group">
+                    <label>nom de l'entité</label>
+                    <input type="text" class="form-control" id="nom_entite_comite_scientifique_local">
+                  </div>
+                  <div class="card-footer text-right">
+                    <p style="cursor:pointer" class="btn btn-primary" onclick="addComiteScientifiqueLocal(document.getElementById('nom_comite_scientifique_local').value,document.getElementById('prenom_comite_scientifique_local').value ,document.getElementById('tel_comite_scientifique_local').value,document.getElementById('email_comite_scientifique_local').value,document.getElementById('type_entite_comite_scientifique_local').value ,document.getElementById('nom_entite_comite_scientifique_local').value);">+</p>
+                  </div>
+                  <div style="overflow-x:auto;">
+                    <table class="table " id="comite_scientifique_local_table">
+                      <thead>
+                        <tr>
+                          <th scope="col">nom & prenom</th>
+                          <th scope="col">email</th>
+                          <th scope="col">tel</th>
+                          <th scope="col">type de l'entité</th>
+                          <th scope="col">nom de l'entité</th>
+                          <th scope="col">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+
+                      </tbody>
+                    </table>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+            <div class="col-12 col-md-12 col-lg-12">
+              <div class="card">
+                <div class="card-header">
+                  <h4>Comité scientifique non local</h4>
+                </div>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" class="form-control" id="nom_comite_scientifique_non_local">
+                  </div>
+                  <div class="form-group">
+                    <label> Prenom</label>
+                    <input type="text" class="form-control" id="prenom_comite_scientifique_non_local">
+                  </div>
+                  <div class="form-group">
+                    <label> Tel</label>
+                    <input type="tel" class="form-control" id="tel_comite_scientifique_non_local">
+                  </div>
+                  <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-control" id="email_comite_scientifique_non_local">
+                  </div>
+                  <div class="form-group">
+                    <label> type de l'entité</label>
+                    <input type="text" class="form-control" id="type_entite_comite_scientifique_non_local">
+                  </div>
+
+                  <div class="form-group">
+                    <label>nom de l'entité</label>
+                    <input type="text" class="form-control" id="nom_entite_comite_scientifique_non_local">
+                  </div>
+                  <div class="form-group">
+                    <label>pays</label>
+                    <input type="text" class="form-control" id="pays_entite_comite_scientifique_non_local">
+                  </div>
+                  <div class="card-footer text-right">
+                    <p style="cursor:pointer" class="btn btn-primary" onclick="addComiteScientifiqueNonLocal(document.getElementById('nom_comite_scientifique_non_local').value,document.getElementById('prenom_comite_scientifique_non_local').value ,document.getElementById('tel_comite_scientifique_non_local').value,document.getElementById('email_comite_scientifique_non_local').value,document.getElementById('type_entite_comite_scientifique_non_local').value ,document.getElementById('nom_entite_comite_scientifique_non_local').value,document.getElementById('pays_entite_comite_scientifique_non_local').value);">+</p>
+                  </div>
+                  <div style="overflow-x:auto;">
+                    <table class="table " id="comite_scientifique_non_local_table">
+                      <thead>
+                        <tr>
+                          <th scope="col">nom & prenom</th>
+                          <th scope="col">email</th>
+                          <th scope="col">tel</th>
+                          <th scope="col">type de l'entité</th>
+                          <th scope="col">nom de l'entité</th>
+                          <th scope="col">pays</th>
+                          <th scope="col">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+
+                      </tbody>
+                    </table>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
 
 
 
@@ -542,10 +658,14 @@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   var comiteOrganisationNonLocal = []
+  var comiteScientifiqueLocal = []
+  var comiteScientifiqueNonLocal = []
   var contributeurs = []
   var gestionFinanciere = []
   var contributionParticipants = []
   var comiteOrganisationNonLocalCount = 0
+  var comiteScientifiqueLocalCount = 0
+  var comiteScientifiqueNonLocalCount = 0
   var contributeurCount = 0
   var contributionParticipantsCount = 0
   var gestionFinanciereCount = 0
@@ -587,6 +707,83 @@
 
     }
 
+  }
+
+  function addComiteScientifiqueLocal(nom, prenom, tel, email, type_entite, nom_entite) {
+
+    nom = nom.trim()
+    prenom = prenom.trim()
+    tel = tel.trim()
+    email = email.trim()
+    type_entite = type_entite.trim()
+    nom_entite = nom_entite.trim()
+    if (nom != "" && prenom != "") {
+      var organisateur = {
+        nom: nom,
+        prenom: prenom,
+        tel: tel,
+        email: email,
+        type_entite: type_entite,
+        nom_entite: nom_entite,
+      }
+      comiteScientifiqueLocal[comiteScientifiqueLocalCount] = organisateur;
+      comiteScientifiqueLocalCount = comiteScientifiqueLocalCount + 1
+      var HtmlContent = " <tr><td>" + nom + " " + prenom + " </td> <td>" + email + " </td><td>" + tel + " </td><td>" + type_entite + " </td><td>" + nom_entite + " </td><td> <button  class='btn btn-icon btn-danger' onClick='deleteComiteScientifiqueLocalRow(this);'><i class='fas fa-times'></i></button> </td></tr>"
+      var tableRef = document.getElementById('comite_scientifique_local_table').getElementsByTagName('tbody')[0];
+      var newRow = tableRef.insertRow(tableRef.rows.length);
+      newRow.innerHTML = HtmlContent;
+
+
+
+      $('#nom_comite_scientifique_local').val('')
+      $('#prenom_comite_scientifique_local').val('')
+      $('#tel_comite_scientifique_local').val('')
+      $('#email_comite_scientifique_local').val('')
+      $('#type_entite_comite_scientifique_local').val('')
+      $('#nom_entite_comite_scientifique_local').val('')
+    } else {
+
+    }
+  }
+
+  function addComiteScientifiqueNonLocal(nom, prenom, tel, email, type_entite, nom_entite, pays) {
+
+    nom = nom.trim()
+    prenom = prenom.trim()
+    tel = tel.trim()
+    email = email.trim()
+    type_entite = type_entite.trim()
+    nom_entite = nom_entite.trim()
+    pays = pays.trim()
+    if (nom != "" && prenom != "") {
+      var organisateur = {
+        nom: nom,
+        prenom: prenom,
+        tel: tel,
+        email: email,
+        type_entite: type_entite,
+        nom_entite: nom_entite,
+        pays: pays
+      }
+      comiteScientifiqueNonLocal[comiteScientifiqueNonLocalCount] = organisateur;
+      comiteScientifiqueNonLocalCount = comiteScientifiqueNonLocalCount + 1
+      var HtmlContent = " <tr><td>" + nom + " " + prenom + " </td> <td>" + email + " </td><td>" + tel + " </td><td>" + type_entite + " </td><td>" + nom_entite + " </td><td>" + pays + " </td><td> <button  class='btn btn-icon btn-danger' onClick='deleteComiteScientifiqueNonLocalRow(this);'><i class='fas fa-times'></i></button> </td></tr>"
+      var tableRef = document.getElementById('comite_scientifique_non_local_table').getElementsByTagName('tbody')[0];
+      var newRow = tableRef.insertRow(tableRef.rows.length);
+      newRow.innerHTML = HtmlContent;
+
+
+
+      $('#nom_comite_scientifique_non_local').val('')
+      $('#prenom_comite_scientifique_non_local').val('')
+      $('#tel_comite_scientifique_non_local').val('')
+      $('#email_comite_scientifique_non_local').val('')
+      $('#type_entite_comite_scientifique_non_local').val('')
+      $('#nom_entite_comite_scientifique_non_local').val('')
+      $('#pays_entite_comite_scientifique_non_local').val('')
+    } else {
+
+    }
   }
 
   function addContributeur(nom_contributeur, montant_contributeur, nature_contributeur, id_nature_contributeur) {
@@ -673,6 +870,19 @@
     document.getElementById('organisateurs_non_local_table').deleteRow(i);
   }
 
+  function deleteComiteScientifiqueLocalRow(row) {
+    var i = row.parentNode.parentNode.rowIndex;
+    comiteOrganisation.splice((i - 1), 1)
+    document.getElementById('comite_scientifique_local_table').deleteRow(i);
+  }
+
+  function deleteComiteScientifiqueNonLocalRow(row) {
+    var i = row.parentNode.parentNode.rowIndex;
+    comiteOrganisation.splice((i - 1), 1)
+    document.getElementById('comite_scientifique_non_local_table').deleteRow(i);
+  }
+
+
   function deleteContributeurRow(row) {
     var i = row.parentNode.parentNode.rowIndex;
     contributeurs.splice((i - 1), 1)
@@ -730,6 +940,14 @@
     $("<input />").attr("type", "hidden")
       .attr("name", "comiteOrganisationNonLocal")
       .attr("value", JSON.stringify(comiteOrganisationNonLocal))
+      .appendTo("#manifestationForm");
+    $("<input />").attr("type", "hidden")
+      .attr("name", "comiteScientifiqueLocal")
+      .attr("value", JSON.stringify(comiteScientifiqueLocal))
+      .appendTo("#manifestationForm");
+    $("<input />").attr("type", "hidden")
+      .attr("name", "comiteScientifiqueNonLocal")
+      .attr("value", JSON.stringify(comiteScientifiqueNonLocal))
       .appendTo("#manifestationForm");
 
     Swal.fire({

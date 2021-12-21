@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Models\ComiteOrganisation;
 use App\Models\ComiteOrganisationLocal;
 use App\Models\ComiteOrganisationNonLocal;
+use App\Models\ComiteScientifiqueLocal;
+use App\Models\ComiteScientifiqueNonLocal;
 use App\Models\Contributeur;
 use App\Models\ContributionParticipant;
 use App\Models\Demande;
@@ -243,6 +245,20 @@ class DashboardController extends Controller
                 $cnl = $comiteOrganisationNonLocal[$i];
                 $cnl['manifestation_id'] = $manifestation->getAttributes()["id"];
                 ComiteOrganisationNonLocal::create($cnl);
+            }
+
+            $comiteScientifiqueLocal = json_decode($data['comiteScientifiqueLocal'], true);
+            for ($i = 0; $i < count($comiteScientifiqueLocal); $i++) {
+                $csl = $comiteScientifiqueLocal[$i];
+                $csl['manifestation_id'] = $manifestation->getAttributes()["id"];
+                ComiteScientifiqueLocal::create($csl);
+            }
+
+            $comiteScientifiqueNonLocal = json_decode($data['comiteScientifiqueNonLocal'], true);
+            for ($i = 0; $i < count($comiteScientifiqueNonLocal); $i++) {
+                $csnl = $comiteScientifiqueNonLocal[$i];
+                $csnl['manifestation_id'] = $manifestation->getAttributes()["id"];
+                ComiteScientifiqueNonLocal::create($csnl);
             }
 
             for ($i = 0; $i < count($fraisCouvert); $i++) {

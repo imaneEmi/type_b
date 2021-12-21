@@ -16,6 +16,7 @@ class ComiteScientifiqueLocal extends Model
         'tel',
         'type_entite',
         'nom_entite',
+        'manifestation_id'
     ];
 
   
