@@ -6,6 +6,8 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 
 use App\Models\ComiteOrganisation;
+use App\Models\ComiteOrganisationLocal;
+use App\Models\ComiteOrganisationNonLocal;
 use App\Models\Contributeur;
 use App\Models\ContributionParticipant;
 use App\Models\Demande;
@@ -85,7 +87,7 @@ class DashboardController extends Controller
     {
 
         $demandes = $this->demandeService->findAll();
-       // dd($demandes[0]->manifestation->lettreAcceptation);
+        // dd($demandes[0]->manifestation->lettreAcceptation);
         return view('user/list-request', ['demandes' => $demandes]);
     }
 
@@ -108,6 +110,9 @@ class DashboardController extends Controller
         $typeContributeurs = $this->typeContributeurService->findAll();
         $fraisCouvert = $this->fraisCouvertService->findAll();
         $natureContributions  = $this->natureContributionService->findAll();
+
+        $chercheurs = $this->chercheurService->findAll();
+
         if ($request->isMethod('post')) {
             $data = $request->all();
 
@@ -192,10 +197,10 @@ class DashboardController extends Controller
 
             $typeContributeurs = $data['typeContributeurs'];
             for ($i = 0; $i < count($typeContributeurs); $i++) {
-                $ManifestationTypeContributeur = new ManifestationTypeContributeur();
-                $ManifestationTypeContributeur->manifestation_id = $manifestation->getAttributes()["id"];
-                $ManifestationTypeContributeur->type_contributeur_id = $typeContributeurs[$i];
-                ManifestationTypeContributeur::create($ManifestationTypeContributeur->getAttributes());
+                $manifestationTypeContributeur = new ManifestationTypeContributeur();
+                $manifestationTypeContributeur->manifestation_id = $manifestation->getAttributes()["id"];
+                $manifestationTypeContributeur->type_contributeur_id = $typeContributeurs[$i];
+                ManifestationTypeContributeur::create($manifestationTypeContributeur->getAttributes());
             }
 
             // $comiteOrganisation = json_decode($data['comiteOrganisation'], true);
@@ -225,6 +230,24 @@ class DashboardController extends Controller
                 $manifestationContributionParticipant = ManifestationContributionParticipant::create($manifestationContributionParticipant->getAttributes());
             }
 
+            // $comiteOrganisationLocal = $data['comiteOrganisationLocal'];
+            // for ($i = 0; $i < count($comiteOrganisationLocal); $i++) {
+            //     $cl = new ComiteOrganisationLocal();
+            //     $cl->id_cher = $typeContributeurs[$i];
+            //     $cl = ComiteOrganisationLocal::create($cl->getAttributes());
+            //     $manifestationContributeur = new ManifestationComite();
+            //     $manifestationContributeur->contributeur_id = $contributeur->getAttributes()['id'];
+            //     $manifestationContributeur->manifestation_id  = $manifestation->getAttributes()["id"];
+            //     $manifestationContributeur = ManifestationContributeur::create($manifestationContributeur->getAttributes());
+            // }
+
+            // $comiteOrganisationNonLocal = json_decode($data['comiteOrganisationNonLocal'], true);
+            // for ($i = 0; $i < count($comiteOrganisationNonLocal); $i++) {
+            //     $cnl = $comiteOrganisationNonLocal[$i];
+            //     $cnl['manifestation_id'] = $manifestation->getAttributes()["id"];
+            //     ComiteOrganisationNonLocal::create($cnl);
+            // }
+
             for ($i = 0; $i < count($fraisCouvert); $i++) {
                 if ($request->has("frais-ouvert-" . $fraisCouvert[$i]->id)) {
                     $soutienSollicite = new SoutienSollicite();
@@ -249,7 +272,7 @@ class DashboardController extends Controller
             return redirect()->route('dashboard.user');
         }
 
-        return view('user/create-request', ["natureContributions" => $natureContributions, "typeContributeurs" => $typeContributeurs, "etablissements" => $etablissements, 'user' => $user, 'fraisCouvert' => $fraisCouvert]);
+        return view('user/create-request', ["chercheurs" => $chercheurs, "natureContributions" => $natureContributions, "typeContributeurs" => $typeContributeurs, "etablissements" => $etablissements, 'user' => $user, 'fraisCouvert' => $fraisCouvert]);
     }
 
     public  function uploadRapport(Request $request)
@@ -291,7 +314,7 @@ class DashboardController extends Controller
     {
 
         $url = $request->route('url');
-        $url =str_replace('-','/',$url);
+        $url = str_replace('-', '/', $url);
         $response = Common::readFileFromLocalStorage($url);
         if ($response == null)  return redirect()->route('dashboard.user');
         return $response;

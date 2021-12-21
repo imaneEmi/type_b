@@ -381,47 +381,73 @@
 
           </div>
           <div class="page">
-            <!-- <div class="col-12 col-md-12 col-lg-12">
+            <div class="col-12 col-md-12 col-lg-12">
               <div class="card">
                 <div class="card-header">
-                  <h4>Comité d'organisation</h4>
+                  <h4>Comité d'organisation local</h4>
+                </div>
+                <div class="card-body">
+                  <div class="form-group">
+                    <div class="section-title mt-0"></div>
+                    <label> Les frais d’inscription couvrent </label>
+                    <select class="custom-select" name="comiteOrganisationLocal[]" id="comite_organisation_local" multiple="multiple" data-height="100%">
+                      @foreach ($chercheurs as $chercheur)
+                      <option value="{{$chercheur->id_cher}}" id="{{$chercheur->id_cher}}" selected>{{$chercheur->nom}} {{$chercheur->prenom}}({{$chercheur->laboratoire->etablissement->nom}} )</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-12 col-lg-12">
+              <div class="card">
+                <div class="card-header">
+                  <h4>Comité d'organisation non local</h4>
                 </div>
                 <div class="card-body">
                   <div class="form-group">
                     <label>Nom</label>
-                    <input type="text" class="form-control" id="nom_organisateur" name="nom_organisateur">
+                    <input type="text" class="form-control" id="nom_organisateur_non_local">
                   </div>
                   <div class="form-group">
                     <label> Prenom</label>
-                    <input type="text" class="form-control" id="prenom_organisateur" name="prenom_organisateur">
+                    <input type="text" class="form-control" id="prenom_organisateur_non_local">
                   </div>
                   <div class="form-group">
                     <label> Tel</label>
-                    <input type="tel" class="form-control" id="tel_organisateur" name="tel_organisateur">
+                    <input type="tel" class="form-control" id="tel_organisateur_non_local">
                   </div>
                   <div class="form-group">
                     <label>Email</label>
-                    <input type="text" class="form-control" id="email_organisateur" name="email_organisateur">
+                    <input type="email" class="form-control" id="email_organisateur_non_local">
                   </div>
-                  <div class="section-title mt-0">Etablissment</div>
                   <div class="form-group">
-                    <select class="custom-select" id="etablissement_organisateur" name="etablissement_organisateur">
-                      @foreach ($etablissements as $etablissement)
-                      <option value="{{$etablissement->id}}" id="{{$etablissement->libelle}}" selected>{{$etablissement->libelle}}</option>
-                      @endforeach
-                    </select>
+                    <label> universite</label>
+                    <input type="text" class="form-control" id="universite_organisateur_non_local">
                   </div>
+
+                  <div class="form-group">
+                    <label> etablissement</label>
+                    <input type="text" class="form-control" id="etablissement_organisateur_non_local">
+                  </div>
+                  <div class="form-group">
+                    <label> ville</label>
+                    <input type="text" class="form-control" id="ville_organisateur_non_local">
+                  </div>
+
                   <div class="card-footer text-right">
-                    <p style="cursor:pointer" class="btn btn-primary" onclick="addOrganisateur(document.getElementById('tel_organisateur').value,document.getElementById('nom_organisateur').value ,document.getElementById('prenom_organisateur').value,document.getElementById('email_organisateur').value, $('#etablissement_organisateur').children(':selected').attr('id') ,document.getElementById('etablissement_organisateur').value );">+</p>
+                    <p style="cursor:pointer" class="btn btn-primary" onclick="addOrganisateurNonLocal(document.getElementById('tel_organisateur_non_local').value,document.getElementById('nom_organisateur_non_local').value ,document.getElementById('prenom_organisateur_non_local').value,document.getElementById('email_organisateur_non_local').value,document.getElementById('etablissement_organisateur_non_local').value ,document.getElementById('universite_organisateur_non_local').value,document.getElementById('ville_organisateur_non_local').value);">+</p>
                   </div>
                   <div style="overflow-x:auto;">
-                    <table class="table " id="organisateurs_table">
+                    <table class="table " id="organisateurs_non_local_table">
                       <thead>
                         <tr>
                           <th scope="col">nom & prenom</th>
                           <th scope="col">etablissement</th>
                           <th scope="col">email</th>
                           <th scope="col">tel</th>
+                          <th scope="col">universite</th>
+                          <th scope="col">ville</th>
                           <th scope="col">Action</th>
                         </tr>
                       </thead>
@@ -434,7 +460,13 @@
                 </div>
 
               </div>
-            </div>-->
+            </div>
+
+
+
+
+
+
             <div class="col-12 col-md-12 col-lg-12">
 
               <div class="card">
@@ -484,14 +516,14 @@
                   <div class="form-group">
                     <label>Liste des pieces </label>
                     <div class="custom-file">
-                      <input type="file" class="custom-file-input" id="customFile" name="pieces[]"  multiple required>
+                      <input type="file" class="custom-file-input" id="customFile" name="pieces[]" multiple required>
                       <label class="custom-file-label" for="customFile">Choose files</label>
                     </div>
                   </div>
                 </div>
                 <div class="card-footer text-right">
                   <p class="btn btn-primary prev-3 prev">Previous </p>
-                  <button class="btn btn-primary">Créer </button>
+                  <p class="btn btn-primary" id="submitManifestationForm">Créer </p>
                 </div>
               </div>
             </div>
@@ -507,43 +539,50 @@
 @endsection
 
 @section('scripts')
-
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  var comiteOrganisation = []
+  var comiteOrganisationNonLocal = []
   var contributeurs = []
   var gestionFinanciere = []
   var contributionParticipants = []
-  var comiteOrganisationCount = 0
+  var comiteOrganisationNonLocalCount = 0
   var contributeurCount = 0
   var contributionParticipantsCount = 0
   var gestionFinanciereCount = 0
 
-  function addOrganisateur(tel_organisateur, nom_organisateur, prenom_organisateur, email_organisateur, etablissement_organisateur, id_etablissement_organisateur) {
+  function addOrganisateurNonLocal(tel_organisateur, nom_organisateur, prenom_organisateur, email_organisateur, etablissement_organisateur, universite_organisateur, ville_organisateur) {
 
     tel_organisateur = tel_organisateur.trim()
     nom_organisateur = nom_organisateur.trim()
     email_organisateur = email_organisateur.trim()
     prenom_organisateur = prenom_organisateur.trim()
-
-    if (tel_organisateur != "" && nom_organisateur != "" && prenom_organisateur != "" && email_organisateur != "") {
+    universite_organisateur = universite_organisateur.trim()
+    ville_organisateur = ville_organisateur.trim()
+    etablissement_organisateur = etablissement_organisateur.trim()
+    if (nom_organisateur != "" && prenom_organisateur != "") {
       var organisateur = {
         nom: nom_organisateur,
         prenom: prenom_organisateur,
         tel: tel_organisateur,
         email: email_organisateur,
-        etablissement_id: id_etablissement_organisateur
+        etablissement: etablissement_organisateur,
+        ville: ville_organisateur,
+        universite: universite_organisateur
       }
-      comiteOrganisation[comiteOrganisationCount] = organisateur;
-      comiteOrganisationCount = comiteOrganisationCount + 1
-      var HtmlContent = " <tr><td>" + nom_organisateur + " " + prenom_organisateur + " </td> <td>" + etablissement_organisateur + " </td><td>" + email_organisateur + " </td><td>" + tel_organisateur + " </td><td> <button  class='btn btn-icon btn-danger' onClick='deleteOrganisateurRow(this);'><i class='fas fa-times'></i></button> </td></tr>"
-      var tableRef = document.getElementById('organisateurs_table').getElementsByTagName('tbody')[0];
+      comiteOrganisationNonLocal[comiteOrganisationNonLocalCount] = organisateur;
+      comiteOrganisationNonLocalCount = comiteOrganisationNonLocalCount + 1
+      var HtmlContent = " <tr><td>" + nom_organisateur + " " + prenom_organisateur + " </td> <td>" + etablissement_organisateur + " </td><td>" + email_organisateur + " </td><td>" + tel_organisateur + " </td><td>" + universite_organisateur + " </td><td>" + ville_organisateur + " </td><td> <button  class='btn btn-icon btn-danger' onClick='deleteOrganisateurNonLocalRow(this);'><i class='fas fa-times'></i></button> </td></tr>"
+      var tableRef = document.getElementById('organisateurs_non_local_table').getElementsByTagName('tbody')[0];
       var newRow = tableRef.insertRow(tableRef.rows.length);
       newRow.innerHTML = HtmlContent;
 
-      $('#tel_organisateur').val('')
-      $('#nom_organisateur').val('')
-      $('#email_organisateur').val('')
-      $('#prenom_organisateur').val('')
+      $('#tel_organisateur_non_local').val('')
+      $('#nom_organisateur_non_local').val('')
+      $('#email_organisateur_non_local').val('')
+      $('#prenom_organisateur_non_local').val('')
+      $('#ville_organisateur_non_local').val('')
+      $('#universite_organisateur_non_local').val('')
+      $('#etablissement_organisateur_non_local').val('')
     } else {
 
     }
@@ -628,10 +667,10 @@
   }
 
 
-  function deleteOrganisateurRow(row) {
+  function deleteOrganisateurNonLocalRow(row) {
     var i = row.parentNode.parentNode.rowIndex;
     comiteOrganisation.splice((i - 1), 1)
-    document.getElementById('organisateurs_table').deleteRow(i);
+    document.getElementById('organisateurs_non_local_table').deleteRow(i);
   }
 
   function deleteContributeurRow(row) {
@@ -675,12 +714,7 @@
 
 
   }
-  $("#manifestationForm").submit(function(eventObj) {
-    console.log("dddddd");
-    $("<input />").attr("type", "hidden")
-      .attr("name", "comiteOrganisation")
-      .attr("value", JSON.stringify(comiteOrganisation))
-      .appendTo("#manifestationForm");
+  $("#submitManifestationForm").on('click', function(eventObj) {
     $("<input />").attr("type", "hidden")
       .attr("name", "contributeurs")
       .attr("value", JSON.stringify(contributeurs))
@@ -693,7 +727,22 @@
       .attr("name", "contributionParticipants")
       .attr("value", JSON.stringify(contributionParticipants))
       .appendTo("#manifestationForm");
-    return true;
+    $("<input />").attr("type", "hidden")
+      .attr("name", "comiteOrganisationNonLocal")
+      .attr("value", JSON.stringify(comiteOrganisationNonLocal))
+      .appendTo("#manifestationForm");
+
+    Swal.fire({
+      title: 'Attention!!',
+      text: 'Something went wrong!',
+      icon: 'error',
+      confirmButtonText: "Oui",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $("#manifestationForm").submit();
+      }
+    })
+
   });
 </script>
 @endsection
