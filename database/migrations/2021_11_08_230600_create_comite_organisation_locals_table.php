@@ -17,7 +17,8 @@ class CreateComiteOrganisationLocalsTable extends Migration
         Schema::connection('mysql')->create('comite_organisation_locals', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_cher');
-           
+            $table->unsignedBigInteger('manifestation_id');
+            $table->foreign('manifestation_id')->references('id')->on('manifestations');
             $table->timestamps();
         });
     }

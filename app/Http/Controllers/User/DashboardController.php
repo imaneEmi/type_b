@@ -230,23 +230,20 @@ class DashboardController extends Controller
                 $manifestationContributionParticipant = ManifestationContributionParticipant::create($manifestationContributionParticipant->getAttributes());
             }
 
-            // $comiteOrganisationLocal = $data['comiteOrganisationLocal'];
-            // for ($i = 0; $i < count($comiteOrganisationLocal); $i++) {
-            //     $cl = new ComiteOrganisationLocal();
-            //     $cl->id_cher = $typeContributeurs[$i];
-            //     $cl = ComiteOrganisationLocal::create($cl->getAttributes());
-            //     $manifestationContributeur = new ManifestationComite();
-            //     $manifestationContributeur->contributeur_id = $contributeur->getAttributes()['id'];
-            //     $manifestationContributeur->manifestation_id  = $manifestation->getAttributes()["id"];
-            //     $manifestationContributeur = ManifestationContributeur::create($manifestationContributeur->getAttributes());
-            // }
+            $comiteOrganisationLocal = $data['comiteOrganisationLocal'];
+            for ($i = 0; $i < count($comiteOrganisationLocal); $i++) {
+                $cl = new ComiteOrganisationLocal();
+                $cl->id_cher = $typeContributeurs[$i];
+                $cl['manifestation_id'] = $manifestation->getAttributes()["id"];
+                ComiteOrganisationLocal::create($cl->getAttributes());
+            }
 
-            // $comiteOrganisationNonLocal = json_decode($data['comiteOrganisationNonLocal'], true);
-            // for ($i = 0; $i < count($comiteOrganisationNonLocal); $i++) {
-            //     $cnl = $comiteOrganisationNonLocal[$i];
-            //     $cnl['manifestation_id'] = $manifestation->getAttributes()["id"];
-            //     ComiteOrganisationNonLocal::create($cnl);
-            // }
+            $comiteOrganisationNonLocal = json_decode($data['comiteOrganisationNonLocal'], true);
+            for ($i = 0; $i < count($comiteOrganisationNonLocal); $i++) {
+                $cnl = $comiteOrganisationNonLocal[$i];
+                $cnl['manifestation_id'] = $manifestation->getAttributes()["id"];
+                ComiteOrganisationNonLocal::create($cnl);
+            }
 
             for ($i = 0; $i < count($fraisCouvert); $i++) {
                 if ($request->has("frais-ouvert-" . $fraisCouvert[$i]->id)) {

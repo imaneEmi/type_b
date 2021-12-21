@@ -12,6 +12,7 @@ class ComiteOrganisationLocal extends Model
     protected $with=['etablissement'];
     public $fillable = [
            'id_cher',
+           'manifestation_id'
     ];
 
  
