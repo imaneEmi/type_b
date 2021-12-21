@@ -64,4 +64,8 @@ class ManifestationServiceImpl implements ManifestationService
         return $details;
     }
 
+    public function findByDemandeId($id){
+        return Manifestation::where("demande_id",$id)->first();
+    }
+
 }

@@ -9,7 +9,7 @@ class Manifestation extends Model
 {
     use HasFactory;
     protected $connection = 'mysql';
-    protected $with = [];
+    protected $with = ['rapport','lettreAcceptation'];
 
     public $fillable = [
         'intitule',
@@ -24,6 +24,8 @@ class Manifestation extends Model
         'nbr_etudiants_non_locaux',
         'file_manifestation_etudiants_locaux_id',
         'file_manifestation_enseignants_locaux_id',
+        'file_manifestation_rapport_id',
+        'lettre_acceptation_id',
         'nbr_enseignants_locaux',
         'nbr_enseignants_non_locaux',
         'date_debut',
@@ -31,6 +33,16 @@ class Manifestation extends Model
         'demande_id',
         'entite_organisatrice_id',
     ];
+    
+    public function rapport()
+    {
+        return $this->belongsTo(FileManifestation::class, 'file_manifestation_rapport_id');
+    }
+
+    public function lettreAcceptation()
+    {
+        return $this->belongsTo(FileManifestation::class, 'lettre_acceptation_id');
+    }
 
     public function entiteOrganisatrice()
     {

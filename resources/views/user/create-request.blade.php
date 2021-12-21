@@ -236,7 +236,7 @@
                 </div>
                 <div class="card-body">
 
-                    <!-- <div class="section-title mt-0">Type</div>
+                  <!-- <div class="section-title mt-0">Type</div>
                     <div class="form-group">
                       <select class="custom-select" id="type_contributeur" name="type_contributeur">
                         @foreach ($typeContributeurs as $typeContributeur)
@@ -283,7 +283,6 @@
                 <div class="card-footer text-right">
                   <p class="btn btn-primary prev-1 prev"> Previous </p>
                   <p class="btn btn-primary next-1 next"> Next </p>
-                  <button class="btn btn-primary">Créer </button>
                 </div>
 
               </div>
@@ -329,51 +328,41 @@
             </div> -->
 
           </div>
-          <!--  <div class="page">
+          <div class="page">
             <div class="col-12 col-md-12 col-lg-12">
               <div class="card">
                 <div class="card-header">
-                  <h4>Contributeurs</h4>
+                  <h4>Contribution des participants</h4>
                 </div>
                 <div class="card-body">
 
-                  <div class="section-title mt-0">Type</div>
                   <div class="form-group">
-                    <select class="custom-select" id="type_contributeur" name="type_contributeur">
+                    <div class="section-title mt-0"></div>
+                    <label> Les frais d’inscription couvrent </label>
+                    <select class="custom-select" name="typeContributeurs[]" id="type_contributeurs" multiple="multiple" data-height="100%">
                       @foreach ($typeContributeurs as $typeContributeur)
-                      <option value="{{$typeContributeur->id}}" id="{{$typeContributeur->libelle}}" selected>{{$typeContributeur->libelle}}</option>
+                      <option value="{{$typeContributeur->id}}" id="{{$typeContributeur->id}}" selected>{{$typeContributeur->libelle}}</option>
                       @endforeach
                     </select>
                   </div>
                   <div class="form-group">
                     <label>Nom</label>
-                    <input type="text" class="form-control" id='nom_contributeur' name="nom_contributeur">
+                    <input type="text" class="form-control" id='nom_contribution_participant'>
                   </div>
                   <div class="form-group">
                     <label>Montant</label>
-                    <input type="number" min="0" class="form-control" id='montant_contributeur' name="montant_contributeur">
-                  </div>
-
-                  <div class="section-title mt-0">Nature</div>
-                  <div class="form-group">
-                    <select class="custom-select" id="nature_contributeur" name="nature_contributeur">
-                      @foreach ($natureContributions as $natureContribution)
-                      <option value="{{$natureContribution->id}}" id="{{$natureContribution->libelle}}" selected>{{$natureContribution->libelle}}</option>
-                      @endforeach
-                    </select>
+                    <input type="number" min="0" class="form-control" id='montant_contribution_participant'>
                   </div>
                 </div>
                 <div class="card-footer text-right">
-                  <p style="cursor:pointer" class="btn btn-primary" onclick="addContributeur(document.getElementById('nom_contributeur').value,$('#type_contributeur').children(':selected').attr('id'),document.getElementById('type_contributeur').value ,document.getElementById('montant_contributeur').value,$('#nature_contributeur').children(':selected').attr('id'),document.getElementById('nature_contributeur').value );">+</p>
+                  <p style="cursor:pointer" class="btn btn-primary" onclick="addContributionParticipant(document.getElementById('nom_contribution_participant').value ,document.getElementById('montant_contribution_participant').value );">+</p>
                 </div>
                 <div style="overflow-x:auto;">
-                  <table class="table " id="contributeurs_table">
+                  <table class="table " id="contribution_participants_table">
                     <thead>
                       <tr>
-                        <th scope="col">Type</th>
                         <th scope="col">Nom</th>
                         <th scope="col">Montant</th>
-                        <th scope="col">Nature</th>
                         <th scope="col">Action</th>
                       </tr>
                     </thead>
@@ -395,44 +384,70 @@
             <div class="col-12 col-md-12 col-lg-12">
               <div class="card">
                 <div class="card-header">
-                  <h4>Comité d'organisation</h4>
+                  <h4>Comité d'organisation local</h4>
+                </div>
+                <div class="card-body">
+                  <div class="form-group">
+                    <div class="section-title mt-0"></div>
+                    <label> Les frais d’inscription couvrent </label>
+                    <select class="custom-select" name="comiteOrganisationLocal[]" id="comite_organisation_local" multiple="multiple" data-height="100%">
+                      @foreach ($chercheurs as $chercheur)
+                      <option value="{{$chercheur->id_cher}}" id="{{$chercheur->id_cher}}" selected>{{$chercheur->nom}} {{$chercheur->prenom}}({{$chercheur->laboratoire->etablissement->nom}} )</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-12 col-lg-12">
+              <div class="card">
+                <div class="card-header">
+                  <h4>Comité d'organisation non local</h4>
                 </div>
                 <div class="card-body">
                   <div class="form-group">
                     <label>Nom</label>
-                    <input type="text" class="form-control" id="nom_organisateur" name="nom_organisateur">
+                    <input type="text" class="form-control" id="nom_organisateur_non_local">
                   </div>
                   <div class="form-group">
                     <label> Prenom</label>
-                    <input type="text" class="form-control" id="prenom_organisateur" name="prenom_organisateur">
+                    <input type="text" class="form-control" id="prenom_organisateur_non_local">
                   </div>
                   <div class="form-group">
                     <label> Tel</label>
-                    <input type="tel" class="form-control" id="tel_organisateur" name="tel_organisateur">
+                    <input type="tel" class="form-control" id="tel_organisateur_non_local">
                   </div>
                   <div class="form-group">
                     <label>Email</label>
-                    <input type="text" class="form-control" id="email_organisateur" name="email_organisateur">
+                    <input type="email" class="form-control" id="email_organisateur_non_local">
                   </div>
-                  <div class="section-title mt-0">Etablissment</div>
                   <div class="form-group">
-                    <select class="custom-select" id="etablissement_organisateur" name="etablissement_organisateur">
-                      @foreach ($etablissements as $etablissement)
-                      <option value="{{$etablissement->id}}" id="{{$etablissement->libelle}}" selected>{{$etablissement->libelle}}</option>
-                      @endforeach
-                    </select>
+                    <label> universite</label>
+                    <input type="text" class="form-control" id="universite_organisateur_non_local">
                   </div>
+
+                  <div class="form-group">
+                    <label> etablissement</label>
+                    <input type="text" class="form-control" id="etablissement_organisateur_non_local">
+                  </div>
+                  <div class="form-group">
+                    <label> ville</label>
+                    <input type="text" class="form-control" id="ville_organisateur_non_local">
+                  </div>
+
                   <div class="card-footer text-right">
-                    <p style="cursor:pointer" class="btn btn-primary" onclick="addOrganisateur(document.getElementById('tel_organisateur').value,document.getElementById('nom_organisateur').value ,document.getElementById('prenom_organisateur').value,document.getElementById('email_organisateur').value, $('#etablissement_organisateur').children(':selected').attr('id') ,document.getElementById('etablissement_organisateur').value );">+</p>
+                    <p style="cursor:pointer" class="btn btn-primary" onclick="addOrganisateurNonLocal(document.getElementById('tel_organisateur_non_local').value,document.getElementById('nom_organisateur_non_local').value ,document.getElementById('prenom_organisateur_non_local').value,document.getElementById('email_organisateur_non_local').value,document.getElementById('etablissement_organisateur_non_local').value ,document.getElementById('universite_organisateur_non_local').value,document.getElementById('ville_organisateur_non_local').value);">+</p>
                   </div>
                   <div style="overflow-x:auto;">
-                    <table class="table " id="organisateurs_table">
+                    <table class="table " id="organisateurs_non_local_table">
                       <thead>
                         <tr>
                           <th scope="col">nom & prenom</th>
                           <th scope="col">etablissement</th>
                           <th scope="col">email</th>
                           <th scope="col">tel</th>
+                          <th scope="col">universite</th>
+                          <th scope="col">ville</th>
                           <th scope="col">Action</th>
                         </tr>
                       </thead>
@@ -446,6 +461,12 @@
 
               </div>
             </div>
+
+
+
+
+
+
             <div class="col-12 col-md-12 col-lg-12">
 
               <div class="card">
@@ -482,14 +503,32 @@
 
                   </div>
                 </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-12 col-lg-12">
+
+              <div class="card">
+                <div class="card-header">
+                  <h4>Pièces</h4>
+                </div>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label>Liste des pieces </label>
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="customFile" name="pieces[]" multiple required>
+                      <label class="custom-file-label" for="customFile">Choose files</label>
+                    </div>
+                  </div>
+                </div>
                 <div class="card-footer text-right">
                   <p class="btn btn-primary prev-3 prev">Previous </p>
-                  <button class="btn btn-primary">Créer </button>
+                  <p class="btn btn-primary" id="submitManifestationForm">Créer </p>
                 </div>
               </div>
             </div>
 
-          </div> -->
+          </div>
         </form>
       </div>
     </div>
@@ -500,41 +539,50 @@
 @endsection
 
 @section('scripts')
-
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  var comiteOrganisation = []
+  var comiteOrganisationNonLocal = []
   var contributeurs = []
   var gestionFinanciere = []
-  var comiteOrganisationCount = 0
+  var contributionParticipants = []
+  var comiteOrganisationNonLocalCount = 0
   var contributeurCount = 0
+  var contributionParticipantsCount = 0
   var gestionFinanciereCount = 0
 
-  function addOrganisateur(tel_organisateur, nom_organisateur, prenom_organisateur, email_organisateur, etablissement_organisateur, id_etablissement_organisateur) {
+  function addOrganisateurNonLocal(tel_organisateur, nom_organisateur, prenom_organisateur, email_organisateur, etablissement_organisateur, universite_organisateur, ville_organisateur) {
 
     tel_organisateur = tel_organisateur.trim()
     nom_organisateur = nom_organisateur.trim()
     email_organisateur = email_organisateur.trim()
     prenom_organisateur = prenom_organisateur.trim()
-
-    if (tel_organisateur != "" && nom_organisateur != "" && prenom_organisateur != "" && email_organisateur != "") {
+    universite_organisateur = universite_organisateur.trim()
+    ville_organisateur = ville_organisateur.trim()
+    etablissement_organisateur = etablissement_organisateur.trim()
+    if (nom_organisateur != "" && prenom_organisateur != "") {
       var organisateur = {
         nom: nom_organisateur,
         prenom: prenom_organisateur,
         tel: tel_organisateur,
         email: email_organisateur,
-        etablissement_id: id_etablissement_organisateur
+        etablissement: etablissement_organisateur,
+        ville: ville_organisateur,
+        universite: universite_organisateur
       }
-      comiteOrganisation[comiteOrganisationCount] = organisateur;
-      comiteOrganisationCount = comiteOrganisationCount + 1
-      var HtmlContent = " <tr><td>" + nom_organisateur + " " + prenom_organisateur + " </td> <td>" + etablissement_organisateur + " </td><td>" + email_organisateur + " </td><td>" + tel_organisateur + " </td><td> <button  class='btn btn-icon btn-danger' onClick='deleteOrganisateurRow(this);'><i class='fas fa-times'></i></button> </td></tr>"
-      var tableRef = document.getElementById('organisateurs_table').getElementsByTagName('tbody')[0];
+      comiteOrganisationNonLocal[comiteOrganisationNonLocalCount] = organisateur;
+      comiteOrganisationNonLocalCount = comiteOrganisationNonLocalCount + 1
+      var HtmlContent = " <tr><td>" + nom_organisateur + " " + prenom_organisateur + " </td> <td>" + etablissement_organisateur + " </td><td>" + email_organisateur + " </td><td>" + tel_organisateur + " </td><td>" + universite_organisateur + " </td><td>" + ville_organisateur + " </td><td> <button  class='btn btn-icon btn-danger' onClick='deleteOrganisateurNonLocalRow(this);'><i class='fas fa-times'></i></button> </td></tr>"
+      var tableRef = document.getElementById('organisateurs_non_local_table').getElementsByTagName('tbody')[0];
       var newRow = tableRef.insertRow(tableRef.rows.length);
       newRow.innerHTML = HtmlContent;
 
-      $('#tel_organisateur').val('')
-      $('#nom_organisateur').val('')
-      $('#email_organisateur').val('')
-      $('#prenom_organisateur').val('')
+      $('#tel_organisateur_non_local').val('')
+      $('#nom_organisateur_non_local').val('')
+      $('#email_organisateur_non_local').val('')
+      $('#prenom_organisateur_non_local').val('')
+      $('#ville_organisateur_non_local').val('')
+      $('#universite_organisateur_non_local').val('')
+      $('#etablissement_organisateur_non_local').val('')
     } else {
 
     }
@@ -546,7 +594,7 @@
     montant_contributeur = montant_contributeur.trim()
     nature_contributeur = nature_contributeur.trim()
 
-    if (nature_contributeur != "" && montant_contributeur != ""  && nom_contributeur != "") {
+    if (nature_contributeur != "" && montant_contributeur != "" && nom_contributeur != "") {
       var contributeur = {
         nom: nom_contributeur,
         montant: montant_contributeur,
@@ -554,13 +602,38 @@
       }
       contributeurs[contributeurCount] = contributeur;
       contributeurCount = contributeurCount + 1
-      var HtmlContent = " <tr><td>" +nom_contributeur + " </td> <td>" + montant_contributeur + " </td><td>" + nature_contributeur + " </td><td> <button  class='btn btn-icon btn-danger' onClick='deleteContributeurRow(this);'><i class='fas fa-times'></i></button> </td></tr>"
+      var HtmlContent = " <tr><td>" + nom_contributeur + " </td> <td>" + montant_contributeur + " </td><td>" + nature_contributeur + " </td><td> <button  class='btn btn-icon btn-danger' onClick='deleteContributeurRow(this);'><i class='fas fa-times'></i></button> </td></tr>"
       var tableRef = document.getElementById('contributeurs_table').getElementsByTagName('tbody')[0];
       var newRow = tableRef.insertRow(tableRef.rows.length);
       newRow.innerHTML = HtmlContent;
 
       $('#nom_contributeur').val('')
       $('#montant_contributeur').val('')
+
+    } else {
+
+    }
+
+  }
+
+  function addContributionParticipant(nom_contributeur, montant_contributeur) {
+    nom_contributeur = nom_contributeur.trim()
+    montant_contributeur = montant_contributeur.trim()
+
+    if (montant_contributeur != "" && nom_contributeur != "") {
+      var contributeur = {
+        nom: nom_contributeur,
+        montant: montant_contributeur,
+      }
+      contributionParticipants[contributionParticipantsCount] = contributeur;
+      contributionParticipantsCount = contributionParticipantsCount + 1
+      var HtmlContent = " <tr><td>" + nom_contributeur + " </td> <td>" + montant_contributeur + " </td><td> <button  class='btn btn-icon btn-danger' onClick='deleteContributionParticipantRow(this);'><i class='fas fa-times'></i></button> </td></tr>"
+      var tableRef = document.getElementById('contribution_participants_table').getElementsByTagName('tbody')[0];
+      var newRow = tableRef.insertRow(tableRef.rows.length);
+      newRow.innerHTML = HtmlContent;
+
+      $('#nom_contribution_participant').val('')
+      $('#montant_contribution_participant').val('')
 
     } else {
 
@@ -594,16 +667,22 @@
   }
 
 
-  function deleteOrganisateurRow(row) {
+  function deleteOrganisateurNonLocalRow(row) {
     var i = row.parentNode.parentNode.rowIndex;
     comiteOrganisation.splice((i - 1), 1)
-    document.getElementById('organisateurs_table').deleteRow(i);
+    document.getElementById('organisateurs_non_local_table').deleteRow(i);
   }
 
   function deleteContributeurRow(row) {
     var i = row.parentNode.parentNode.rowIndex;
     contributeurs.splice((i - 1), 1)
     document.getElementById('contributeurs_table').deleteRow(i);
+  }
+
+  function deleteContributionParticipantRow(row) {
+    var i = row.parentNode.parentNode.rowIndex;
+    contributeurs.splice((i - 1), 1)
+    document.getElementById('contribution_participants_table').deleteRow(i);
   }
 
   function deleteGestionFinanciereRow(row) {
@@ -635,12 +714,7 @@
 
 
   }
-  $("#manifestationForm").submit(function(eventObj) {
-    console.log("dddddd");
-    $("<input />").attr("type", "hidden")
-      .attr("name", "comiteOrganisation")
-      .attr("value", JSON.stringify(comiteOrganisation))
-      .appendTo("#manifestationForm");
+  $("#submitManifestationForm").on('click', function(eventObj) {
     $("<input />").attr("type", "hidden")
       .attr("name", "contributeurs")
       .attr("value", JSON.stringify(contributeurs))
@@ -649,7 +723,26 @@
       .attr("name", "gestionFinanciere")
       .attr("value", JSON.stringify(gestionFinanciere))
       .appendTo("#manifestationForm");
-    return true;
+    $("<input />").attr("type", "hidden")
+      .attr("name", "contributionParticipants")
+      .attr("value", JSON.stringify(contributionParticipants))
+      .appendTo("#manifestationForm");
+    $("<input />").attr("type", "hidden")
+      .attr("name", "comiteOrganisationNonLocal")
+      .attr("value", JSON.stringify(comiteOrganisationNonLocal))
+      .appendTo("#manifestationForm");
+
+    Swal.fire({
+      title: 'Attention!!',
+      text: 'Something went wrong!',
+      icon: 'error',
+      confirmButtonText: "Oui",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $("#manifestationForm").submit();
+      }
+    })
+
   });
 </script>
 @endsection

@@ -11,7 +11,7 @@ class ComiteOrganisationLocal extends Model
     protected $connection = 'mysql';
     protected $with=['etablissement'];
     public $fillable = [
-           'id_cher'
+           'id_cher',
     ];
 
  

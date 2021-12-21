@@ -6,7 +6,10 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 
 use App\Models\ComiteOrganisation;
+use App\Models\ComiteOrganisationLocal;
+use App\Models\ComiteOrganisationNonLocal;
 use App\Models\Contributeur;
+use App\Models\ContributionParticipant;
 use App\Models\Demande;
 use App\Models\Dto\Departement;
 use App\Models\EntiteOrganisatrice;
@@ -15,7 +18,9 @@ use App\Models\GestionFinanciere;
 use App\Models\Manifestation;
 use App\Models\ManifestationComite;
 use App\Models\ManifestationContributeur;
+use App\Models\ManifestationContributionParticipant;
 use App\Models\ManifestationEtablissement;
+use App\Models\ManifestationTypeContributeur;
 use App\Models\SoutienSollicite;
 use App\Services\ChercheurService;
 use App\Services\DemandeService;
@@ -23,8 +28,10 @@ use App\Services\EtablissementService;
 use App\Services\FraisCouvertService;
 use App\Services\ManifestationComiteService;
 use App\Services\ManifestationContributeurService;
+use App\Services\ManifestationService;
 use App\Services\NatureContributionService;
 use App\Services\TypeContributeurService;
+use App\Services\util\Common;
 use Illuminate\Http\Request;
 use PDF;
 use Illuminate\Support\Facades\Gate;
@@ -42,12 +49,14 @@ class DashboardController extends Controller
     private   ManifestationComiteService $manifestationComiteService;
     private ManifestationContributeurService $manifestationContributeurService;
     private ChercheurService $chercheurService;
+    private  ManifestationService $manifestationService;
     /**
      * Create a new controller instance.
      *
      * @return void
      */
     public function __construct(
+        ManifestationService $manifestationService,
         DemandeService $demandeService,
         EtablissementService $etablissementService,
         TypeContributeurService $typeContributeurService,
@@ -66,6 +75,7 @@ class DashboardController extends Controller
         $this->manifestationComiteService  = $manifestationComiteService;
         $this->manifestationContributeurService  = $manifestationContributeurService;
         $this->chercheurService = $chercheurService;
+        $this->manifestationService = $manifestationService;
     }
 
     /**
@@ -75,9 +85,9 @@ class DashboardController extends Controller
      */
     public function index(Request $request)
     {
-        // dd($this->chercheurService->findByEmail($request->user()->email));
-        // dd($this->chercheurService->findByEmail($request->user()->email));
+
         $demandes = $this->demandeService->findAll();
+        // dd($demandes[0]->manifestation->lettreAcceptation);
         return view('user/list-request', ['demandes' => $demandes]);
     }
 
@@ -100,8 +110,15 @@ class DashboardController extends Controller
         $typeContributeurs = $this->typeContributeurService->findAll();
         $fraisCouvert = $this->fraisCouvertService->findAll();
         $natureContributions  = $this->natureContributionService->findAll();
+
+        $chercheurs = $this->chercheurService->findAll();
+
         if ($request->isMethod('post')) {
             $data = $request->all();
+
+
+            //dd($data);
+
             // $user->etablissement_id =  $data['etablissment_coordonnateur_manifestation'];
             // $user->tel =  $data['tel_coordonnateur_manifestation'];
             // $user->fax =  $data['fax_coordonnateur_manifestation'];
@@ -120,7 +137,7 @@ class DashboardController extends Controller
             $chercheur = $this->chercheurService->findByEmail($request->user()->email);
 
             $demande = new Demande();
-            $demande->code = $chercheur->id_cher  . "/" . $this->demandeService->countCoordonnateurDemandeByCurrentYear($chercheur)+1 . "/" . date('Y');
+            $demande->code = $chercheur->id_cher  . "/" . $this->demandeService->countCoordonnateurDemandeByCurrentYear($chercheur) + 1 . "/" . date('Y');
             $demande->date_envoie = date('Y-m-d H:i:s');
             $demande->etat = 'PENDING';
             $demande->coordonnateur_id = $chercheur->id_cher;
@@ -134,7 +151,7 @@ class DashboardController extends Controller
             $manifestation->site_web = $data['site_web'];
             $manifestation->agence_organisatrice = $data['agence_organisatrice'];
             $manifestation->partenaires = $data['partenaires'];
-            $manifestation->nbr_participants_prevus = $data['nbr_etudiants_locaux'] +$data['nbr_etudiants_non_locaux']+ $data['nbr_enseignants_locaux']+$data['nbr_enseignants_non_locaux'];
+            $manifestation->nbr_participants_prevus = $data['nbr_etudiants_locaux'] + $data['nbr_etudiants_non_locaux'] + $data['nbr_enseignants_locaux'] + $data['nbr_enseignants_non_locaux'];
             $manifestation->nbr_etudiants_locaux = $data['nbr_etudiants_locaux'];
             $manifestation->nbr_etudiants_non_locaux = $data['nbr_etudiants_non_locaux'];
             $manifestation->nbr_enseignants_locaux = $data['nbr_enseignants_locaux'];
@@ -170,13 +187,21 @@ class DashboardController extends Controller
                 GestionFinanciere::create($gestionFinanciere[$i]);
             }
 
-            // $etablissementsOrganisateur = $data['etablissements_organisateur'];
-            // for ($i = 0; $i < count($etablissementsOrganisateur); $i++) {
-            //     $manifestationEtablissement = new ManifestationEtablissement();
-            //     $manifestationEtablissement->manifestation_id = $manifestation->getAttributes()["id"];
-            //     $manifestationEtablissement->etablissement_id = $etablissementsOrganisateur[$i];
-            //     ManifestationEtablissement::create($manifestationEtablissement->getAttributes());
-            // }
+            $etablissementsOrganisateur = $data['etablissements_organisateur'];
+            for ($i = 0; $i < count($etablissementsOrganisateur); $i++) {
+                $manifestationEtablissement = new ManifestationEtablissement();
+                $manifestationEtablissement->manifestation_id = $manifestation->getAttributes()["id"];
+                $manifestationEtablissement->etablissement_id = $etablissementsOrganisateur[$i];
+                ManifestationEtablissement::create($manifestationEtablissement->getAttributes());
+            }
+
+            $typeContributeurs = $data['typeContributeurs'];
+            for ($i = 0; $i < count($typeContributeurs); $i++) {
+                $manifestationTypeContributeur = new ManifestationTypeContributeur();
+                $manifestationTypeContributeur->manifestation_id = $manifestation->getAttributes()["id"];
+                $manifestationTypeContributeur->type_contributeur_id = $typeContributeurs[$i];
+                ManifestationTypeContributeur::create($manifestationTypeContributeur->getAttributes());
+            }
 
             // $comiteOrganisation = json_decode($data['comiteOrganisation'], true);
             // for ($i = 0; $i < count($comiteOrganisation); $i++) {
@@ -196,21 +221,102 @@ class DashboardController extends Controller
                 $manifestationContributeur = ManifestationContributeur::create($manifestationContributeur->getAttributes());
             }
 
-            // for ($i = 0; $i < count($fraisCouvert); $i++) {
-            //     if ($request->has("frais-ouvert-" . $fraisCouvert[$i]->id)) {
-            //         $soutienSollicite = new SoutienSollicite();
-            //         $soutienSollicite->nbr = $data["nombre_frais_ouvert_" . $fraisCouvert[$i]->id];
-            //         $soutienSollicite->montant = $data["montant_frais_ouvert_" . $fraisCouvert[$i]->id];
-            //         $soutienSollicite->remarques = $data["remarques_frais_ouvert_" . $fraisCouvert[$i]->id];
-            //         $soutienSollicite->manifestation_id = $manifestation->getAttributes()["id"];
-            //         $soutienSollicite->frais_couvert_id = $fraisCouvert[$i]->id;
-            //         SoutienSollicite::create($soutienSollicite->getAttributes());
-            //     }
+            $contributionParticipants = json_decode($data['contributionParticipants'], true);
+            for ($i = 0; $i < count($contributionParticipants); $i++) {
+                $contributeurParticipant = ContributionParticipant::create($contributionParticipants[$i]);
+                $manifestationContributionParticipant = new ManifestationContributionParticipant();
+                $manifestationContributionParticipant->cont_par_id = $contributeurParticipant->getAttributes()['id'];
+                $manifestationContributionParticipant->manifestation_id  = $manifestation->getAttributes()["id"];
+                $manifestationContributionParticipant = ManifestationContributionParticipant::create($manifestationContributionParticipant->getAttributes());
+            }
+
+            // $comiteOrganisationLocal = $data['comiteOrganisationLocal'];
+            // for ($i = 0; $i < count($comiteOrganisationLocal); $i++) {
+            //     $cl = new ComiteOrganisationLocal();
+            //     $cl->id_cher = $typeContributeurs[$i];
+            //     $cl = ComiteOrganisationLocal::create($cl->getAttributes());
+            //     $manifestationContributeur = new ManifestationComite();
+            //     $manifestationContributeur->contributeur_id = $contributeur->getAttributes()['id'];
+            //     $manifestationContributeur->manifestation_id  = $manifestation->getAttributes()["id"];
+            //     $manifestationContributeur = ManifestationContributeur::create($manifestationContributeur->getAttributes());
             // }
+
+            // $comiteOrganisationNonLocal = json_decode($data['comiteOrganisationNonLocal'], true);
+            // for ($i = 0; $i < count($comiteOrganisationNonLocal); $i++) {
+            //     $cnl = $comiteOrganisationNonLocal[$i];
+            //     $cnl['manifestation_id'] = $manifestation->getAttributes()["id"];
+            //     ComiteOrganisationNonLocal::create($cnl);
+            // }
+
+            for ($i = 0; $i < count($fraisCouvert); $i++) {
+                if ($request->has("frais-ouvert-" . $fraisCouvert[$i]->id)) {
+                    $soutienSollicite = new SoutienSollicite();
+                    $soutienSollicite->nbr = $data["nombre_frais_ouvert_" . $fraisCouvert[$i]->id];
+                    $soutienSollicite->montant = $data["montant_frais_ouvert_" . $fraisCouvert[$i]->id];
+                    $soutienSollicite->remarques = $data["remarques_frais_ouvert_" . $fraisCouvert[$i]->id];
+                    $soutienSollicite->manifestation_id = $manifestation->getAttributes()["id"];
+                    $soutienSollicite->frais_couvert_id = $fraisCouvert[$i]->id;
+                    SoutienSollicite::create($soutienSollicite->getAttributes());
+                }
+            }
+
+            $pieces = $data['pieces'];
+            for ($i = 0; $i < count($pieces); $i++) {
+                $path =   Storage::disk('local')->put("manifestation_files", $pieces[$i]);
+                $fileManifestation = new FileManifestation();
+                $fileManifestation->url = $path;
+                $fileManifestation->manifestation_id = $manifestation->getAttributes()["id"];
+                FileManifestation::create($fileManifestation->getAttributes());
+            }
 
             return redirect()->route('dashboard.user');
         }
 
-        return view('user/create-request', ["natureContributions" => $natureContributions, "typeContributeurs" => $typeContributeurs, "etablissements" => $etablissements, 'user' => $user, 'fraisCouvert' => $fraisCouvert]);
+        return view('user/create-request', ["chercheurs" => $chercheurs, "natureContributions" => $natureContributions, "typeContributeurs" => $typeContributeurs, "etablissements" => $etablissements, 'user' => $user, 'fraisCouvert' => $fraisCouvert]);
+    }
+
+    public  function uploadRapport(Request $request)
+    {
+
+
+
+        if (!$request->hasFile('rapport')) {
+            return  response()
+                ->json([
+                    'code' => 500,
+                    'message' => 'le rapport est requis! '
+                ]);
+        }
+
+        $demande = $request->all()['demande'];
+        $file = $request->file('rapport');
+
+
+        $manifestation = $this->manifestationService->findByDemandeId($demande);
+
+        $fileEtudiantsLocauxPath =   Storage::disk('local')->put("manifestation_files", $file);
+        $fileManifestation = new FileManifestation();
+        $fileManifestation->url = $fileEtudiantsLocauxPath;
+        $fileManifestation->manifestation_id = $manifestation->getAttributes()["id"];
+        $fileManifestation = FileManifestation::create($fileManifestation->getAttributes());
+
+        $manifestation->file_manifestation_rapport_id = $fileManifestation->getAttributes()["id"];
+        $manifestation->update($manifestation->getAttributes());
+
+        return response()
+            ->json([
+                'code' => 200,
+                'message' => "rapport téléchargé!"
+            ]);
+    }
+
+    public function readRapport(Request $request)
+    {
+
+        $url = $request->route('url');
+        $url = str_replace('-', '/', $url);
+        $response = Common::readFileFromLocalStorage($url);
+        if ($response == null)  return redirect()->route('dashboard.user');
+        return $response;
     }
 }

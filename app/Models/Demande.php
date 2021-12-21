@@ -18,6 +18,7 @@ class Demande extends Model
         'editable',
         'remarques',
         'coordonnateur_id',
+        
     ];
 
     public function manifestation(){

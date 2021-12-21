@@ -1,7 +1,7 @@
 "use strict";
 
-$("#modal-1").fireModal({body: 'Modal body text goes here.'});
-$("#modal-2").fireModal({body: 'Modal body text goes here.', center: true});
+$("#modal-1").fireModal({ body: 'Modal body text goes here.' });
+$("#modal-2").fireModal({ body: 'Modal body text goes here.', center: true });
 
 let modal_3_body = '<p>Object to create a button on the modal.</p><pre class="language-javascript"><code>';
 modal_3_body += '[\n';
@@ -22,7 +22,7 @@ $("#modal-3").fireModal({
     {
       text: 'Click, me!',
       class: 'btn btn-primary btn-shadow',
-      handler: function(modal) {
+      handler: function (modal) {
         alert('Hello, you clicked me!');
       }
     }
@@ -36,36 +36,48 @@ $("#modal-4").fireModal({
     {
       text: 'No Action!',
       class: 'btn btn-primary btn-shadow',
-      handler: function(modal) {
+      handler: function (modal) {
       }
     }
   ]
 });
 
 
-console.log("aaaa", document.getElementById("modal-upload-part"))
 
 $("#modal-5").fireModal({
   title: 'Upload Rapport',
   body: $("#modal-upload-part"),
   footerClass: 'bg-whitesmoke',
   autoFocus: false,
-  onFormSubmit: function(modal, e, form) {
+  onFormSubmit: function (modal, e, form) {
     // Form Data
-    let form_data = $(e.target).serialize();
-    console.log(form_data)
 
+    let repport = e.target[0].files[0];
+    var form_data = new FormData();
+    form_data.append('file', repport);
+
+    $.ajax({
+      url: 'upload.php', // <-- point to server-side PHP script 
+      dataType: 'text',  // <-- what to expect back from the PHP script, if anything
+      cache: false,
+      contentType: false,
+      processData: false,
+      data: form_data,
+      type: 'post',
+      success: function (php_script_response) {
+      }
+    });
+    
     // DO AJAX HERE
-    let fake_ajax = setTimeout(function() {
+    let fake_ajax = setTimeout(function () {
       form.stopProgress();
       modal.find('.modal-body').prepend('<div class="alert alert-info">Please check your browser console</div>')
-
       clearInterval(fake_ajax);
     }, 1500);
 
     e.preventDefault();
   },
-  shown: function(modal, form) {
+  shown: function (modal, form) {
     console.log(form)
   },
   buttons: [
@@ -73,7 +85,7 @@ $("#modal-5").fireModal({
       text: 'Upload',
       submit: true,
       class: 'btn btn-primary btn-shadow',
-      handler: function(modal) {
+      handler: function (modal) {
       }
     }
   ]
@@ -81,7 +93,7 @@ $("#modal-5").fireModal({
 
 $("#modal-6").fireModal({
   body: '<p>Now you can see something on the left side of the footer.</p>',
-  created: function(modal) {
+  created: function (modal) {
     modal.find('.modal-footer').prepend('<div class="mr-auto"><a href="#">I\'m a hyperlink!</a></div>');
   },
   buttons: [
@@ -89,7 +101,7 @@ $("#modal-6").fireModal({
       text: 'No Action',
       submit: true,
       class: 'btn btn-primary btn-shadow',
-      handler: function(modal) {
+      handler: function (modal) {
       }
     }
   ]
@@ -101,24 +113,24 @@ $('.oh-my-modal').fireModal({
 });
 
 $("#accepter-demande").fireModal({
-    body: "<p>Êtes-vous sûr de vouloir accepter cette demande?</p><p>Un email sera envoyé à la personne concerné.</p>",
-    title:'Accepter cette demande',
-    buttons: [
-        {
-            text: 'Accepter',
-            submit: true,
-            class: 'btn btn-success btn-shadow',
-            handler: function () {
-                $('form[name="accepter-demande"').submit();
-            }
-        },
-        {
-            text: 'Annuler',
-            submit: true,
-            class: 'btn btn-danger btn-shadow',
-            handler: function (modal) {
-                modal.modal('toggle');
-            }
-        }
-    ]
+  body: "<p>Êtes-vous sûr de vouloir accepter cette demande?</p><p>Un email sera envoyé à la personne concerné.</p>",
+  title: 'Accepter cette demande',
+  buttons: [
+    {
+      text: 'Accepter',
+      submit: true,
+      class: 'btn btn-success btn-shadow',
+      handler: function () {
+        $('form[name="accepter-demande"').submit();
+      }
+    },
+    {
+      text: 'Annuler',
+      submit: true,
+      class: 'btn btn-danger btn-shadow',
+      handler: function (modal) {
+        modal.modal('toggle');
+      }
+    }
+  ]
 });

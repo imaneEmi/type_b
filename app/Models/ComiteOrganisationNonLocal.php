@@ -17,6 +17,7 @@ class ComiteOrganisationNonLocal extends Model
         'universite',
         'etablissement',
         'ville',
+        'manifestation_id'
     ];
 
 
