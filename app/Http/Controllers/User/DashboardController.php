@@ -155,7 +155,7 @@ class DashboardController extends Controller
             'coordonnateur', 'entiteOrganisatrice', 'responsableEntiteOrganisatrice',
             'demande', 'manifestationComite', 'manifestationcontributeurs', 'etablissementsOrganisateur',
             'gestionFinanciere'));
-        return $pdf->stream("invoice.pdf", array("Attachment" => false));
+        return $pdf->stream("Soutien_a_la_recherche_Type_B.pdf", array("Attachment" => false));
     }
 
     public function createRequest(Request $request)
