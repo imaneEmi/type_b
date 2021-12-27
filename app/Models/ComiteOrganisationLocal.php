@@ -9,11 +9,10 @@ class ComiteOrganisationLocal extends Model
 {
     use HasFactory;
     protected $connection = 'mysql';
-    protected $with=['etablissement'];
     public $fillable = [
            'id_cher',
            'manifestation_id'
     ];
 
- 
+
 }

@@ -13,5 +13,11 @@ class EtablissementServiceImpl implements EtablissementService{
     public function findAll(){
         return Etablissement::all();
     }
-   
+
+
+    public function findById($id)
+    {
+        return Etablissement::findOrFail($id);
+    }
+
 }

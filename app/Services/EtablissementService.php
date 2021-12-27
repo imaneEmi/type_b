@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
-interface EtablissementService{
+interface EtablissementService
+{
     public function findAll();
-   
+
+    public function findById($id);
+
 }

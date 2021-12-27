@@ -63,10 +63,42 @@ class AppServiceProvider extends ServiceProvider
             'App\Services\ChercheurService',
             'App\Services\ServicesImpl\ChercheurServiceImpl'
         );
-
-        
-
-
+        $this->app->bind(
+            'App\Services\ManifestationEtablissementService',
+            'App\Services\ServicesImpl\ManifestationEtablissementServiceImpl'
+        );
+        $this->app->bind(
+            'App\Services\GestionFinanciereService',
+            'App\Services\ServicesImpl\GestionFinanciereServiceImpl'
+        );
+        $this->app->bind(
+            'App\Services\ComiteOrganisationLocalService',
+            'App\Services\ServicesImpl\ComiteOrganisationLocalServiceImpl'
+        );
+        $this->app->bind(
+            'App\Services\ComiteOrganisationNonLocalService',
+            'App\Services\ServicesImpl\ComiteOrganisationNonLocalServiceImpl'
+        );
+        $this->app->bind(
+            'App\Services\ComiteScientifiqueLocalService',
+            'App\Services\ServicesImpl\ComiteScientifiqueLocalServiceImpl'
+        );
+        $this->app->bind(
+            'App\Services\ComiteScientifiqueNonLocalService',
+            'App\Services\ServicesImpl\ComiteScientifiqueNonLocalServiceImpl'
+        );
+        $this->app->bind(
+            'App\Services\ManifestationContributionParticipantService',
+            'App\Services\ServicesImpl\ManifestationContributionParticipantServiceImpl'
+        );
+        $this->app->bind(
+            'App\Services\ManifestationTypeContributeurService',
+            'App\Services\ServicesImpl\ManifestationTypeContributeurServiceImpl'
+        );
+        $this->app->bind(
+            'App\Services\SoutienSolliciteService',
+            'App\Services\ServicesImpl\SoutienSolliciteServiceImpl'
+        );
 
     }
 

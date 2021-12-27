@@ -36,6 +36,7 @@ Route::middleware(['verified'])->group(function () {
     Route::post('/dashboard-user/create-request', [App\Http\Controllers\User\DashboardController::class, 'createRequest'])->name('create.request.store');
     Route::get('/dashboard-user/demande/{id}/pdf', [App\Http\Controllers\User\DashboardController::class, 'generatePDF'])->name('request.pdf');
     Route::post('/dashboard-user/manifestation/upload-rapport', [App\Http\Controllers\User\DashboardController::class, 'uploadRapport'])->name('manifestation.upload.rapport');
+    Route::post('/dashboard-user/manifestation/add-file', [App\Http\Controllers\User\DashboardController::class, 'addFile'])->name('manifestation.add.file');
     Route::get('/dashboard-user/manifestation/rapport/{url}', [App\Http\Controllers\User\DashboardController::class, 'readRapport'])->name('manifestation.read.rapport');
 });
 

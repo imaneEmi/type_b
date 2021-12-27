@@ -1,7 +1,6 @@
 @extends('layouts.main_user')
 
 @section('content')
-
 <section class="section">
   <div class="section-header">
     <h1>Créer une demande</h1>
@@ -11,11 +10,18 @@
       <div class="breadcrumb-item">Form Validation</div>
     </div>
   </div>
-
+  @isset($message)
+  <div class="alert alert-warning alert-has-icon">
+    <div class="alert-icon"><i class="far fa-lightbulb"></i></div>
+    <div class="alert-body">
+      <div class="alert-title">Warning</div>
+      Vous ne pouvez pas créer de demande, car ,une demande appartenant a votre structurene contient pas le rapport!
+    </div>
+  </div>
+  @else
   <div class="steps">
     <div class="step ">
       <p>
-
       </p>
       <div class="bullet">
         <span>1</span>
@@ -24,7 +30,6 @@
     </div>
     <div class="step">
       <p>
-
       </p>
       <div class="bullet">
         <span>2</span>
@@ -33,7 +38,6 @@
     </div>
     <div class="step">
       <p>
-
       </p>
       <div class="bullet">
         <span>3</span>
@@ -42,7 +46,6 @@
     </div>
     <div class="step">
       <p>
-
       </p>
       <div class="bullet">
         <span>4</span>
@@ -50,9 +53,7 @@
       <div class="check fas fa-check"></div>
     </div>
   </div>
-
   <div class="section-body">
-
     <div class="container">
       <div class="form-outer">
         <form method="POST" enctype="multipart/form-data" action="{{ route('create.request.store') }}" id="manifestationForm">
@@ -112,7 +113,6 @@
                       <div class="col-6">
                         <label>Liste des etudiants locaux </label>
                         <div class="custom-file">
-
                           <input type="file" class="custom-file-input" id="customFile" name="file_nbr_etudiants_locaux" required>
                           <label class="custom-file-label" for="customFile">Choose file</label>
                         </div>
@@ -154,9 +154,7 @@
                     <div class="form-group">
                       <label>Date fin</label>
                       <input type="date" class="form-control" name="date_fin" required="">
-
                     </div>
-
                   </div>
                   <div class="card-footer text-right">
                     <button class="btn btn-primary firstNext next"> Next </button>
@@ -198,8 +196,6 @@
                   <h4> Comment la gestion financière est-elle prévue ?</h4>
                 </div>
                 <div class="card-body">
-
-
                   <div class="form-group">
                     <label>Libelle</label>
                     <input type="text" class="form-control" id='libelle_gestion_financiere'>
@@ -222,12 +218,10 @@
                       </tr>
                     </thead>
                     <tbody>
-
                     </tbody>
                   </table>
                 </div>
               </div>
-
             </div>
             <div class="col-12 col-md-12 col-lg-12">
               <div class="card">
@@ -235,7 +229,6 @@
                   <h4>Contributeurs(Sponsors,établissements)</h4>
                 </div>
                 <div class="card-body">
-
                   <!-- <div class="section-title mt-0">Type</div>
                     <div class="form-group">
                       <select class="custom-select" id="type_contributeur" name="type_contributeur">
@@ -252,7 +245,6 @@
                     <label>Montant</label>
                     <input type="number" min="0" class="form-control" id='montant_contributeur' name="montant_contributeur">
                   </div>
-
                   <div class="section-title mt-0">Nature</div>
                   <div class="form-group">
                     <select class="custom-select" id="nature_contributeur" name="nature_contributeur">
@@ -276,7 +268,6 @@
                       </tr>
                     </thead>
                     <tbody>
-
                     </tbody>
                   </table>
                 </div>
@@ -284,7 +275,6 @@
                   <p class="btn btn-primary prev-1 prev"> Previous </p>
                   <p class="btn btn-primary next-1 next"> Next </p>
                 </div>
-
               </div>
             </div>
             <!-- <div class="col-12 col-md-12 col-lg-12">
@@ -326,7 +316,6 @@
                 </div>
               </div>
             </div> -->
-
           </div>
           <div class="page">
             <div class="col-12 col-md-12 col-lg-12">
@@ -335,7 +324,6 @@
                   <h4>Contribution des participants</h4>
                 </div>
                 <div class="card-body">
-
                   <div class="form-group">
                     <div class="section-title mt-0"></div>
                     <label> Les frais d’inscription couvrent </label>
@@ -375,10 +363,8 @@
                   <p class="btn btn-primary prev-2 prev"> Previous </p>
                   <p class="btn btn-primary next-2 next"> Next </p>
                 </div>
-
               </div>
             </div>
-
           </div>
           <div class="page">
             <div class="col-12 col-md-12 col-lg-12">
@@ -452,16 +438,12 @@
                         </tr>
                       </thead>
                       <tbody>
-
                       </tbody>
                     </table>
                   </div>
-
                 </div>
-
               </div>
             </div>
-
             <div class="col-12 col-md-12 col-lg-12">
               <div class="card">
                 <div class="card-header">
@@ -472,7 +454,6 @@
                     <label>Nom</label>
                     <input type="text" class="form-control" id="nom_comite_scientifique_local">
                   </div>
-
                   <div class="form-group">
                     <label> Prenom</label>
                     <input type="text" class="form-control" id="prenom_comite_scientifique_local">
@@ -489,7 +470,6 @@
                     <label> type de l'entité</label>
                     <input type="text" class="form-control" id="type_entite_comite_scientifique_local">
                   </div>
-
                   <div class="form-group">
                     <label>nom de l'entité</label>
                     <input type="text" class="form-control" id="nom_entite_comite_scientifique_local">
@@ -510,13 +490,10 @@
                         </tr>
                       </thead>
                       <tbody>
-
                       </tbody>
                     </table>
                   </div>
-
                 </div>
-
               </div>
             </div>
             <div class="col-12 col-md-12 col-lg-12">
@@ -545,7 +522,6 @@
                     <label> type de l'entité</label>
                     <input type="text" class="form-control" id="type_entite_comite_scientifique_non_local">
                   </div>
-
                   <div class="form-group">
                     <label>nom de l'entité</label>
                     <input type="text" class="form-control" id="nom_entite_comite_scientifique_non_local">
@@ -571,20 +547,13 @@
                         </tr>
                       </thead>
                       <tbody>
-
                       </tbody>
                     </table>
                   </div>
-
                 </div>
-
               </div>
             </div>
-
-
-
             <div class="col-12 col-md-12 col-lg-12">
-
               <div class="card">
                 <div class="card-header">
                   <h4>Soutien sollicité de l’Université</h4>
@@ -610,20 +579,16 @@
                         </div>
                         <div class="form-group">
                           <label> Remarques</label>
-
                           <input type="text" class="form-control" id='remarques_frais_ouvert_{{$fr->id}}' name="remarques_frais_ouvert_{{$fr->id}}" required="" disabled>
                         </div>
                       </div>
                     </div>
                     @endforeach
-
                   </div>
                 </div>
               </div>
             </div>
-
             <div class="col-12 col-md-12 col-lg-12">
-
               <div class="card">
                 <div class="card-header">
                   <h4>Pièces</h4>
@@ -643,14 +608,12 @@
                 </div>
               </div>
             </div>
-
           </div>
         </form>
+        @endisset
       </div>
     </div>
   </div>
-
-
 </section>
 @endsection
 
@@ -903,7 +866,6 @@
     document.getElementById('gestion_financiere_table').deleteRow(i);
   }
 
-
   var fraisOuvert = <?php echo json_encode($fraisCouvert); ?>;
   for (var i = 0; i < fraisOuvert.length; i++) {
     $('#frais-ouvert-' + fraisOuvert[i].id).change(
@@ -921,9 +883,8 @@
 
         }
       });
-
-
   }
+
   $("#submitManifestationForm").on('click', function(eventObj) {
     $("<input />").attr("type", "hidden")
       .attr("name", "contributeurs")
