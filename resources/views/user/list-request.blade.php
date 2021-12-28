@@ -6,9 +6,8 @@
         <div class="section-header">
             <h1>Liste des demandes</h1>
             <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
-                <div class="breadcrumb-item"><a href="#">Forms</a></div>
-                <div class="breadcrumb-item">Form Validation</div>
+                <div class="breadcrumb-item">Demandes</div>
+                <div class="breadcrumb-item">Liste des demandes </div>
             </div>
         </div>
 
@@ -23,7 +22,7 @@
                                 <div class="card-header-action">
                                     <form>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" placeholder="Search">
+                                            <input type="text" class="form-control" placeholder="chercher">
                                             <div class="input-group-btn">
                                                 <button class="btn btn-primary"><i class="fas fa-search"></i></button>
                                             </div>
@@ -39,7 +38,7 @@
                                             <th class="text-center">
                                                 <i class="fas fa-th"></i>
                                             </th>
-                                            <th>Code</th>
+                                            <th>Reference</th>
                                             <th>Date d'envoi</th>
                                             <th>Remarques</th>
                                             <th>état</th>
@@ -69,7 +68,7 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <button class="btn btn-primary" id="modal-5{{$demande->id}}">
+                                                    <button style=" max-width: 80px;min-width: 80px;" class="btn btn-primary dashboard-user-bnt" id="modal-5{{$demande->id}}">
                                                         @if (!is_null($demande->manifestation->rapport))
                                                             éditer
                                                         @else
@@ -78,25 +77,25 @@
                                                     </button>
                                                     @if (!is_null($demande->manifestation->rapport))
                                                         <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->rapport->url)])}}"
-                                                           class="btn btn-primary"> voir </a>
+                                                           class="btn btn-primary dashboard-user-bnt" style=" max-width: 80px; min-width: 80px;"> voir </a>
                                                     @endif
                                                 </td>
                                                 <td>
                                                     @if (!is_null($demande->manifestation->lettreAcceptation) )
                                                         <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->lettreAcceptation->url)])}}"
-                                                           class="btn btn-primary">voir</a>
+                                                           class="btn btn-primary dashboard-user-bnt" style=" max-width: 80px;min-width: 80px; " >voir</a>
                                                     @else
                                                         indisponible pour le moment
                                                     @endif
                                                 </td>
                                                 <td>
                                                     @if ($demande->editable)
-                                                        <button class="btn btn-primary" id="modal-6{{$demande->id}}">
-                                                            Ajouter un fichier
+                                                        <button class="btn btn-primary dashboard-user-bnt"  style=" max-width: 80px;min-width: 80px; " id="modal-6{{$demande->id}}">
+                                                            +fichier
                                                         </button>
                                                     @endif
                                                     <a href="{{route('request.pdf',['id'=>$demande->id])}}"
-                                                       class="btn btn-primary">Detail</a>
+                                                       class="btn btn-primary dashboard-user-bnt" style=" max-width: 80px;min-width: 80px;">PDF</a>
                                                 </td>
                                             </tr>
                                         @endforeach

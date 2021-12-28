@@ -97,8 +97,8 @@ class DashboardController extends Controller
         ComiteOrganisationLocalService $comiteOrganisationLocalService
     )
     {
-        $this->soutienSolliciteService=$soutienSolliciteService;
-        $this->manifestationTypeContributeurService=$manifestationTypeContributeurService;
+        $this->soutienSolliciteService = $soutienSolliciteService;
+        $this->manifestationTypeContributeurService = $manifestationTypeContributeurService;
         $this->manifestationContributionParticipantService = $manifestationContributionParticipantService;
         $this->comiteScientifiqueNonLocalService = $comiteScientifiqueNonLocalService;
         $this->comiteScientifiqueLocalService = $comiteScientifiqueLocalService;
@@ -146,10 +146,10 @@ class DashboardController extends Controller
         $comiteScientifiqueNonLocal = $this->comiteScientifiqueNonLocalService->findByManifistation($demande->manifestation);
         $comiteScientifiqueLocal = $this->comiteScientifiqueLocalService->findByManifistation($demande->manifestation);
         $manifestationContributionParticipant = $this->manifestationContributionParticipantService->findByManifistation($demande->manifestation);
-        $manifestationTypeContributeur =$this->manifestationTypeContributeurService->findByManifistation($demande->manifestation);
-        $soutienSollicite =$this->soutienSolliciteService->findByManifistation($demande->manifestation);
+        $manifestationTypeContributeur = $this->manifestationTypeContributeurService->findByManifistation($demande->manifestation);
+        $soutienSollicite = $this->soutienSolliciteService->findByManifistation($demande->manifestation);
         $totalSoutienSollicite = $this->soutienSolliciteService->calculateTotal($soutienSollicite);
-        $pdf = PDF::loadView('user/pdf', compact('totalSoutienSollicite','soutienSollicite','manifestationTypeContributeur','manifestationContributionParticipant',
+        $pdf = PDF::loadView('user/pdf', compact('totalSoutienSollicite', 'soutienSollicite', 'manifestationTypeContributeur', 'manifestationContributionParticipant',
             'comiteScientifiqueLocal', 'comiteScientifiqueNonLocal',
             'comiteOrganisationNonLocal', 'comiteOrganisationLocal',
             'coordonnateur', 'entiteOrganisatrice', 'responsableEntiteOrganisatrice',
@@ -178,24 +178,19 @@ class DashboardController extends Controller
         if ($request->isMethod('post')) {
             $data = $request->all();
 
-
-            //dd($data);
-
-            // $user->etablissement_id =  $data['etablissment_coordonnateur_manifestation'];
-            // $user->tel =  $data['tel_coordonnateur_manifestation'];
-            // $user->fax =  $data['fax_coordonnateur_manifestation'];
-            // $updated = $user->update($user->getAttributes());
-            // if (!$updated) {
-            //     dd("field to update user");
-            // }
-
-
-            // $entiteOrganisatrice = new EntiteOrganisatrice();
-            // $entiteOrganisatrice->nom = $data['nom_entite_organisatrice'];
-            // $entiteOrganisatrice->responsable = $data['responsable_entite_organisatrice'];
-            // $entiteOrganisatrice->etablissement_id = $data['etablissement_entite_organisatrice'];
-            // $entiteOrganisatrice = EntiteOrganisatrice::create($entiteOrganisatrice->getAttributes());
-
+            $request->validate([
+                'intitule' => 'required',
+                'date_debut' => 'required|date',
+                'date_fin' => 'required|date|after_or_equal:date_debut',
+                'type' => 'required',
+                'etendue' => 'required',
+                'file_nbr_etudiants_locaux' => 'required',
+                'file_nbr_enseignants_locaux' => 'required',
+                'nbr_etudiants_locaux' => 'required',
+                'nbr_etudiants_non_locaux' => 'required',
+                'nbr_enseignants_locaux' => 'required',
+                'nbr_enseignants_non_locaux' => 'required',
+            ]);
 
             $demande = new Demande();
             $demande->code = $chercheur->id_cher . "/" . $this->demandeService->countCoordonnateurDemandeByCurrentYear($chercheur) + 1 . "/" . date('Y');
@@ -264,15 +259,6 @@ class DashboardController extends Controller
                 ManifestationTypeContributeur::create($manifestationTypeContributeur->getAttributes());
             }
 
-            // $comiteOrganisation = json_decode($data['comiteOrganisation'], true);
-            // for ($i = 0; $i < count($comiteOrganisation); $i++) {
-            //     $organisature = ComiteOrganisation::create($comiteOrganisation[$i]);
-            //     $manifestationComite = new ManifestationComite();
-            //     $manifestationComite->comite_organisation_id = $organisature->getAttributes()['id'];
-            //     $manifestationComite->manifestation_id = $manifestation->getAttributes()["id"];
-            //     $manifestationComite = ManifestationComite::create($manifestationComite->getAttributes());
-            // }
-
             $contributeurs = json_decode($data['contributeurs'], true);
             for ($i = 0; $i < count($contributeurs); $i++) {
                 $contributeur = Contributeur::create($contributeurs[$i]);
@@ -332,15 +318,16 @@ class DashboardController extends Controller
                 }
             }
 
-            $pieces = $data['pieces'];
-            for ($i = 0; $i < count($pieces); $i++) {
-                $path = Storage::disk('local')->put("manifestation_files", $pieces[$i]);
-                $fileManifestation = new FileManifestation();
-                $fileManifestation->url = $path;
-                $fileManifestation->manifestation_id = $manifestation->getAttributes()["id"];
-                FileManifestation::create($fileManifestation->getAttributes());
+            if ($request->has('pieces')) {
+                $pieces = $data['pieces'];
+                for ($i = 0; $i < count($pieces); $i++) {
+                    $path = Storage::disk('local')->put("manifestation_files", $pieces[$i]);
+                    $fileManifestation = new FileManifestation();
+                    $fileManifestation->url = $path;
+                    $fileManifestation->manifestation_id = $manifestation->getAttributes()["id"];
+                    FileManifestation::create($fileManifestation->getAttributes());
+                }
             }
-
             return redirect()->route('dashboard.user');
         }
 
