@@ -361,7 +361,7 @@
                                         <div class="card-body">
                                             <div class="form-group">
                                                 <div class="section-title mt-0"></div>
-                                                <label> Les frais d’inscription couvrent </label>
+                                                <label>  Chercheurs </label>
                                                 <select class="js-example-basic-multiple"
                                                         name="comiteOrganisationLocal[]"
                                                         multiple="multiple">
