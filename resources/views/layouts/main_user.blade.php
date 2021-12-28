@@ -47,10 +47,6 @@
                                 }}</div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
-
-                            <a href="{{ route('edit.profile') }}" class="dropdown-item has-icon">
-                                <i class="fas fa-cog"></i> Paramètres
-                            </a>
                             <div class="dropdown-divider"></div>
                             <a href="{{ route('logout') }}" onclick="event.preventDefault();
                                           document.getElementById('logout-form').submit();" class="dropdown-item has-icon text-danger">
