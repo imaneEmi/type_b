@@ -51,6 +51,8 @@ Route::get('/edit-budgetFixe', [App\Http\Controllers\Admin\AdminsController::cla
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/dashboard-admin', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard.admin');
     Route::get('/statistiques-admin', [App\Http\Controllers\Admin\StatistiquesController::class, 'index'])->name('statistiques.admin');
+    Route::post('/rechercher', [App\Http\Controllers\Admin\StatistiquesController::class, 'search'])->name('statistiques.search');
+
     Route::get('/admin_edit_form/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'getManifestation'])
         ->name('admin.edit.manifestation');
     Route::get('/manif-details/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'getManifestationDetails'])

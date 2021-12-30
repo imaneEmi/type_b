@@ -74,9 +74,8 @@
                             <a href="{{ route('dashboard.admin') }}" class="nav-link"><i class="fas fa-fire"></i><span>Tableau de bord</span></a>
 
                         </li>
-                        <li @if (Route::is('dashboard.admin')) class="nav-item dropdown" @endif>
+                        <li class="nav-item {{Route::is('statistiques.admin')?'active':''}} ">
                             <a href="{{ route('statistiques.admin') }}" class="nav-link"><i class="fas fa-fire"></i><span>Statistiques</span></a>
-
                         </li>
 
                         <li class="menu-header">Liste des Demandes</li>

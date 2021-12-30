@@ -12,6 +12,8 @@ class BudgetAnnuel extends Model
     public $fillable = [
         'annee',
         'budget_fixe',
-        'budget_restant'
+        'budget_restant',
+
+
     ];
 }

@@ -63,11 +63,10 @@ class AppServiceProvider extends ServiceProvider
             'App\Services\ChercheurService',
             'App\Services\ServicesImpl\ChercheurServiceImpl'
         );
-
-        
-
-
-
+        $this->app->bind(
+            'App\Services\LaboratoireService',
+            'App\Services\ServicesImpl\LaboratoireServiceImpl'
+        );
     }
 
     /**
