@@ -3,47 +3,48 @@
 @section('content')
 <section class="section">
     <div class="section-header">
-        <h1>Budget Total Fixé</h1>
+        <h1>Budget Annuel de l'année</h1>
     </div>
-    <div class="card">
+    <div class="card ">
         <form method="post" class="needs-validation" novalidate="">
             <div class="card-header">
-                <h4>Ajouter un nouveau budget fixe</h4>
+                <h4>Ajouter un nouveau budget annuel</h4>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="form-group col-md-6 col-12">
-                        <label>Libelle</label>
-                        <input type="text" class="form-control" value="" required>
-                        <div class="invalid-feedback">
-                            Veuillez remplir ce champs
+                    <div class="form-group col-md-6 col-6">
+
+
+                        <label>Phone Number (US Format)</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                            </div>
+                            <input type="text" class="form-control phone-number">
                         </div>
+
+
                     </div>
-                    <div class="form-group col-md-4 col-12">
-                        <label>Forfait</label>
-                        <input type="text" class="form-control" value="" required>
-                        <div class="invalid-feedback">
-                            Veuillez remplir ce champs
-                        </div>
-                    </div>
-                    <div class="form-group col-md-2 col-12">
-                        <label>Limite</label>
-                        <input type="number" class="form-control" value="" required>
-                        <div class="invalid-feedback">
-                            Veuillez remplir ce champs
+
+
+                    <div class="form-group col-md-6 col-6">
+                        <label>Budget en (MAD)</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    $
+                                </div>
+                            </div>
+                            <input type="text" class="form-control currency">
+                            <div class="invalid-feedback">
+                                Veuillez remplir ce champs
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="form-group col-md-6 col-12">
-                        <label>Description</label>
-                        <input type="text" class="form-control" value="">
-                    </div>
-                    <div class="form-group col-md-6 col-12">
-                        <label>Remarques</label>
-                        <input type="text" class="form-control" value="ujang@maman.com">
-                    </div>
-                </div>
+
             </div>
             <div class="card-footer text-right">
                 <button class="btn btn-success">Enregister</button>
@@ -53,29 +54,10 @@
     </div>
 
 
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <th>Libelle</th>
-                    <th>Forfait</th>
-                    <th>Limite</th>
-                    <th>Description</th>
-                    <th>Remarques</th>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Libelle</td>
-                        <td>Forfait</td>
-                        <td>Limite</td>
-                        <td>Description</td>
-                        <td>Remarques</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+
 </section>
 @endsection
 @section('scripts')
+<script src="../assets/js/page/forms-advanced-forms.js"></script>
+
 @endsection

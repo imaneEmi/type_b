@@ -17,4 +17,5 @@ interface BudgetAnnuelService
     public function findBudgetConsommeeParEtabParAnnee($idEtablissement, $annee);
     public function findBudgetConsommeeParAnnee($annee);
     public function findBudgetConsommeeParEtabParEntite($idEtablissement, $idEntite);
+    public function budgetNull();
 }

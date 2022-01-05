@@ -5,6 +5,7 @@ namespace App\Services\ServicesImpl;
 use App\Models\BudgetAnnuel;
 use App\Models\Dto\Laboratoire;
 use App\Services\BudgetAnnuelService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class BudgetAnnuelServiceImpl implements BudgetAnnuelService
@@ -78,5 +79,11 @@ class BudgetAnnuelServiceImpl implements BudgetAnnuelService
         $soutien_accordes = env('DB_DATABASE') . ".soutien_accordes";
         return  Laboratoire::join('etablissement', 'etab_id', '=', 'etablissement.id')->join($manifestations, 'laboratoire.id_labo', '=', 'manifestations.entite_organisatrice_id')
             ->join($soutien_accordes, 'manifestation_id', '=', 'manifestations.id')->whereYear('date_debut', '=', $annee)->get();
+    }
+    public function budgetNull()
+    {
+        $result = $this->findBudgetParAnnee(Carbon::now()->format('Y'));
+        if ($result == null) return true;
+        else return true;
     }
 }

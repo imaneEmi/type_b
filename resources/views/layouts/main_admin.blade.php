@@ -97,14 +97,13 @@
                             </a></li>
 
                         <li class="menu-header">Paramétres</li>
-                        <li class="nav-item dropdown">
+                        <li class="nav-item dropdown {{Route::is('edit.budgetFixe') || Route::is('edit.frais') || Route::is('edit.pieces') ?'active':''}}">
                             <a href="#" class="nav-link has-dropdown"><i class="fas fa-cog"></i><span>Liste des
                                     paramétres</span></a>
-                            <ul class="dropdown-menu">
-                                <li><a class="{{Route::is('edit.budgetFixe')?'beep beep-sidebar':''}}" href="{{ route('edit.budgetFixe') }}">Budget Total Fixe</a></li>
-
-                                <li><a class="{{Route::is('edit.frais')?'beep beep-sidebar':''}}" href="{{ route('edit.frais') }}">Frais couvert</a></li>
-                                <li><a class="{{Route::is('edit.pieces')?'beep beep-sidebar':''}}" href="{{ route('edit.pieces') }}">Pieces demandées</a></li>
+                            <ul class="dropdown-menu ">
+                                <li class="{{Route::is('edit.budgetFixe') ? 'active':''}}"><a class="{{Route::is('edit.budgetFixe') ? 'beep beep-sidebar':''}}" href="{{ route('edit.budgetFixe') }}">Budget Total Fixe</a></li>
+                                <li class="{{Route::is('edit.frais')?'active':''}}"><a class="{{Route::is('edit.frais')?'beep beep-sidebar':''}}" href="{{ route('edit.frais') }}">Frais couvert</a></li>
+                                <li class="{{Route::is('edit.pieces')?'active':''}}"><a class="{{Route::is('edit.pieces')?'beep beep-sidebar':''}}" href="{{ route('edit.pieces') }}">Pieces demandées</a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown {{Route::is('edit.profile')?'active':''}}">

@@ -36,6 +36,7 @@ Route::middleware(['verified'])->group(function () {
     Route::post('/dashboard-user/create-request', [App\Http\Controllers\User\DashboardController::class, 'createRequest'])->name('create.request.store');
     Route::get('/dashboard-user/demande/{id}/pdf', [App\Http\Controllers\User\DashboardController::class, 'generatePDF'])->name('request.pdf');
     Route::post('/dashboard-user/manifestation/upload-rapport', [App\Http\Controllers\User\DashboardController::class, 'uploadRapport'])->name('manifestation.upload.rapport');
+    Route::post('/dashboard-user/manifestation/add-file', [App\Http\Controllers\User\DashboardController::class, 'addFile'])->name('manifestation.add.file');
     Route::get('/dashboard-user/manifestation/rapport/{url}', [App\Http\Controllers\User\DashboardController::class, 'readRapport'])->name('manifestation.read.rapport');
 });
 
@@ -45,7 +46,6 @@ Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'inde
 Route::get('/edit-profile', [App\Http\Controllers\Admin\AdminsController::class, 'profile'])->name('edit.profile');
 Route::get('/edit-pieces', [App\Http\Controllers\Admin\AdminsController::class, 'pieceDemandee'])->name('edit.pieces');
 Route::get('/edit-frais', [App\Http\Controllers\Admin\AdminsController::class, 'fraisCouverts'])->name('edit.frais');
-Route::get('/edit-budgetFixe', [App\Http\Controllers\Admin\AdminsController::class, 'budgetFixe'])->name('edit.budgetFixe');
 
 
 Route::group(['middleware' => ['auth']], function () {
@@ -65,6 +65,7 @@ Route::group(['middleware' => ['auth']], function () {
         ->name('demandes.refusees');
     Route::get('/archive', [App\Http\Controllers\Admin\AdminsController::class, 'archive'])
         ->name('archive');
-    Route::post('/accept-demande', [App\Http\Controllers\Admin\AdminsController::class, 'accept'])->name('accept.demande');
+    Route::post('/accept-demande', [App\Http\Controllers\Admin\AdminsController::class, 'accept'])->name('acedit.budgetFixecept.demande');
     Route::post('/delete-demande', [App\Http\Controllers\Admin\AdminsController::class, 'delete'])->name('delete.demande');
+    Route::get('/edit-budgetFixe', [App\Http\Controllers\Admin\AdminsController::class, 'budgetFixe'])->name('');
 });

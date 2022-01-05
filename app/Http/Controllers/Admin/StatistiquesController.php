@@ -32,6 +32,7 @@ class StatistiquesController extends Controller
      */
     public function index()
     {
+
         $annees = $this->budgetAnnuelService->findAllAnnee();
         $etablissements = $this->etablissementService->findAll();
         $entiteOrganisatrice = $this->laboratoireService->findAll();
