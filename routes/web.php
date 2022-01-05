@@ -67,5 +67,7 @@ Route::group(['middleware' => ['auth']], function () {
         ->name('archive');
     Route::post('/accept-demande', [App\Http\Controllers\Admin\AdminsController::class, 'accept'])->name('acedit.budgetFixecept.demande');
     Route::post('/delete-demande', [App\Http\Controllers\Admin\AdminsController::class, 'delete'])->name('delete.demande');
-    Route::get('/edit-budgetFixe', [App\Http\Controllers\Admin\AdminsController::class, 'budgetFixe'])->name('');
+    Route::post('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'save'])->name('save.budgetFixe');
+
+    Route::get('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'edit'])->name('edit.budgetFixe');
 });

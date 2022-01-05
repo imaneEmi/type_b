@@ -86,4 +86,8 @@ class BudgetAnnuelServiceImpl implements BudgetAnnuelService
         if ($result == null) return true;
         else return true;
     }
+    public function save(BudgetAnnuel $budgetAnnuel)
+    {
+        BudgetAnnuel::create($budgetAnnuel);
+    }
 }

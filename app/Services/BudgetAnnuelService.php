@@ -2,8 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\BudgetAnnuel;
+
 interface BudgetAnnuelService
 {
+    public function save(BudgetAnnuel $budgetAnnuel);
     public function findAll();
     public function findAllWithLimit($limit);
 
