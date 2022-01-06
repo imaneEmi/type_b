@@ -33,7 +33,7 @@ class Manifestation extends Model
         'demande_id',
         'entite_organisatrice_id',
     ];
-    
+
     public function rapport()
     {
         return $this->belongsTo(FileManifestation::class, 'file_manifestation_rapport_id');

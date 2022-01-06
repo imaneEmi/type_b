@@ -60,7 +60,23 @@
                     <div class="section-header">
                         <h1>{{ $manifestation->intitule }}</h1>
                         <div class="section-header-breadcrumb">
+                            <div class="d-inline m-3">
+                                <span>
+                                    @if($demande->manifestation->lettreAcceptation != null)
+                                    <a  href="{{route('manifastation.lettre',['url'=>Str::replace('/','-',$demande->manifestation->lettreAcceptation->url)])}}"
+                                        title="Lettre d'acceptation"><i class="fa fa-file-pdf fa-lg" aria-hidden="true"></i>
+                                    </a>
+                                    @endif
+                                </span>
+                            </div>
                             <div class="d-inline">
+                                <span>
+                                    <a href="{{ route('pdf',['id'=>$demande->id]) }}"
+                                        title="Télécharger Fiche traitement de dossier"><i class="fa fa-download fa-lg"></i>
+                                    </a>
+                                </span>
+                            </div>
+                            <div class="d-inline m-3">
                                 <span>
                                     <a href="{{ url()->previous() }}" title="Retour en arrière">
                                         <i class="fa fa-reply fa-lg"></i>
@@ -107,6 +123,7 @@
                                 site web: <a href="{{ $manifestation->site_web}}"> {{ $manifestation->site_web}}</a>
                             </div>
                         </div>
+                        @if ($gestionFinanciere != null )
                         <div class="card" id="gestion-financiere">
                             <div class="card-header">
                                 <h4>Gestion financière</h4>
@@ -119,7 +136,9 @@
                             <div class="card-footer bg-whitesmoke">
                             </div>
                         </div>
+                        @endif
 
+                        @if ($etablissements != null )
                         <div class="card" id="etablissements">
                             <div class="card-header">
                                 <h4>Etablissement(s) de l’UCAM impliqué(s) dans l’organisation </h4>
@@ -145,7 +164,8 @@
                             <div class="card-footer bg-whitesmoke">
                             </div>
                         </div>
-
+                        @endif
+                        @if ($entiteOrganisatrice != null)
                         <div class="card" id="entite">
                             <div class="card-header">
                                 <h4>Entité de recherche organisant la manifestation</h4>
@@ -168,6 +188,8 @@
                                     </tbody>
                                 </table>
                             </div>
+                            @endif
+
                             <div class="card-footer bg-whitesmoke">
                                 @if ($manifestation->agence_organisatrice != null)
                                 <span>Organisation confié à l'agence: {{ $manifestation->agence_organisatrice }}</span>
@@ -222,13 +244,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($comiteOrganisations as $comiteOrganisation )
+
                                     <tr>
-                                        <td>{{ $comiteOrganisation->nom }}&nbsp;{{ $comiteOrganisation->prenom }}</td>
-                                        <td>{{ $comiteOrganisation->etablissement->libelle }}</td>
-                                        <td>{{ $comiteOrganisation->email }}&nbsp;/{{ $comiteOrganisation->tel }}</td>
+                                        <td> $comiteOrganisation->nom }}&nbsp; $comiteOrganisation->prenom }}</td>
+                                        <td> $comiteOrganisation->etablissement->libelle }}</td>
+                                        <td> $comiteOrganisation->email }}&nbsp;/ $comiteOrganisation->tel }}</td>
                                     </tr>
-                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -236,6 +257,7 @@
                         </div>
                     </div>
 
+                    @if ($contributeurs != null)
                     <div class="card" id="contribution">
                         <div class="card-header">
                             <h4>Contribution</h4>
@@ -253,7 +275,7 @@
                                 <tbody>
                                     @foreach ($contributeurs as $contributeur )
                                     <tr>
-                                        <td>{{ $contributeur->typeContributeur->libelle }}</td>
+                                        <td> $contributeur->typeContributeur->libelle }}</td>
                                         <td>
                                             @if ($contributeur->nom !='')
                                             {{ $contributeur->nom }}
@@ -269,7 +291,7 @@
                         <div class="card-footer bg-whitesmoke">
                         </div>
                     </div>
-
+                    @endif
                     <div class="card" id="soutienSollicite">
                         <div class="card-header">
                             <h4>Soutien sollicité</h4>

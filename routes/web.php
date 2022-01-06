@@ -44,7 +44,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard-admin', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard.admin');
-    Route::get('/admin_edit_form/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'getManifestation'])
+    Route::get('/traitement-dossier/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'getManifestation'])
         ->name('admin.edit.manifestation');
     Route::get('/manif-details/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'getManifestationDetails'])
         ->name('manifestation.details');
@@ -62,4 +62,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/edit-pieces', [App\Http\Controllers\Admin\AdminsController::class, 'pieceDemandee'])->name('edit.pieces');
     Route::get('/edit-frais', [App\Http\Controllers\Admin\AdminsController::class, 'fraisCouverts'])->name('edit.frais');
     Route::get('/edit-budgetFixe', [App\Http\Controllers\Admin\AdminsController::class, 'budgetFixe'])->name('edit.budgetFixe');
+    Route::get('/traitement-dossier-pdf/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'generatePdf'])->name('pdf');
+    Route::post('/upload-lettre/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'uploadLettre'])->name('upload.lettre');
+    Route::get('manifastation/lettre/{url}', [App\Http\Controllers\Admin\AdminsController::class, 'getLettre'])->name('manifastation.lettre');
+    Route::post('/save-admin', [App\Http\Controllers\Admin\AdminsController::class, 'saveAdmin'])->name('save-admin');
 });

@@ -19,5 +19,4 @@ class ComiteScientifiqueNonLocal extends Model
         'pays'
     ];
 
-  
 }

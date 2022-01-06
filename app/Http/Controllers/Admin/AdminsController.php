@@ -3,16 +3,33 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\FileManifestation;
+use App\Models\Manifestation;
 use App\Models\SoutienAccorde;
 use App\Services\ManifestationService;
 use App\Services\DemandeService;
 use App\Services\UserService;
+use App\Services\util\Common;
 use App\Services\util\Config;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use PDF;
+
+use function Psy\debug;
 
 class AdminsController extends Controller
 {
 
+    private ManifestationService $manifestationService;
+    private DemandeService $demandeService;
+
+    public function __construct(ManifestationService $manifestationService, DemandeService $demandeService)
+    {
+        $this->manifestationService = $manifestationService;
+        $this->demandeService = $demandeService;
+    }
 
     public function getManifestation($id, ManifestationService $manifestationService, DemandeService $demandeService)
     {
@@ -88,7 +105,70 @@ class AdminsController extends Controller
     }
     public function archive(DemandeService $demandeService)
     {
-
         return view('admin/archive', $demandeService->getAll());
+    }
+
+    public function generatePdf(Request $request)
+    {
+        $data = Date::now();
+        return PDF::loadView('admin.traitement_dossier_pdf', compact('data'))->stream();
+    }
+
+    public function saveAdmin(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'nom' => 'required',
+            'prenom' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|confirmed|min:8',
+            'password_confirmation' => 'same:password',
+        ]);
+
+        if ($validator->fails()) {
+            return response()
+                ->json([
+                    'code' => 500,
+                    'message' => 'le rapport est requis! '
+                ]);
+        }
+        dd(1);
+        return 1;
+    }
+
+    public function uploadLettre(Request $request, $id)
+    {
+        if ($request->hasFile('lettre')) {
+            $manifestation = $this->manifestationService->findByDemandeId($id);
+
+            $file = $request->file('lettre');
+            $lettrePath =  Storage::disk('local')->put("manifestation_files/lettres", $file);
+            $lettreManif = new FileManifestation();
+            $lettreManif->url = $lettrePath;
+            $lettreManif->manifestation_id = $manifestation->getAttributes()["id"];
+            $lettreManif = FileManifestation::create($lettreManif->getAttributes());
+
+            $manifestation->lettre_acceptation_id = $lettreManif->getAttributes()["id"];
+            $manifestation->update($manifestation->getAttributes());
+            return response()
+                ->json([
+                    'code' => 200,
+                    'message' => "lettre téléchargé!"
+                ]);
+        }
+
+        return response()
+            ->json([
+                'code' => 500,
+                'message' => "FAIL"
+            ]);
+    }
+
+    public function getLettre(Request $request)
+    {
+        $url = $request->route('url');
+        $url = str_replace('-', '/', $url);
+        $response = Common::readFileFromLocalStorage($url);
+        if ($response == null)  return redirect()->route('dashboard.admin');
+        return $response;
     }
 }

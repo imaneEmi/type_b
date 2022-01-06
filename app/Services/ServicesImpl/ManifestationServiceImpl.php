@@ -54,12 +54,12 @@ class ManifestationServiceImpl implements ManifestationService
         $etablissements = $manifestation->etablissements;
         $contributeurs = $manifestation->contributeurs;
         $gestionFinanciere = $manifestation->gestionFinanciere;
-        $comiteOrganisations = $manifestation->comites;
+        //$comiteOrganisations = $manifestation->comites;
 
         $details = array_merge($details_part1, [
             'entiteOrganisatrice' => $entiteOrganisatrice,
             'etablissements' => $etablissements, 'contributeurs' => $contributeurs,
-            'gestionFinanciere' => $gestionFinanciere, 'comiteOrganisations' => $comiteOrganisations
+            'gestionFinanciere' => $gestionFinanciere,
         ]);
         return $details;
     }

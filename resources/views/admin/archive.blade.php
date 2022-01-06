@@ -42,16 +42,16 @@
                                             }}
                                         </td>
                                         <td>
-                                            @if ($demande->etat ==='Acceptée')
-                                            <div class="badge badge-success">
+                                            @if ($demande->etat === App\Services\util\Config::$ACCEPTEE)
+                                            <div class="badge badge-success text-capitalize">
                                                 {{$demande->etat}}
                                             </div>
-                                            @elseif ($demande->etat === 'Courante')
-                                            <div class="badge badge-warning">
+                                            @elseif ($demande->etat === App\Services\util\Config::$COURANTE)
+                                            <div class="badge badge-light text-capitalize">
                                                 {{$demande->etat}}
                                             </div>
                                             @else
-                                            <div class="badge badge-danger">
+                                            <div class="badge badge-danger text-capitalize">
                                                 {{$demande->etat}}
                                             </div>
                                             @endif
