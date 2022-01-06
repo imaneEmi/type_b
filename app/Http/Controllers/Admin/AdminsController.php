@@ -99,10 +99,7 @@ class AdminsController extends Controller
     {
         return view('admin/edit_fraisCouvert');
     }
-    public function budgetFixe()
-    {
-        return view('admin/edit_budgetFixe');
-    }
+
     public function archive(DemandeService $demandeService)
     {
         return view('admin/archive', $demandeService->getAll());

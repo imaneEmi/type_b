@@ -75,6 +75,10 @@
                             <a href="{{ route('dashboard.admin') }}" class="nav-link"><i class="fas fa-fire"></i><span>Tableau de bord</span></a>
 
                         </li>
+                        <li class="nav-item {{Route::is('statistiques.admin')?'active':''}} ">
+                            <a href="{{ route('statistiques.admin') }}" class="nav-link"><i class="fas fa-fire"></i><span>Statistiques</span></a>
+                        </li>
+
                         <li class="menu-header">Liste des Demandes</li>
                         <li class="nav-item dropdown {{Route::is('demandes.courantes')?'active':''}}"><a class="" href="{{ route('demandes.courantes') }}">
                                 <i class="fas fa-folder-open"></i>
@@ -94,14 +98,13 @@
                             </a></li>
 
                         <li class="menu-header">Paramétres</li>
-                        <li class="nav-item dropdown">
+                        <li class="nav-item dropdown {{Route::is('edit.budgetFixe') || Route::is('edit.frais') || Route::is('edit.pieces') ?'active':''}}">
                             <a href="#" class="nav-link has-dropdown"><i class="fas fa-cog"></i><span>Liste des
                                     paramétres</span></a>
-                            <ul class="dropdown-menu">
-                                <li><a class="{{Route::is('edit.budgetFixe')?'beep beep-sidebar':''}}" href="{{ route('edit.budgetFixe') }}">Budget Total Fixe</a></li>
-
-                                <li><a class="{{Route::is('edit.frais')?'beep beep-sidebar':''}}" href="{{ route('edit.frais') }}">Frais couvert</a></li>
-                                <li><a class="{{Route::is('edit.pieces')?'beep beep-sidebar':''}}" href="{{ route('edit.pieces') }}">Pieces demandées</a></li>
+                            <ul class="dropdown-menu ">
+                                <li class="{{Route::is('edit.budgetFixe') ? 'active':''}}"><a class="{{Route::is('edit.budgetFixe') ? 'beep beep-sidebar':''}}" href="{{ route('edit.budgetFixe') }}">Budget Total Fixe</a></li>
+                                <li class="{{Route::is('edit.frais')?'active':''}}"><a class="{{Route::is('edit.frais')?'beep beep-sidebar':''}}" href="{{ route('edit.frais') }}">Frais couvert</a></li>
+                                <li class="{{Route::is('edit.pieces')?'active':''}}"><a class="{{Route::is('edit.pieces')?'beep beep-sidebar':''}}" href="{{ route('edit.pieces') }}">Pieces demandées</a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown {{Route::is('edit.profile')?'active':''}}">
@@ -126,7 +129,7 @@
         </div>
     </div>
 
-    <!-- General JS Scripts -->
+
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
     </script>
@@ -139,6 +142,9 @@
 
     <!-- JS Libraies -->
 
+    <script src="../assets/js/cleave.js/dist/cleave.min.js"></script>
+
+    <script src="../assets/js/select2/dist/js/select2.full.min.js"></script>
     <!-- Template JS File -->
     <script src="../assets/js/scripts.js"></script>
     <script src="../assets/js/custom.js"></script>

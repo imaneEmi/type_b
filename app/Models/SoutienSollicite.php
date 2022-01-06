@@ -9,6 +9,7 @@ class SoutienSollicite extends Model
 {
     use HasFactory;
     protected $connection = 'mysql';
+    protected $with=['fraisCouvert'];
     public $fillable = [
         'nbr',
         'montant',
@@ -16,4 +17,8 @@ class SoutienSollicite extends Model
         'frais_couvert_id',
         'manifestation_id',
     ];
+
+    public function fraisCouvert(){
+        return $this->belongsTo(FraisCouvert::class,'frais_couvert_id');
+    }
 }

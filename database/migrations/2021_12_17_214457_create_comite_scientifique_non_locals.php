@@ -17,11 +17,13 @@ class CreateComiteScientifiqueNonLocals extends Migration
             $table->id();
             $table->string('nom',500);
             $table->string('prenom',500);
-            $table->string('email',500);
-            $table->string('tel',500);
-            $table->string('type_entite',500);
-            $table->string('nom_entite',500);
-            $table->string('pays',500);
+            $table->string('email',500)->nullable();
+            $table->string('tel',500)->nullable();
+            $table->string('type_entite',500)->nullable();
+            $table->string('nom_entite',500)->nullable();
+            $table->string('pays',500)->nullable();
+            $table->unsignedBigInteger('manifestation_id');
+            $table->foreign('manifestation_id')->references('id')->on('manifestations') ;
             $table->timestamps();
         });
     }

@@ -16,7 +16,8 @@ class ComiteScientifiqueNonLocal extends Model
         'tel',
         'type_entite',
         'nom_entite',
-        'pays'
+        'pays',
+        'manifestation_id'
     ];
 
 }

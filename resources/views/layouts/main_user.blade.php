@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>UCA</title>
+    <link href="{{asset('assets/img/uca-logo.png')}}" rel="icon">
+    <link href="{{asset('assets/assets/img/uca-logo.png')}}" rel="apple-touch-icon">
+    <title>Dashboard</title>
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -16,7 +18,7 @@
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/components.css">
     <link rel="stylesheet" href="../css/steps.css">
-
+     @yield('head')
 
 </head>
 
@@ -31,7 +33,7 @@
                         <li><a href="#" data-toggle="search" class="nav-link nav-link-lg d-sm-none"><i class="fas fa-search"></i></a></li>
                     </ul>
                     <div class="search-element">
-                        <input class="form-control" type="search" placeholder="Search" aria-label="Search" data-width="250">
+                        <input class="form-control" type="search" placeholder="Chercher" aria-label="Search" data-width="250">
                         <button class="btn" type="submit"><i class="fas fa-search"></i></button>
                         <div class="search-backdrop"></div>
 
@@ -45,10 +47,6 @@
                                 }}</div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
-
-                            <a href="{{ route('edit.profile') }}" class="dropdown-item has-icon">
-                                <i class="fas fa-cog"></i> Paramètres
-                            </a>
                             <div class="dropdown-divider"></div>
                             <a href="{{ route('logout') }}" onclick="event.preventDefault();
                                           document.getElementById('logout-form').submit();" class="dropdown-item has-icon text-danger">
@@ -64,15 +62,15 @@
             <div class="main-sidebar">
                 <aside id="sidebar-wrapper">
                     <div class="sidebar-brand">
-                        <a href="{{ route('dashboard') }}">uca</a>
+                        <a href="{{ route('home') }}">Accueil</a>
                     </div>
                     <div class="sidebar-brand sidebar-brand-sm">
-                        <a href="{{ route('dashboard') }}">UCA</a>
+                        <a href="{{ route('home') }}">Accueil</a>
                     </div>
                     <ul class="sidebar-menu">
 
 
-                        <li class="menu-header">UCA</li>
+                        <li class="menu-header">Menu</li>
 
                         <li class="nav-item dropdown active">
                             <a href="#" class="nav-link has-dropdown"><i class="far fa-file-alt"></i>

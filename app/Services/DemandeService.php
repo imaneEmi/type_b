@@ -18,4 +18,6 @@ interface DemandeService
     public function getNbrDemandesParEtatAnneeCour($etat);
     public function getNbrDemandesAnneeCour();
     public  function nbrDemandeParEtablissAnneeCour();
+    public function isAllRapportLaboratoireExists($chercheur);
+    public  function  findByCoordonnateurId($id);
 }
