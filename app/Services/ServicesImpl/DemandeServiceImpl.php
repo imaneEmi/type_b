@@ -100,15 +100,16 @@ class DemandeServiceImpl implements DemandeService
 
     public function isAllRapportLaboratoireExists($chercheur)
     {
-        $chercheurs = $chercheur->laboratoire->chercheurs;
-        foreach ($chercheurs as $chercheur) {
-            $demandes = $this->findByCoordonnateurId($chercheur->id_cher);
-            foreach ($demandes as $demande) {
-                if ($demande->manifestation->file_manifestation_rapport_id==null) {
-                     return  false;
+
+            $chercheurs = $chercheur->laboratoire->chercheurs;
+            foreach ($chercheurs as $chercheur) {
+                $demandes = $this->findByCoordonnateurId($chercheur->id_cher);
+                foreach ($demandes as $demande) {
+                    if ($demande->manifestation->file_manifestation_rapport_id == null) {
+                        return false;
+                    }
                 }
             }
-        }
-        return true;
+            return true;
     }
 }
