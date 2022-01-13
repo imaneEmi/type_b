@@ -88,7 +88,7 @@ class RegisterController extends Controller
             $user->assignRole($userRole);
             return $user;
 
-        } catch (Exception) {
+        } catch (Exception $e) {
 
             $userRole = Role::create(['name' => 'user']);
             $user->assignRole($userRole);
