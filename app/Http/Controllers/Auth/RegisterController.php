@@ -59,7 +59,7 @@ class RegisterController extends Controller
             'prenom' => ['required', 'string', 'max:255'],
             'profession' => ['required', 'string', 'max:255'],
             'tel' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users', 'regex:/@uca/'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ], $message);
     }
@@ -83,7 +83,7 @@ class RegisterController extends Controller
 
 
         try {
-            
+
             $userRole = Role::findByName('user');
             $user->assignRole($userRole);
             return $user;
