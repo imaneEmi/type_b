@@ -1,5 +1,9 @@
 @extends('layouts.main_admin')
 
+@section('title')
+Tableau de bord
+@endsection
+
 @section('content')
 <section class="section">
 

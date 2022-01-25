@@ -66,7 +66,7 @@ Route::group(['middleware' => ['auth']], function () {
         ->name('demandes.refusees');
     Route::get('/archive', [App\Http\Controllers\Admin\AdminsController::class, 'archive'])
         ->name('archive');
-    Route::post('/accept-demande', [App\Http\Controllers\Admin\AdminsController::class, 'accept'])->name('acedit.budgetFixecept.demande');
+    Route::post('/accept-demande', [App\Http\Controllers\Admin\AdminsController::class, 'accept'])->name('accept.demande');
     Route::post('/delete-demande', [App\Http\Controllers\Admin\AdminsController::class, 'delete'])->name('delete.demande');
     Route::get('/edit-profile', [App\Http\Controllers\Admin\AdminsController::class, 'profile'])->name('edit.profile');
     Route::get('/edit-pieces', [App\Http\Controllers\Admin\AdminsController::class, 'pieceDemandee'])->name('edit.pieces');
@@ -77,6 +77,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('manifastation/lettre/{url}', [App\Http\Controllers\Admin\AdminsController::class, 'getLettre'])->name('manifastation.lettre');
     Route::post('/save-admin', [App\Http\Controllers\Admin\AdminsController::class, 'saveAdmin'])->name('save-admin');
     Route::post('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'save'])->name('save.budgetFixe');
-
     Route::get('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'edit'])->name('edit.budgetFixe');
+    Route::get('/notification-email', [App\Http\Controllers\Admin\AdminsController::class, 'notificationEmail'])->name('emails.notify');
 });

@@ -1,5 +1,8 @@
 @extends('layouts.main_admin')
 
+@section('title')
+Traitement de dossier
+@endsection
 @section('content')
 <section class="section">
     <div class="section-header d-flex justify-content-between pl-2 pr-3">

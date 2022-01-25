@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\NotificationMail;
 use App\Models\FileManifestation;
 use App\Models\Manifestation;
 use App\Models\SoutienAccorde;
@@ -13,8 +14,10 @@ use App\Services\util\Common;
 use App\Services\util\Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use PDF;
 
 use function Psy\debug;
@@ -108,7 +111,8 @@ class AdminsController extends Controller
     public function generatePdf(Request $request)
     {
         $data = Date::now();
-        return PDF::loadView('admin.traitement_dossier_pdf', compact('data'))->stream();
+        $pdf = PDF::loadView('admin.traitement_dossier_pdf', compact('data'))->stream();
+        return  $pdf;
     }
 
     public function saveAdmin(Request $request)
@@ -138,8 +142,10 @@ class AdminsController extends Controller
             $manifestation = $this->manifestationService->findByDemandeId($id);
 
             $file = $request->file('lettre');
-            $lettrePath =  Storage::disk('local')->put("manifestation_files/lettres", $file);
+            //$lettrePath =  $file->storeAs('manifestation_files/lettres','Lettre'.$id.'.pdf');
+            $lettrePath =  $file->storeAs('manifestation_files/lettres', $file->getClientOriginalName());
             $lettreManif = new FileManifestation();
+            $lettreManif->titre =Str::of($file->getClientOriginalName())->trim('.pdf');
             $lettreManif->url = $lettrePath;
             $lettreManif->manifestation_id = $manifestation->getAttributes()["id"];
             $lettreManif = FileManifestation::create($lettreManif->getAttributes());
@@ -167,5 +173,31 @@ class AdminsController extends Controller
         $response = Common::readFileFromLocalStorage($url);
         if ($response == null)  return redirect()->route('dashboard.admin');
         return $response;
+    }
+
+    public function notificationEmail(Request $request)
+    {
+        try {
+            Mail::to('me@uca.ma')
+                ->cc(['me2@uca.ma', 'me3@uca.ma'])
+                ->send(new NotificationMail('EL AIMANI Imane'));
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            error_log($th->getMessage());
+        }
+    }
+
+    public function customEmail(Request $request)
+    {
+        if ($request->has('cc')) {
+        }
+        try {
+            Mail::to('me@uca.ma')
+                ->cc(['me2@uca.ma', 'me3@uca.ma'])
+                ->send(new NotificationMail('EL AIMANI Imane'));
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            error_log($th->getMessage());
+        }
     }
 }

@@ -1,21 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>Layout &rsaquo; Top Navigation &mdash; Stisla</title>
+    <title>{{ $manifestation->intitule }}</title>
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
         integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link href="{{asset('assets/img/uca-logo.png')}}" rel="icon">
+    <link href="{{asset('assets/assets/img/uca-logo.png')}}" rel="apple-touch-icon">
 
     <!-- CSS Libraries -->
 
     <!-- Template CSS -->
     <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/customStyle.css">
     <link rel="stylesheet" href="../assets/css/components.css">
 </head>
 
@@ -50,6 +53,10 @@
                             <a href="#soutienSollicite" class="nav-link"><i class="far fa-clone"></i><span>Soutien
                                     sollicité</span></a>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a href="#piecesFournies" class="nav-link"><i class="far fa-clone"></i>
+                                <span>Piéces fournies</span></a>
+                        </li>
                     </ul>
                 </div>
             </nav>
@@ -63,8 +70,9 @@
                             <div class="d-inline m-3">
                                 <span>
                                     @if($demande->manifestation->lettreAcceptation != null)
-                                    <a  href="{{route('manifastation.lettre',['url'=>Str::replace('/','-',$demande->manifestation->lettreAcceptation->url)])}}"
-                                        title="Lettre d'acceptation"><i class="fa fa-file-pdf fa-lg" aria-hidden="true"></i>
+                                    <a href="{{route('manifastation.lettre',['url'=>Str::replace('/','-',$demande->manifestation->lettreAcceptation->url)])}}"
+                                        title="Lettre d'acceptation"><i class="fa fa-file-pdf fa-lg"
+                                            aria-hidden="true"></i>
                                     </a>
                                     @endif
                                 </span>
@@ -72,7 +80,8 @@
                             <div class="d-inline">
                                 <span>
                                     <a href="{{ route('pdf',['id'=>$demande->id]) }}"
-                                        title="Télécharger Fiche traitement de dossier"><i class="fa fa-download fa-lg"></i>
+                                        title="Télécharger Fiche traitement de dossier"><i
+                                            class="fa fa-download fa-lg"></i>
                                     </a>
                                 </span>
                             </div>
@@ -350,10 +359,43 @@
                             </div>
                         </div>
                     </div>
+                    <div class="card" id="piecesFournies">
+                        <div class="card-header">
+                            <h4>Piéces fournies</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped" id="table-1">
+                                <thead>
+                                    <tr>
+                                        <th>Intitulé</th>
+                                        <th>Document</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                           <span class="text-capitalize">{{ $manifestation->lettreAcceptation->titre }}</span>
+                                        </td>
+                                        <td>
+                                            @if($demande->manifestation->lettreAcceptation != null)
+                                            <a href="{{route('manifastation.lettre',['url'=>Str::replace('/','-',$demande->manifestation->lettreAcceptation->url)])}}"
+                                                title="Lettre d'acceptation"><i class="fa fa-file-pdf fa-lg"
+                                                    aria-hidden="true"></i>
+                                            </a>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-footer bg-whitesmoke">
+                        </div>
+                    </div>
                 </section>
             </div>
-            <footer class="main-footer">
-                <div class="footer-right">
+            <a href="#" class="back-to-top"><i class="fas fa-angle-up mr-1"></i></a>
+            <footer class="main-footer d-flex justify-content-center">
+                <div class="footer-center">
                     Copyright &copy; Made with 🧡 by EL OUADI, KHADIM and EL AIMANI
                 </div>
             </footer>

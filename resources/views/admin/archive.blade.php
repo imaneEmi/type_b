@@ -1,5 +1,9 @@
 @extends('layouts.main_admin')
 
+@section('title')
+Archive
+@endsection
+
 @section('content')
 <section class="section">
     <div class="section-header">

@@ -1,5 +1,14 @@
 @extends('layouts.main_admin')
 
+@section('title')
+@if (Route::is('demandes.courantes'))
+Demandes courantes
+@elseif (Route::is('demandes.acceptees'))
+Demandes acceptées
+@else
+Demandes refusées
+@endif
+@endsection
 @section('content')
 <section class="section">
     <div class="section-header">
@@ -63,11 +72,11 @@
                                             {{ $demande->manifestation->soutienSollicite()->sum('montant') }}
                                             @endif
                                         </td>
-                                        <td>{{ $demande->created_at }}</td>
+                                        <td>{{ $demande->created_at->format('d/m/Y H:i') }}</td>
                                         <td class="text-center">
                                             @if (Route::is('demandes.courantes'))
                                             <a href="{{ route('admin.edit.manifestation',['id'=>$demande->id]) }}"
-                                                class="text-job has-icon"><i class="fas fa-pen"></i>
+                                                class=" has-icon"><i class="fas fa-pen"></i>
                                             </a>
                                             @else
                                             <a href="{{ route('manifestation.details',['id'=>$demande->id]) }}" title="Plus de détails"><i class="fa fa-plus fa-lg"></i>

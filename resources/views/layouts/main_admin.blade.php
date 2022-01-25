@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>UCA</title>
+    <link href="{{asset('assets/img/uca-logo.png')}}" rel="icon">
+    <link href="{{asset('assets/assets/img/uca-logo.png')}}" rel="apple-touch-icon">
+    <title>@yield('title')</title>
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -38,7 +40,7 @@
                 </form>
                 <ul class="navbar-nav navbar-right">
                     <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                            <img alt="image" src="../assets/img/avatar/avatar-1.png" class="rounded-circle mr-1">
+                            <i class="fas fa-user-circle mr-1" style="font-size: 30px;"></i>
                             <div class="d-sm-none d-lg-inline-block">Bienvenue, {{ Auth::user()->name }}&nbsp;{{
                                 Auth::user()->prenom
                                 }}</div>
@@ -72,11 +74,11 @@
 
                         <li class="menu-header">Tableau de bord</li>
                         <li @if (Route::is('dashboard.admin')) class="nav-item dropdown active" @endif>
-                            <a href="{{ route('dashboard.admin') }}" class="nav-link"><i class="fas fa-fire"></i><span>Tableau de bord</span></a>
+                            <a href="{{ route('dashboard.admin') }}" class="nav-link"><i class="fas fa-tachometer-alt" aria-hidden="true"></i><span>Tableau de bord</span></a>
 
                         </li>
                         <li class="nav-item {{Route::is('statistiques.admin')?'active':''}} ">
-                            <a href="{{ route('statistiques.admin') }}" class="nav-link"><i class="fas fa-fire"></i><span>Statistiques</span></a>
+                            <a href="{{ route('statistiques.admin') }}" class="nav-link"><i class="fas fa-chart-bar" aria-hidden="true"></i><span>Statistiques</span></a>
                         </li>
 
                         <li class="menu-header">Liste des Demandes</li>

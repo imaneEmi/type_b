@@ -6,23 +6,31 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="{{asset('assets/img/uca-logo.png')}}" rel="icon">
+    <link href="{{asset('assets/assets/img/uca-logo.png')}}" rel="apple-touch-icon">
     <title>UCA</title>
     <style>
         .font {
             font-family: 'TIMES NEW ROMAN';
-            font-size: 12;
+            font-size: 11;
         }
-        .header-font{
+
+        .header-font {
             font-family: 'TIMES NEW ROMAN';
             font-size: 10;
+        }
+
+        .ml-6 {
+            margin-left: 6em;
         }
     </style>
 </head>
 
 <body>
     <div class="header-font">
-        <p>Université Cadi Ayyad</p>
-        <p class="ml-3">Présidence</p>
+        <img src="{{ public_path('/assets/img/uca-logo.jpg') }}" alt="UCA logo" height="53px" style="float: left;">
+        <p class="d-inline">Université Cadi Ayyad</p>
+        <p class="ml-6">Présidence</p>
     </div>
     <section class="section font">
         <div class="section-header">
@@ -141,6 +149,11 @@
             </div>
         </div>
     </section>
+    <script type="text/php">
+        if (isset($pdf)) {
+           $pdf->page_text(555,800, "Page {PAGE_NUM}/{PAGE_COUNT}", null, 7, array(0, 0, 0));
+        }
+        </script>
 </body>
 
 </html>

@@ -10,6 +10,7 @@ class Demande extends Model
     use HasFactory;
     protected $connection = 'mysql';
     protected $with = ['coordonnateur','manifestation'];
+    protected $dates = ['date_envoie'];
 
     public $fillable = [
         'code',
@@ -18,7 +19,7 @@ class Demande extends Model
         'editable',
         'remarques',
         'coordonnateur_id',
-        
+
     ];
 
     public function manifestation(){

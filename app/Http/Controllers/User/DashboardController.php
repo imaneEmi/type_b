@@ -47,6 +47,7 @@ use Illuminate\Http\Request;
 use PDF;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 
 class DashboardController extends Controller
@@ -222,13 +223,16 @@ class DashboardController extends Controller
 
 
             $fileEtudiantsLocauxPath = Storage::disk('local')->put("manifestation_files", $data['file_nbr_etudiants_locaux']);
+            $fileEtudiantsLocauxPath = $data['file_nbr_etudiants_locaux']->storeAs("manifestation_files",$request->file('file_nbr_etudiants_locaux')->getClientOriginalName());
             $fileManifestation1 = new FileManifestation();
+            $fileManifestation1->titre =Str::of($request()->file('file_nbr_etudiants_locaux')->getClientOriginalName())->trim('.pdf');
             $fileManifestation1->url = $fileEtudiantsLocauxPath;
             $fileManifestation1->manifestation_id = $manifestation->getAttributes()["id"];
             $fileManifestation1 = FileManifestation::create($fileManifestation1->getAttributes());
 
             $fileEnseignantsLocauxPath = Storage::disk('local')->put("manifestation_files", $data['file_nbr_enseignants_locaux']);
             $fileManifestation2 = new FileManifestation();
+            $fileManifestation2->titre =Str::of($request()->file('file_nbr_enseignants_locaux')->getClientOriginalName())->trim('.pdf');
             $fileManifestation2->url = $fileEnseignantsLocauxPath;
             $fileManifestation2->manifestation_id = $manifestation->getAttributes()["id"];
             $fileManifestation2 = FileManifestation::create($fileManifestation2->getAttributes());

@@ -1,5 +1,9 @@
 @extends('layouts.main_admin')
 
+@section('title')
+Statistiques
+@endsection
+
 @section('content')
 <section class="section">
     <div class="section-header">

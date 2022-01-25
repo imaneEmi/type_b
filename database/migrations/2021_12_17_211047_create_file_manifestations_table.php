@@ -15,6 +15,7 @@ class CreateFileManifestationsTable extends Migration
     {
         Schema::connection('mysql')->create('file_manifestations', function (Blueprint $table) {
             $table->id();
+            $table->string('titre', 200);
             $table->string('url', 200);
             $table->unsignedBigInteger('manifestation_id');
             $table->foreign('manifestation_id')->references('id')->on('manifestations');
