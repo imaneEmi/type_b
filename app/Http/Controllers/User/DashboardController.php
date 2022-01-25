@@ -13,6 +13,7 @@ use App\Models\ComiteScientifiqueNonLocal;
 use App\Models\Contributeur;
 use App\Models\ContributionParticipant;
 use App\Models\Demande;
+use App\Models\DemandeStatus;
 use App\Models\Dto\Departement;
 use App\Models\EntiteOrganisatrice;
 use App\Models\FileManifestation;
@@ -23,6 +24,7 @@ use App\Models\ManifestationContributeur;
 use App\Models\ManifestationContributionParticipant;
 use App\Models\ManifestationEtablissement;
 use App\Models\ManifestationTypeContributeur;
+use App\Models\PieceDemande;
 use App\Models\SoutienSollicite;
 use App\Services\ChercheurService;
 use App\Services\ComiteOrganisationLocalService;
@@ -127,7 +129,7 @@ class DashboardController extends Controller
     {
 
         $demandes = $this->demandeService->findAll();
-        return view('user/list-request', ['demandes' => $demandes]);
+        return view('user/list-request', ['demandes' => $demandes,"demandeStatus" => DemandeStatus::class]);
     }
 
     public function generatePDF(Request $request)
@@ -173,6 +175,7 @@ class DashboardController extends Controller
         $typeContributeurs = $this->typeContributeurService->findAll();
         $fraisCouvert = $this->fraisCouvertService->findAll();
         $natureContributions = $this->natureContributionService->findAll();
+        $piecesDemande = PieceDemande::all();
 
         $chercheurs = $this->chercheurService->findAll();
 
@@ -196,7 +199,7 @@ class DashboardController extends Controller
             $demande = new Demande();
             $demande->code = $chercheur->id_cher . "/" . $this->demandeService->countCoordonnateurDemandeByCurrentYear($chercheur) + 1 . "/" . date('Y');
             $demande->date_envoie = date('Y-m-d H:i:s');
-            $demande->etat = 'PENDING';
+            $demande->etat =DemandeStatus::COURANTE;
             $demande->coordonnateur_id = $chercheur->id_cher;
             $demande = Demande::create($demande->getAttributes());
 
@@ -335,7 +338,7 @@ class DashboardController extends Controller
             return redirect()->route('dashboard.user');
         }
 
-        return view('user/create-request', ["chercheurs" => $chercheurs, "natureContributions" => $natureContributions, "typeContributeurs" => $typeContributeurs, "etablissements" => $etablissements, 'user' => $user, 'fraisCouvert' => $fraisCouvert]);
+        return view('user/create-request', ["piecesDemande"=>$piecesDemande,"chercheurs" => $chercheurs, "natureContributions" => $natureContributions, "typeContributeurs" => $typeContributeurs, "etablissements" => $etablissements, 'user' => $user, 'fraisCouvert' => $fraisCouvert]);
     }
 
     public function uploadRapport(Request $request)

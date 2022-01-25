@@ -635,8 +635,23 @@
                                             <h4>Pièces</h4>
                                         </div>
                                         <div class="card-body">
+                                            <div class="accordion">
+                                                <div class="accordion-header" role="button"
+                                                     data-toggle="collapse"
+                                                     data-target="#panel-body" aria-expanded="true">
+                                                    <h4>Pièces requises</h4>
+                                                </div>
+                                                <div class="accordion-body collapse "
+                                                     id="panel-body" data-parent="#accordion">
+                                                    @foreach ($piecesDemande as $item)
+                                                        <div class="section-title mt-0"></div>
+                                                        <p class="mb-0">Libelle: {{$item->libelle}}</p>
+                                                        <p class="mb-0">Description: {{$item->description}}</p>
+                                                        <p class="mb-0">nombre de copie: {{$item->nbr_copie}}</p>
+                                                    @endforeach
+                                                </div>
+                                            </div>
                                             <div class="form-group">
-                                                <label>Liste des pieces </label>
                                                 <div class="custom-file">
                                                     <input type="file" class="custom-file-input" id="customFile"
                                                            name="pieces[]" multiple required>
@@ -957,9 +972,9 @@
 
             Swal.fire({
                 title: 'Attention!!',
-                text: 'Something went wrong!',
+                text: "L'argent accordé n'est dépensé que pour la manifestation!",
                 icon: 'error',
-                confirmButtonText: "Oui",
+                confirmButtonText: "OK",
             }).then((result) => {
                 if (result.isConfirmed) {
                     $("#manifestationForm").submit();

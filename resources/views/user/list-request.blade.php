@@ -7,7 +7,7 @@
             <h1>Liste des demandes</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item">Demandes</div>
-                <div class="breadcrumb-item">Liste des demandes </div>
+                <div class="breadcrumb-item">Liste des demandes</div>
             </div>
         </div>
 
@@ -61,14 +61,18 @@
                                                 </td>
                                                 <td> {{$demande->remarques}}</td>
                                                 <td>
-                                                    @if ($demande->etat === "PENDING")
-                                                        <div class="badge badge-danger">{{$demande->etat}}</div>
-                                                    @else
+                                                    @if ($demande->etat === $demandeStatus::COURANTE)
+                                                        <div class="badge badge-info">{{$demande->etat}}</div>
+                                                    @elseif($demande->etat === $demandeStatus::ACCEPTEE )
                                                         <div class="badge badge-success">{{$demande->etat}}</div>
+                                                    @elseif($demande->etat === $demandeStatus::REFUSEE )
+                                                        <div class="badge badge-danger">{{$demande->etat}}</div>
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <button style=" max-width: 80px;min-width: 80px;" class="btn btn-primary dashboard-user-bnt" id="modal-5{{$demande->id}}">
+                                                    <button style=" max-width: 80px;min-width: 80px;"
+                                                            class="btn btn-primary dashboard-user-bnt"
+                                                            id="modal-5{{$demande->id}}">
                                                         @if (!is_null($demande->manifestation->rapport))
                                                             éditer
                                                         @else
@@ -77,25 +81,30 @@
                                                     </button>
                                                     @if (!is_null($demande->manifestation->rapport))
                                                         <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->rapport->url)])}}"
-                                                           class="btn btn-primary dashboard-user-bnt" style=" max-width: 80px; min-width: 80px;"> voir </a>
+                                                           class="btn btn-primary dashboard-user-bnt"
+                                                           style=" max-width: 80px; min-width: 80px;"   target="_blank"> voir </a>
                                                     @endif
                                                 </td>
                                                 <td>
                                                     @if (!is_null($demande->manifestation->lettreAcceptation) )
                                                         <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->lettreAcceptation->url)])}}"
-                                                           class="btn btn-primary dashboard-user-bnt" style=" max-width: 80px;min-width: 80px; " >voir</a>
+                                                           class="btn btn-primary dashboard-user-bnt"
+                                                           style=" max-width: 80px;min-width: 80px; "  target="_blank">voir</a>
                                                     @else
                                                         indisponible pour le moment
                                                     @endif
                                                 </td>
                                                 <td>
                                                     @if ($demande->editable)
-                                                        <button class="btn btn-primary dashboard-user-bnt"  style=" max-width: 80px;min-width: 80px; " id="modal-6{{$demande->id}}">
+                                                        <button class="btn btn-primary dashboard-user-bnt"
+                                                                style=" max-width: 80px;min-width: 80px; "
+                                                                id="modal-6{{$demande->id}}">
                                                             +fichier
                                                         </button>
                                                     @endif
                                                     <a href="{{route('request.pdf',['id'=>$demande->id])}}"
-                                                       class="btn btn-primary dashboard-user-bnt" style=" max-width: 80px;min-width: 80px;">PDF</a>
+                                                       class="btn btn-primary dashboard-user-bnt"
+                                                       style=" max-width: 80px;min-width: 80px;"  target="_blank">PDF</a>
                                                 </td>
                                             </tr>
                                         @endforeach
