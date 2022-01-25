@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use App\Services\ChercheurService;
 use Exception;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 
@@ -33,14 +35,18 @@ class RegisterController extends Controller
      */
     protected $redirectTo = "/email/verify";
 
+
+    private $chercheurService;
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(ChercheurService $chercheurService )
     {
         $this->middleware('guest');
+        $this->chercheurService =$chercheurService;
     }
 
     /**
@@ -51,17 +57,16 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        $message = array(
-            'email.regex' => "Cet e-mail n'est pas pour uca"
-        );
+
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'prenom' => ['required', 'string', 'max:255'],
             'profession' => ['required', 'string', 'max:255'],
             'tel' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email','email_uca_rech', 'max:255', 'unique:users' ],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ], $message);
+        ]);
+
     }
 
     /**

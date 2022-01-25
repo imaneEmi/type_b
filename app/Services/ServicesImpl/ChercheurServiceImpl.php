@@ -22,4 +22,7 @@ class ChercheurServiceImpl implements ChercheurService
     {
         return Chercheur::where("email",$email)->with('laboratoire')->first();
     }
+    public  function  isExistByEmail($email){
+        return Chercheur::where("email",$email)->first() !=null ? true : false;
+    }
 }
