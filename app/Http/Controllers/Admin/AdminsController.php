@@ -7,6 +7,8 @@ use App\Models\SoutienAccorde;
 use App\Services\ManifestationService;
 use App\Services\DemandeService;
 use App\Services\UserService;
+use App\Services\BudgetAnnuelService;
+
 use App\Services\util\Config;
 use Illuminate\Http\Request;
 
@@ -83,9 +85,9 @@ class AdminsController extends Controller
         return view('admin/edit_fraisCouvert');
     }
 
-    public function archive(DemandeService $demandeService)
+    public function archive(DemandeService $demandeService,BudgetAnnuelService $budgetService)
     {
-
-        return view('admin/archive', $demandeService->getAll());
+         if(count($budgetService->findAll())==0) return view('admin.edit_budgetFixe');
+        else return view('admin/archive', $demandeService->getAll());
     }
 }

@@ -38,9 +38,7 @@ class DashboardController extends Controller
         $budgetsAnnuelsFixes = $collection->pluck('budget_fixe');
         $budgetsAnnuelsRestant = $collection->pluck('budget_restant');
         $annee = Carbon::now()->format('Y');
-        $budgetIsNull = $this->budgetAnnuelService->budgetNull();
-        if ($budgetIsNull) return redirect()->route('edit.budgetFixe');
-        // dd($collection);
+       
         return view('admin/index', [
             'nbrTotal' => $this->demandeService->getNbrDemandesAnneeCour(),
             'nbrTotalCourant' => $this->demandeService->getNbrDemandesParEtatAnneeCour(Config::$COURANTE),

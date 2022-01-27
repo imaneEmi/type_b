@@ -80,14 +80,9 @@ class BudgetAnnuelServiceImpl implements BudgetAnnuelService
         return  Laboratoire::join('etablissement', 'etab_id', '=', 'etablissement.id')->join($manifestations, 'laboratoire.id_labo', '=', 'manifestations.entite_organisatrice_id')
             ->join($soutien_accordes, 'manifestation_id', '=', 'manifestations.id')->whereYear('date_debut', '=', $annee)->get();
     }
-    public function budgetNull()
+    public function save($annee,$budget_fixe)
     {
-        $result = $this->findBudgetParAnnee(Carbon::now()->format('Y'));
-        if ($result == null) return true;
-        else return true;
-    }
-    public function save(BudgetAnnuel $budgetAnnuel)
-    {
-        BudgetAnnuel::create($budgetAnnuel);
+      return  BudgetAnnuel::create(['annee' => $annee, 'budget_fixe' => $budget_fixe]);
+ 
     }
 }
