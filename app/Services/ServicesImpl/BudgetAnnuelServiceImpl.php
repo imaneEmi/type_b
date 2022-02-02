@@ -83,6 +83,6 @@ class BudgetAnnuelServiceImpl implements BudgetAnnuelService
     }
     public function save($annee, $budget_fixe)
     {
-        return  BudgetAnnuel::create(['annee' => $annee, 'budget_fixe' => $budget_fixe]);
+        return  BudgetAnnuel::create(['annee' => $annee, 'budget_fixe' => $budget_fixe, 'budget_restant' => $budget_fixe]);
     }
 }

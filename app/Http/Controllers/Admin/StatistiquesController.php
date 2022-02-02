@@ -55,9 +55,6 @@ class StatistiquesController extends Controller
         $etab = $request->etablissements;
         $entite = $request->structuresScientifiques;
         $annee = $request->annees;
-        $etabIsNull = true;
-        $anneeIsNull = true;
-        $entiteIsNull = true;
         $isBudget = false;
         $isDemande = false;
         Session::put('result', null);

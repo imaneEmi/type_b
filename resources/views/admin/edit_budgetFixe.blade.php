@@ -11,17 +11,17 @@
             @csrf
             <div class="card-header">
                 <h4>Ajouter un nouveau budget annuel</h4>
-               
+
             </div>
             @if(!empty($error) && $error==1)
-                <div class="alert alert-danger alert-has-icon">
-                      <div class="alert-icon"><i class="far fa-lightbulb"></i></div>
-                      <div class="alert-body">
-                        <div class="alert-title">Attention</div>
-                        Vous avez déjà fixé le budget pour l'année saisie!
-                      </div>
-                    </div>
-                    @endif
+            <div class="alert alert-danger alert-has-icon">
+                <div class="alert-icon"><i class="far fa-lightbulb"></i></div>
+                <div class="alert-body">
+                    <div class="alert-title">Attention</div>
+                    Vous avez déjà fixé le budget pour l'année saisie!
+                </div>
+            </div>
+            @endif
             <div class="card-body">
                 <div class="row">
                     <div class="form-group col-md-6 col-6">
@@ -52,7 +52,7 @@
                                     MAD
                                 </div>
                             </div>
-                            <input type="text" class="form-control currency" name="budget" required onkeyup="manage(this)">
+                            <input type="number" class="form-control " min=0 name="budget" required onkeyup="manage(this)">
                             <div class="invalid-feedback">
                                 Veuillez remplir ce champs
                             </div>
@@ -112,7 +112,7 @@
                 if (willDelete) {
                     document.getElementById('saveBudgetForm').submit();
 
-                    
+
                 } else {
                     swal('Votre opération a été annulée!');
                 }
@@ -120,8 +120,8 @@
     });
 </script>
 @if (!empty($success))
-    <script>
-       swal('Succés', 'le budget a été bien enregistré!', 'success');
-    </script>
+<script>
+    swal('Succés', 'le budget a été bien enregistré!', 'success');
+</script>
 @endif
 @endsection
