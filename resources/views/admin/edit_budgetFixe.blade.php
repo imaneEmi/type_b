@@ -80,8 +80,8 @@
 
 <!-- Page Specific JS File -->
 
-<script src="../assets/js/page/forms-advanced-forms.js" async></script>
-<script src="../assets/js/sweetalert/dist/sweetalert.min.js"></script>
+<script src="{{asset('../assets/js/page/forms-advanced-forms.js')}}" async></script>
+<script src="{{asset('../assets/js/sweetalert/dist/sweetalert.min.js')}}"></script>
 
 <script>
     function manage(txt) {

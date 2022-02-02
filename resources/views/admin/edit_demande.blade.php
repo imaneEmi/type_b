@@ -104,7 +104,7 @@
 </section>
 @endsection
 @section('scripts')
-<script src="../assets/js/page/bootstrap-modal.js"></script>
+<script src="{{asset('../assets/js/page/bootstrap-modal.js')}}"></script>
 <script type="text/javascript">
     let rubrique_body = '<div class="table-responsive">';
 rubrique_body += '<table class="table table-bordered table-md">';

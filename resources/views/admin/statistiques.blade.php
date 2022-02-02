@@ -20,7 +20,7 @@
 
                         <select id="budgetDemandes" class="form-control" name="budgetDemandes">
                             <option value="budget" selected>Budgets</option>
-                            <option value="demandes">Demandes</option>
+                            <option value="demande">Demandes</option>
 
                         </select>
 
@@ -31,7 +31,7 @@
                         <select id="etablissements" class="form-control" onChange="onChange();" name="etablissements">
                             <option value="all" selected>Tous les établissement</option>
 
-                            @foreach ($etablissements as $etablissement)
+                            @foreach (Session::get('etablissements') as $etablissement)
                             <option id="{{$etablissement->id}}" value="{{$etablissement->id}}">{{$etablissement->nom}}</option>
                             @endforeach
                         </select>
@@ -41,7 +41,7 @@
                         <select id="structuresScientifiques" class="form-control" name="structuresScientifiques">
                             <option value="all" selected>Toutes les structures scientifiques</option>
 
-                            @foreach ($entiteOrganisatrices as $entite)
+                            @foreach (Session::get('entiteOrganisatrices') as $entite)
                             <option id="{{$entite->etab_id}}" value="{{$entite->id}}">{{$entite->nom}}</option>
                             @endforeach
                         </select>
@@ -49,13 +49,15 @@
                     <div class="form-group col-md-2">
                         <label for="annees">Année</label>
 
+
                         <select id="annees" class="form-control" name="annees">
                             <option selected value="all">Toutes les années</option>
 
-                            @foreach ($annees as $annee)
+                            @foreach (Session::get('annees') as $annee)
                             <option value="{{$annee->annee}}">{{$annee->annee}}</option>
                             @endforeach
                         </select>
+
 
                     </div>
 
@@ -72,11 +74,11 @@
             </form>
         </div>
     </div>
-
+    @if(!empty(Session::get('result')))
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h4>Sortable Table</h4>
+                <h4>Résultats de la recherche</h4>
                 <div class="card-header-action">
                     <form>
                         <div class="input-group">
@@ -89,14 +91,48 @@
                     </form>
                 </div>
             </div>
+            <div class="card-body">
+                @if(!empty($isBudget) && $isBudget==true)
+                <div class="section-title mt-0">Budget(s) Annuel(s)</div>
+                @else
+                <div class="section-title mt-0">Demande(s)</div>
+                @endif
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Etablissement(s)</th>
+                            <th scope="col">Structure(s) Scientifique(s)</th>
+                            <th scope="col">Année(s)</th>
+                            <th scope="col">Budget(s) Annuel(s)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach(Session::get('result') as $r)
+                        <tr>
+                            <td scope="row">{{$r->nom_etablissement}}</td>
+
+                            <td>{{$r->nom_labo}}</td>
+                            @php $year = substr($r->date_debut, 0, 4); @endphp
+
+
+                            <td>{{$year}}</td>
+                            <td>{{$r->montant}} MAD</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+            </div>
 
         </div>
     </div>
+    @endif
 </section>
 @endsection
 @section('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
-<script src="../assets/js/page/components-statistic.js" async></script>
+<script src="{{asset('../assets/js/page/components-statistic.js')}}" async></script>
 <script>
     function onChange() {
         var selectParent = document.getElementById("etablissements");

@@ -66,8 +66,7 @@
                                         <td>{{ $demande->created_at }}</td>
                                         <td class="text-center">
                                             @if (Route::is('demandes.courantes'))
-                                            <a href="{{ route('admin.edit.manifestation',['id'=>$demande->id]) }}"
-                                                class="text-job has-icon"><i class="fas fa-pen"></i>
+                                            <a href="{{ route('admin.edit.manifestation',['id'=>$demande->id]) }}" class="text-job has-icon"><i class="fas fa-pen"></i>
                                             </a>
                                             @else
                                             <a href="{{ route('manifestation.details',['id'=>$demande->id]) }}" title="Plus de détails"><i class="fa fa-plus fa-lg"></i>
@@ -88,5 +87,5 @@
 @endsection
 @section('scripts')
 <script src="{{ mix('js/app.js') }}"></script>
-<script src="../assets/js/page/modules-datatables.js"></script>
+<script src="{{asset('../assets/js/page/modules-datatables.js')}}"></script>
 @endsection
