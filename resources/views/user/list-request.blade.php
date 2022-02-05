@@ -61,11 +61,11 @@
                                             </td>
                                             <td> {{$demande->remarques}}</td>
                                             <td>
-                                                @if ($demande->etat === App\Services\util\Config::$COURANTE)
+                                                @if ($demande->etat === $demandeStatus::COURANTE)
                                                 <div class="badge badge-light text-capitalize">{{$demande->etat}}</div>
-                                                @elseif($demande->etat === App\Services\util\Config::$ACCEPTEE)
+                                                @elseif($demande->etat === $demandeStatus::ACCEPTEE)
                                                 <div class="badge badge-success text-capitalize">{{$demande->etat}}</div>
-                                                @elseif($demande->etat === App\Services\util\Config::$REFUSEE )
+                                                @elseif($demande->etat === $demandeStatus::REFUSEE )
                                                 <div class="badge badge-danger text-capitalize">{{$demande->etat}}</div>
                                                 @endif
                                             </td>
@@ -95,8 +95,7 @@
                                                     <i class="fa fa-upload fa-lg" aria-hidden="true" title="Télécharger les documents manquants"></i>
                                                 </a>
                                                 @endif
-                                                <a href="{{route('request.pdf',['id'=>$demande->id])}}"
-                                                    class="has-icon m-1" target="_blank">
+                                                <a href="{{route('request.pdf',['id'=>$demande->id])}}" class="has-icon m-1" target="_blank">
                                                     <i class="fa fa-plus fa-lg" aria-hidden="true" title="Plus de détails"></i></a>
                                             </td>
                                         </tr>
@@ -117,7 +116,7 @@
 @section('scripts')
 <script>
     demandes = @json($demandes);
-        for (var i = 0; i < demandes.length; i < i++) {
+    for (var i = 0; i < demandes.length; i < i++) {
 
         var form = document.createElement("form");
         form.setAttribute("method", "post");
@@ -267,6 +266,6 @@
             }]
         });
 
-        }
+    }
 </script>
 @endsection

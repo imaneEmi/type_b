@@ -106,6 +106,10 @@ class AppServiceProvider extends ServiceProvider
             'App\Services\SoutienSolliciteService',
             'App\Services\ServicesImpl\SoutienSolliciteServiceImpl'
         );
+        $this->app->bind(
+            'App\Services\NatureContributionManifestationService',
+            'App\Services\ServicesImpl\NatureContributionManifestationServiceImpl'
+        );
     }
 
     /**
@@ -117,8 +121,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(ChercheurService $chercheurService)
     {
 
-      Validator::extendImplicit('email_uca_rech', function ($attribute, $value, $parameters, $validator) use ($chercheurService) {
-         return $chercheurService->isExistByEmail($value);
-        },"Cet email n'existe pas dans uca recherche !");
+        Validator::extendImplicit('email_uca_rech', function ($attribute, $value, $parameters, $validator) use ($chercheurService) {
+            return $chercheurService->isExistByEmail($value);
+        }, "Cet email n'existe pas dans uca recherche !");
     }
 }

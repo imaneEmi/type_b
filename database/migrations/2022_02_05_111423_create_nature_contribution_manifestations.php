@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateManifestationContributionParticipants extends Migration
+class CreateNatureContributionManifestations extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,15 @@ class CreateManifestationContributionParticipants extends Migration
      */
     public function up()
     {
-        Schema::connection('mysql')->create('manifestation_contribution_participants', function (Blueprint $table) {
+        Schema::connection('mysql')->create('nature_contribution_manifestations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('manifestation_id');
-            $table->unsignedBigInteger('cont_par_id');
+            $table->unsignedBigInteger('nature_con_id');
 
             $table->foreign('manifestation_id')->references('id')->on('manifestations');
             $table->index('manifestation_id');
-            $table->foreign('cont_par_id')->references('id')->on('contribution_participants');
+            $table->foreign('nature_con_id')->references('id')->on('nature_contributions');
+            $table->index('nature_con_id');
             $table->timestamps();
         });
     }
@@ -32,6 +33,6 @@ class CreateManifestationContributionParticipants extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('manifestation_contribution_participants');
+        //
     }
 }

@@ -13,7 +13,7 @@ class CreateBudgetEtablissementsTable extends Migration
      */
     public function up()
     {
-        Schema::create('budget_etablissements', function (Blueprint $table) {
+        Schema::connection('mysql')->create('budget_etablissements', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
         });
