@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Laboratoire extends Model
 {
     use HasFactory;
-    protected $table ='laboratoire';
+    protected $table = 'laboratoire';
     protected $connection = 'mysql2';
     protected $primaryKey = 'id_labo';
     public $fillable = [
@@ -29,7 +29,6 @@ class Laboratoire extends Model
 
     public function chercheurs()
     {
-        return $this->hasMany(Chercheur::class,"lab_id");
+        return $this->hasMany(Chercheur::class, "lab_id");
     }
-
 }

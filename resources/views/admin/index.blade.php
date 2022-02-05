@@ -13,7 +13,7 @@ Tableau de bord
             <div class="card card-statistic-2">
                 <div class="card-stats">
                     <div class="card-stats-title">
-                        Statistiques sur le budget de l'année
+                        Statistiques sur le budget de l'année courante
 
                     </div>
                     <div class="row">
@@ -66,7 +66,7 @@ Tableau de bord
         <div class="col-lg-6 col-md-6 col-sm-12">
             <div class="card card-statistic-2">
                 <div class="card-stats">
-                    <div class="card-stats-title">Statistiques sur les demandes
+                    <div class="card-stats-title">Statistiques sur les demandes de l'année courante
 
                     </div>
 
@@ -111,7 +111,7 @@ Tableau de bord
         <div class="col-12 col-sm-12 col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    <h4>Statistiques sur le budget par année</h4>
+                    <h4>Statistiques sur le budget annuel des 4 dernières années</h4>
 
                 </div>
                 <div class="card-body">
@@ -187,7 +187,7 @@ Tableau de bord
 @endsection
 @section('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
-<script src="../assets/js/page/components-statistic.js" async></script>
+<script src="{{asset('../assets/js/page/components-statistic.js')}}" async></script>
 <script>
     function convertToAray(data) {
 
@@ -200,7 +200,7 @@ Tableau de bord
         data: {
             labels: convertToAray('{{($annees)}}'),
             datasets: [{
-                label: 'Budget Annuel Total',
+                label: 'Budget Annuel Total (MAD)',
                 data: convertToAray('{{($budgetsAnnuelsFixes)}}'),
                 borderWidth: 2,
                 backgroundColor: 'rgba(254,86,83,.7)',
@@ -209,7 +209,7 @@ Tableau de bord
                 pointBackgroundColor: '#ffffff',
                 pointRadius: 4
             }, {
-                label: 'Budget Annuel Restant',
+                label: 'Budget Annuel Restant (MAD)',
                 data: convertToAray('{{($budgetsAnnuelsRestant)}}'),
                 borderWidth: 2,
                 backgroundColor: 'rgba(63,82,227,.8)',

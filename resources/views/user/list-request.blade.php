@@ -119,155 +119,153 @@
     demandes = @json($demandes);
         for (var i = 0; i < demandes.length; i < i++) {
 
-            var form = document.createElement("form");
-            form.setAttribute("method", "post");
-            form.setAttribute("enctype", "multipart/form-data");
-            form.classList.add('modal-part')
+        var form = document.createElement("form");
+        form.setAttribute("method", "post");
+        form.setAttribute("enctype", "multipart/form-data");
+        form.classList.add('modal-part')
 
-            var hideInput = document.createElement("input");
-            hideInput.setAttribute("name", "demande");
-            hideInput.value = demandes[i].id
-            hideInput.style.visibility = "hidden";
-
-
-            var div1 = document.createElement("div");
-            div1.classList.add('form-group')
-
-            var div2 = document.createElement("div");
-            div2.classList.add('custom-file')
-
-            var input = document.createElement("input");
-            input.setAttribute("type", "file");
-            input.setAttribute("id", "customFile");
-            input.setAttribute("name", "rapport");
-            input.setAttribute("required", true);
-            input.classList.add('custom-file-input')
-
-            var label = document.createElement("label");
-            label.setAttribute("type", "file");
-            label.setAttribute("id", "customFile");
-            label.setAttribute("for", "customFile");
-            label.classList.add('custom-file-label');
-            label.innerHTML = 'Choose files'
-
-            form.appendChild(div1);
-            form.appendChild(hideInput);
-            div1.appendChild(div2);
-            div2.appendChild(input);
-            div2.appendChild(label);
+        var hideInput = document.createElement("input");
+        hideInput.setAttribute("name", "demande");
+        hideInput.value = demandes[i].id
+        hideInput.style.visibility = "hidden";
 
 
-            $("#modal-5" + demandes[i].id).fireModal({
-                title: 'Upload Rapport',
-                body: $(form),
-                footerClass: 'bg-whitesmoke',
-                autoFocus: false,
-                onFormSubmit: function (modal, e, form) {
-                    // Form Data
+        var div1 = document.createElement("div");
+        div1.classList.add('form-group')
 
-                    let repport = e.target[0].files[0];
-                    let demande = e.target[1].value;
-                    var form_data = new FormData();
-                    form_data.append('rapport', repport);
-                    form_data.append('demande', demande);
-                    url = "{{route('manifestation.upload.rapport')}}"
-                    $.ajax({
-                        url: url,
-                        dataType: 'text', // what to expect back from the PHP script, if anything
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        data: form_data,
-                        type: 'POST',
-                        headers: {
-                            'X-CSRF-Token': $('meta[name="_token"]').attr('content')
-                        },
-                        success: function (response) {
-                            response = JSON.parse(response);
-                            form.stopProgress();
-                            if (response.code === 200) {
-                                modal.find('.modal-body').prepend('<div class="alert alert-info">' + response.message + '</div>')
+        var div2 = document.createElement("div");
+        div2.classList.add('custom-file')
 
-                            } else {
-                                modal.find('.modal-body').prepend('<div class="alert alert-danger">' + response.message + '</div>')
+        var input = document.createElement("input");
+        input.setAttribute("type", "file");
+        input.setAttribute("id", "customFile");
+        input.setAttribute("name", "rapport");
+        input.setAttribute("required", true);
+        input.classList.add('custom-file-input')
 
-                            }
-                        },
-                        error: function (error) {
-                            console.log("error", error);
-                            form.stopProgress();
-                            modal.find('.modal-body').prepend('<div class="alert alert-danger">Please try again!</div>')
+        var label = document.createElement("label");
+        label.setAttribute("type", "file");
+        label.setAttribute("id", "customFile");
+        label.setAttribute("for", "customFile");
+        label.classList.add('custom-file-label');
+        label.innerHTML = 'Choose files'
+
+        form.appendChild(div1);
+        form.appendChild(hideInput);
+        div1.appendChild(div2);
+        div2.appendChild(input);
+        div2.appendChild(label);
+
+
+        $("#modal-5" + demandes[i].id).fireModal({
+            title: 'Upload Rapport',
+            body: $(form),
+            footerClass: 'bg-whitesmoke',
+            autoFocus: false,
+            onFormSubmit: function(modal, e, form) {
+                // Form Data
+
+                let repport = e.target[0].files[0];
+                let demande = e.target[1].value;
+                var form_data = new FormData();
+                form_data.append('rapport', repport);
+                form_data.append('demande', demande);
+                url = "{{route('manifestation.upload.rapport')}}"
+                $.ajax({
+                    url: url,
+                    dataType: 'text', // what to expect back from the PHP script, if anything
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: form_data,
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-Token': $('meta[name="_token"]').attr('content')
+                    },
+                    success: function(response) {
+                        response = JSON.parse(response);
+                        form.stopProgress();
+                        if (response.code === 200) {
+                            modal.find('.modal-body').prepend('<div class="alert alert-info">' + response.message + '</div>')
+
+                        } else {
+                            modal.find('.modal-body').prepend('<div class="alert alert-danger">' + response.message + '</div>')
+
                         }
-                    });
-                    e.preventDefault();
-                },
-                shown: function (modal, form) {
-                    console.log(form)
-                },
-                buttons: [{
-                    text: 'Upload',
-                    submit: true,
-                    class: 'btn btn-primary btn-shadow',
-                    handler: function (modal) {
+                    },
+                    error: function(error) {
+                        console.log("error", error);
+                        form.stopProgress();
+                        modal.find('.modal-body').prepend('<div class="alert alert-danger">Please try again!</div>')
                     }
-                }]
-            });
+                });
+                e.preventDefault();
+            },
+            shown: function(modal, form) {
+                console.log(form)
+            },
+            buttons: [{
+                text: 'Upload',
+                submit: true,
+                class: 'btn btn-primary btn-shadow',
+                handler: function(modal) {}
+            }]
+        });
 
 
-            $("#modal-6" + demandes[i].id).fireModal({
-                title: 'Ajouter un fichier',
-                body: $(form),
-                footerClass: 'bg-whitesmoke',
-                autoFocus: false,
-                onFormSubmit: function (modal, e, form) {
-                    // Form Data
-                    let file = e.target[0].files[0];
-                    let demande = e.target[1].value;
-                    var form_data = new FormData();
-                    form_data.append('file', file);
-                    form_data.append('demande', demande);
-                    url = "{{route('manifestation.add.file')}}"
-                    $.ajax({
-                        url: url,
-                        dataType: 'text', // what to expect back from the PHP script, if anything
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        data: form_data,
-                        type: 'POST',
-                        headers: {
-                            'X-CSRF-Token': $('meta[name="_token"]').attr('content')
-                        },
-                        success: function (response) {
-                            response = JSON.parse(response);
-                            form.stopProgress();
-                            if (response.code === 200) {
-                                modal.find('.modal-body').prepend('<div class="alert alert-info">' + response.message + '</div>')
+        $("#modal-6" + demandes[i].id).fireModal({
+            title: 'Ajouter un fichier',
+            body: $(form),
+            footerClass: 'bg-whitesmoke',
+            autoFocus: false,
+            onFormSubmit: function(modal, e, form) {
+                // Form Data
+                let file = e.target[0].files[0];
+                let demande = e.target[1].value;
+                var form_data = new FormData();
+                form_data.append('file', file);
+                form_data.append('demande', demande);
+                url = "{{route('manifestation.add.file')}}"
+                $.ajax({
+                    url: url,
+                    dataType: 'text', // what to expect back from the PHP script, if anything
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: form_data,
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-Token': $('meta[name="_token"]').attr('content')
+                    },
+                    success: function(response) {
+                        response = JSON.parse(response);
+                        form.stopProgress();
+                        if (response.code === 200) {
+                            modal.find('.modal-body').prepend('<div class="alert alert-info">' + response.message + '</div>')
 
-                            } else {
-                                modal.find('.modal-body').prepend('<div class="alert alert-danger">' + response.message + '</div>')
+                        } else {
+                            modal.find('.modal-body').prepend('<div class="alert alert-danger">' + response.message + '</div>')
 
-                            }
-                        },
-                        error: function (error) {
-                            console.log("error", error);
-                            form.stopProgress();
-                            modal.find('.modal-body').prepend('<div class="alert alert-danger">Please try again!</div>')
                         }
-                    });
-                    e.preventDefault();
-                },
-                shown: function (modal, form) {
-                    console.log(form)
-                },
-                buttons: [{
-                    text: 'Ajouter',
-                    submit: true,
-                    class: 'btn btn-primary btn-shadow',
-                    handler: function (modal) {
+                    },
+                    error: function(error) {
+                        console.log("error", error);
+                        form.stopProgress();
+                        modal.find('.modal-body').prepend('<div class="alert alert-danger">Please try again!</div>')
                     }
-                }]
-            });
+                });
+                e.preventDefault();
+            },
+            shown: function(modal, form) {
+                console.log(form)
+            },
+            buttons: [{
+                text: 'Ajouter',
+                submit: true,
+                class: 'btn btn-primary btn-shadow',
+                handler: function(modal) {}
+            }]
+        });
 
         }
 </script>

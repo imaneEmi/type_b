@@ -4,21 +4,24 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Services\BudgetAnnuelService;
-use App\Services\DemandeService;
 use App\Services\EtablissementService;
 use App\Services\LaboratoireService;
 use Illuminate\Http\Request;
+use Session;
 
 class StatistiquesController extends Controller
 {
     // protected $demandeService;
     protected $budgetAnnuelService;
+
     private EtablissementService $etablissementService;
     protected LaboratoireService $laboratoireService;
     public function __construct(
         BudgetAnnuelService $d,
         EtablissementService $etablissementService,
-        LaboratoireService $laboratoireService
+        LaboratoireService $laboratoireService,
+
+
     ) {
         $this->budgetAnnuelService = $d;
         $this->etablissementService  = $etablissementService;
@@ -36,6 +39,10 @@ class StatistiquesController extends Controller
         $annees = $this->budgetAnnuelService->findAllAnnee();
         $etablissements = $this->etablissementService->findAll();
         $entiteOrganisatrice = $this->laboratoireService->findAll();
+        Session::put('annees', $annees);
+        Session::put('etablissements', $etablissements);
+        Session::put('entiteOrganisatrices', $entiteOrganisatrice);
+
 
         return view('admin/statistiques', [
             'annees' => $annees, 'etablissements' => $etablissements,
@@ -44,49 +51,42 @@ class StatistiquesController extends Controller
     }
     public function search(Request $request)
     {
+
         $etab = $request->etablissements;
         $entite = $request->structuresScientifiques;
         $annee = $request->annees;
-        $result = null;
-        $etabIsNull = true;
-        $anneeIsNull = true;
-        $entiteIsNull = true;
         $isBudget = false;
         $isDemande = false;
+        Session::put('result', null);
+
         if ($request->budgetDemandes == "budget") {
-            $isDemande = true;
-            if ($etab == "all" && $entite == "all" && $annee == "all") {
-                $result = $this->budgetAnnuelService->findBudgetConsommee();
-                dd($result);
-            }
-            if ($etab && $entite && $annee) {
-                $result = $this->budgetAnnuelService->findBudgetConsommeeParEtabParEntiteParAnnee($etab, $entite, $annee);
-                $etabIsNull = false;
-                $anneeIsNull = false;
-                $entiteIsNull = false;
-            }
-            if ($etab == "all" && $entite == "all" && $annee) {
-                $result = $this->budgetAnnuelService->findBudgetConsommeeParAnnee($annee);
-                $anneeIsNull = false;
-            }
-            if ($etab  && $entite == "all"  && $annee) {
-                $result = $this->budgetAnnuelService->findBudgetConsommeeParEtabParAnnee($etab, $annee);
-                $etabIsNull = false;
-                $anneeIsNull = false;
-            }
-            if ($etab && $entite  && $annee == "all") {
-                $etabIsNull = false;
-                $entiteIsNull = false;
-                $result = $this->budgetAnnuelService->findBudgetConsommeeParEtabParEntite($etab, $entite);
-            }
             $isBudget = true;
+            if ($etab == "all" && $entite == "all" && $annee == "all") {
+                Session::put('result', $this->budgetAnnuelService->findBudgetConsommee());
+            } else if ($etab != "all" && $entite != "all" && $annee != "all") {
+                Session::put('result', $this->budgetAnnuelService->findBudgetConsommeeParEtabParEntiteParAnnee($etab, $entite, $annee));
+                $etabIsNull = false;
+                $anneeIsNull = false;
+                $entiteIsNull = false;
+            } else if ($etab == "all" && $entite == "all" && $annee) {
+                Session::put('result', $this->budgetAnnuelService->findBudgetConsommeeParAnnee($annee));
+                $anneeIsNull = false;
+            } else if ($etab  && $entite == "all"  && $annee) {
+                Session::put('result', $this->budgetAnnuelService->findBudgetConsommeeParEtabParAnnee($etab, $annee));
+                $etabIsNull = false;
+                $anneeIsNull = false;
+            } else if ($etab && $entite  && $annee == "all") {
+                $etabIsNull = false;
+                $entiteIsNull = false;
+                Session::put('result', $this->budgetAnnuelService->findBudgetConsommeeParEtabParEntite($etab, $entite));
+            }
         }
-        dd($result);
+        // dd(Session::get('result'));
         return view('admin/statistiques', [
-            'result' => $result, 'etabIsNull' => $etabIsNull,
+            'etabIsNull' => $etabIsNull,
             'entiteIsNull' => $entiteIsNull,
             'anneeIsNull' => $anneeIsNull,
-            'isBudget' => $isBudget,
+            'isBudget' => $isBudget, 'isDemande' => $isDemande
         ]);
     }
 }

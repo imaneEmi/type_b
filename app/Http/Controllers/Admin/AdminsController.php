@@ -14,6 +14,8 @@ use App\Services\DemandeService;
 use App\Services\EtablissementService;
 use App\Services\UserService;
 use App\Services\util\Common;
+use App\Services\BudgetAnnuelService;
+
 use App\Services\util\Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
@@ -34,7 +36,7 @@ class AdminsController extends Controller
     private ChercheurService $chercheurService;
     private EtablissementService $etablissementService;
 
-    public function __construct(ChercheurService $chercheurService, EtablissementService $etablissementService,ManifestationService $manifestationService)
+    public function __construct(ChercheurService $chercheurService, EtablissementService $etablissementService, ManifestationService $manifestationService)
     {
         $this->chercheurService = $chercheurService;
         $this->etablissementService = $etablissementService;
@@ -43,7 +45,7 @@ class AdminsController extends Controller
 
     public function getManifestation($id, ManifestationService $manifestationService, DemandeService $demandeService)
     {
-        return view('admin/edit_demande', $manifestationService->getManifestation($id, $demandeService,$this->chercheurService));
+        return view('admin/edit_demande', $manifestationService->getManifestation($id, $demandeService, $this->chercheurService));
     }
 
     public function delete(Request $request, DemandeService $demandeService)
@@ -81,7 +83,7 @@ class AdminsController extends Controller
 
     public function getManifestationDetails($id, ManifestationService $manifestationService, DemandeService $demandeService)
     {
-        return view('admin/manif_details', $manifestationService->getManifestationDetails($id, $demandeService,$this->chercheurService,$this->etablissementService));
+        return view('admin/manif_details', $manifestationService->getManifestationDetails($id, $demandeService, $this->chercheurService, $this->etablissementService));
     }
 
     public function getDemandesCourantes(DemandeService $demandeService, ChercheurService $chercheurService)
@@ -110,9 +112,10 @@ class AdminsController extends Controller
         return view('admin/edit_fraisCouvert');
     }
 
-    public function archive(DemandeService $demandeService,ChercheurService $chercheurService)
+ public function archive(DemandeService $demandeService,BudgetAnnuelService $budgetService)
     {
-        return view('admin/archive', $demandeService->getAll($chercheurService));
+         if(count($budgetService->findAll())==0) return view('admin.edit_budgetFixe');
+        else return view('admin/archive', $demandeService->getAll($this->chercheurService));
     }
 
     public function generatePdf(Request $request)
@@ -152,7 +155,7 @@ class AdminsController extends Controller
             //$lettrePath =  $file->storeAs('manifestation_files/lettres','Lettre'.$id.'.pdf');
             $lettrePath =  $file->storeAs('manifestation_files/lettres', $file->getClientOriginalName());
             $lettreManif = new FileManifestation();
-            $lettreManif->titre =Str::of($file->getClientOriginalName())->trim('.pdf');
+            $lettreManif->titre = Str::of($file->getClientOriginalName())->trim('.pdf');
             $lettreManif->url = $lettrePath;
             $lettreManif->manifestation_id = $manifestation->getAttributes()["id"];
             $lettreManif = FileManifestation::create($lettreManif->getAttributes());
@@ -161,10 +164,10 @@ class AdminsController extends Controller
             $manifestation->update($manifestation->getAttributes());
             $success = 'Lettre téléchargé!';
 
-            return redirect()->back()->with('success',$success);
+            return redirect()->back()->with('success', $success);
         }
         $error = "La lettre n'a pas été télécharger!!";
-        return redirect()->back()->with('error',$error);
+        return redirect()->back()->with('error', $error);
     }
 
     public function getLettre(Request $request)
@@ -202,12 +205,13 @@ class AdminsController extends Controller
         }
     }
 
-    public function editMontant(Request $request){
+    public function editMontant(Request $request)
+    {
         Log::error("***********************************editMontant");
         return response()
-        ->json([
-            'code' => 200,
-            'message' => "editMontant"
-        ]);
+            ->json([
+                'code' => 200,
+                'message' => "editMontant"
+            ]);
     }
 }

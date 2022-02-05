@@ -17,9 +17,9 @@
     <!-- CSS Libraries -->
 
     <!-- Template CSS -->
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="../assets/css/customStyle.css">
-    <link rel="stylesheet" href="../assets/css/components.css">
+    <link rel="stylesheet" href="{{asset('../assets/css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('../assets/css/components.css')}}">
+    <link rel="stylesheet" href="{{asset('../assets/css/customStyle.css')}}">
 </head>
 
 <body class="layout-3">
@@ -549,15 +549,15 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-    <script src="../assets/js/stisla.js"></script>
+    <script src="{{asset('../assets/js/stisla.js')}}"></script>
 
     <!-- JS Libraies -->
 
     <!-- Page Specific JS File -->
 
     <!-- Template JS File -->
-    <script src="../assets/js/scripts.js"></script>
-    <script src="../assets/js/custom.js"></script>
+    <script src="{{asset('../assets/js/scripts.js')}}"></script>
+    <script src="{{asset('../assets/js/custom.js')}}"></script>
 </body>
 
 </html>

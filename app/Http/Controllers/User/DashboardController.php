@@ -98,8 +98,7 @@ class DashboardController extends Controller
         ManifestationEtablissementService $manifestationEtablissementService,
         GestionFinanciereService $gestionFinanciereService,
         ComiteOrganisationLocalService $comiteOrganisationLocalService
-    )
-    {
+    ) {
         $this->soutienSolliciteService = $soutienSolliciteService;
         $this->manifestationTypeContributeurService = $manifestationTypeContributeurService;
         $this->manifestationContributionParticipantService = $manifestationContributionParticipantService;
@@ -129,7 +128,8 @@ class DashboardController extends Controller
     {
 
         $demandes = $this->demandeService->findAll();
-        return view('user/list-request', ['demandes' => $demandes,"demandeStatus" => DemandeStatus::class]);
+
+        return view('user/list-request', ['demandes' => $demandes, "demandeStatus" => DemandeStatus::class]);
     }
 
     public function generatePDF(Request $request)
@@ -152,12 +152,24 @@ class DashboardController extends Controller
         $manifestationTypeContributeur = $this->manifestationTypeContributeurService->findByManifistation($demande->manifestation);
         $soutienSollicite = $this->soutienSolliciteService->findByManifistation($demande->manifestation);
         $totalSoutienSollicite = $this->soutienSolliciteService->calculateTotal($soutienSollicite);
-        $pdf = PDF::loadView('user/pdf', compact('totalSoutienSollicite', 'soutienSollicite', 'manifestationTypeContributeur', 'manifestationContributionParticipant',
-            'comiteScientifiqueLocal', 'comiteScientifiqueNonLocal',
-            'comiteOrganisationNonLocal', 'comiteOrganisationLocal',
-            'coordonnateur', 'entiteOrganisatrice', 'responsableEntiteOrganisatrice',
-            'demande', 'manifestationComite', 'manifestationcontributeurs', 'etablissementsOrganisateur',
-            'gestionFinanciere'));
+        $pdf = PDF::loadView('user/pdf', compact(
+            'totalSoutienSollicite',
+            'soutienSollicite',
+            'manifestationTypeContributeur',
+            'manifestationContributionParticipant',
+            'comiteScientifiqueLocal',
+            'comiteScientifiqueNonLocal',
+            'comiteOrganisationNonLocal',
+            'comiteOrganisationLocal',
+            'coordonnateur',
+            'entiteOrganisatrice',
+            'responsableEntiteOrganisatrice',
+            'demande',
+            'manifestationComite',
+            'manifestationcontributeurs',
+            'etablissementsOrganisateur',
+            'gestionFinanciere'
+        ));
         return $pdf->stream("Soutien_a_la_recherche_Type_B.pdf", array("Attachment" => false));
     }
 
@@ -199,7 +211,7 @@ class DashboardController extends Controller
             $demande = new Demande();
             $demande->code = $chercheur->id_cher . "/" . $this->demandeService->countCoordonnateurDemandeByCurrentYear($chercheur) + 1 . "/" . date('Y');
             $demande->date_envoie = date('Y-m-d H:i:s');
-            $demande->etat =DemandeStatus::COURANTE;
+            $demande->etat = DemandeStatus::COURANTE;
             $demande->coordonnateur_id = $chercheur->id_cher;
             $demande = Demande::create($demande->getAttributes());
 
@@ -338,7 +350,7 @@ class DashboardController extends Controller
             return redirect()->route('dashboard.user');
         }
 
-        return view('user/create-request', ["piecesDemande"=>$piecesDemande,"chercheurs" => $chercheurs, "natureContributions" => $natureContributions, "typeContributeurs" => $typeContributeurs, "etablissements" => $etablissements, 'user' => $user, 'fraisCouvert' => $fraisCouvert]);
+        return view('user/create-request', ["piecesDemande" => $piecesDemande, "chercheurs" => $chercheurs, "natureContributions" => $natureContributions, "typeContributeurs" => $typeContributeurs, "etablissements" => $etablissements, 'user' => $user, 'fraisCouvert' => $fraisCouvert]);
     }
 
     public function uploadRapport(Request $request)

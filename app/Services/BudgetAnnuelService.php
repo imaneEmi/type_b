@@ -6,7 +6,8 @@ use App\Models\BudgetAnnuel;
 
 interface BudgetAnnuelService
 {
-    public function save(BudgetAnnuel $budgetAnnuel);
+ 
+    public function save($annee,$budget_fixe);
     public function findAll();
     public function findAllWithLimit($limit);
 
@@ -20,5 +21,4 @@ interface BudgetAnnuelService
     public function findBudgetConsommeeParEtabParAnnee($idEtablissement, $annee);
     public function findBudgetConsommeeParAnnee($annee);
     public function findBudgetConsommeeParEtabParEntite($idEtablissement, $idEntite);
-    public function budgetNull();
-}
+ }

@@ -8,5 +8,6 @@ interface ChercheurService
     public  function findById($id);
     public  function findByIdNull($id);
     public  function findByEmail($email);
+    public  function  isExistByEmail($email);
 
 }

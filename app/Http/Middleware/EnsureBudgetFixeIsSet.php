@@ -27,12 +27,13 @@ class EnsureBudgetFixeIsSet
 
     public function handle(Request $request, Closure $next)
     {
-
+      
         $res = $this->budgetAnnuelService->findBudgetParAnnee(Common::getAnneeActuelle());
         if (!empty($res)) {
             return $next($request);
-        } else {
+        } 
+        $id=1;
             return redirect()->route('edit.budgetFixe');
-        }
+         
     }
 }

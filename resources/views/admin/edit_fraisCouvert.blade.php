@@ -138,4 +138,5 @@ $("#save").fireModal({
     size:'modal-lg'
 });
 </script>
+<script src="{{asset('../assets/js/page/modules-datatables.js')}}"></script>
 @endsection

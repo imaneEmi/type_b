@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Services\ChercheurService;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -109,10 +111,14 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      *
+     * @param ChercheurService $chercheurService
      * @return void
      */
-    public function boot()
+    public function boot(ChercheurService $chercheurService)
     {
-        //
+
+      Validator::extendImplicit('email_uca_rech', function ($attribute, $value, $parameters, $validator) use ($chercheurService) {
+         return $chercheurService->isExistByEmail($value);
+        },"Cet email n'existe pas dans uca recherche !");
     }
 }

@@ -42,18 +42,25 @@ Route::middleware(['verified'])->group(function () {
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 // ********* Admin's routes *******
+
+//Admin should be authenticated to access these routes
+Route::group(['middleware' => ['auth']], function () {
+
 Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 Route::get('/edit-profile', [App\Http\Controllers\Admin\AdminsController::class, 'profile'])->name('edit.profile');
 Route::get('/edit-pieces', [App\Http\Controllers\Admin\AdminsController::class, 'pieceDemandee'])->name('edit.pieces');
 Route::get('/edit-frais', [App\Http\Controllers\Admin\AdminsController::class, 'fraisCouverts'])->name('edit.frais');
-
-
-Route::group(['middleware' => ['auth']], function () {
+Route::post('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'save'])->name('save.budgetFixe');
+Route::get('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'edit'])->name('edit.budgetFixe');
+Route::get('/archive', [App\Http\Controllers\Admin\AdminsController::class, 'archive'])
+->name('archive');
+});
+//Admin should be authenticated and the current annual budget should be set to access these routes
+Route::group(['middleware' => ['auth','budgetFixeSet']], function () {
     Route::get('/dashboard-admin', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard.admin');
     Route::get('/traitement-dossier/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'getManifestation']);
     Route::get('/statistiques-admin', [App\Http\Controllers\Admin\StatistiquesController::class, 'index'])->name('statistiques.admin');
     Route::post('/rechercher', [App\Http\Controllers\Admin\StatistiquesController::class, 'search'])->name('statistiques.search');
-
     Route::get('/admin_edit_form/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'getManifestation'])
         ->name('admin.edit.manifestation');
     Route::get('/manif-details/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'getManifestationDetails'])
