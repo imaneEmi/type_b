@@ -15,6 +15,10 @@ class CreateBudgetEtablissementsTable extends Migration
     {
         Schema::create('budget_etablissements', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('etablissement_id')->unique();
+            $table->integer('annee')->unique()->nullable(false);
+            $table->double('budget_fixe');
+            $table->double('budget_restant');
             $table->timestamps();
         });
     }

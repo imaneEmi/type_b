@@ -463,11 +463,13 @@
                                             </i>
                                         </td>
                                         <td class="text-right"><input class="form-control text-right" type="number"
-                                                disabled name="" id="" value="{ $soutienAccorde[$i]->pivot->nbr }}">
+                                                disabled name="" id="" @if (sizeof($soutienAccorde) !=0 )
+                                                value="{{ $soutienAccorde[$i]->pivot->nbr }}" @endif>
                                         </td>
                                         <td class="text-right"><input class="form-control montantOk text-right"
                                                 type="number" disabled id=""
-                                                value="{ $soutienAccorde[$i]->pivot->montant }}">
+                                                @if (sizeof($soutienAccorde) !=0 )
+                                                    value="{{ $soutienAccorde[$i]->pivot->montant }}" @endif>
                                         </td>
                                         </tr>
                                         @endfor
@@ -487,7 +489,8 @@
                                         <th>Total accordé</th>
                                         <th class="text-right"><input class="form-control totalmontant text-right"
                                                 disabled type="number" name="totalmontant" id="totalmontant"
-                                                value="{{ $demande->manifestation->soutienAccorde()->sum('montant') }}">
+                                                @if($soutienAccorde !=null)
+                                                value="{{ $manifestation->soutienAccorde()->sum('montant') }}" @endif>
                                         </th>
                                     </tr>
                                 </table>

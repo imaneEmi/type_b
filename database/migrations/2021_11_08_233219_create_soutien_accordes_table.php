@@ -16,8 +16,8 @@ class CreateSoutienAccordesTable extends Migration
         Schema::connection('mysql')->disableForeignKeyConstraints();
         Schema::connection('mysql')->create('soutien_accordes', function (Blueprint $table) {
             $table->id();
-            $table->integer('nbr');
-            $table->double('montant');
+            $table->integer('nbr')->default('0');
+            $table->double('montant')->default('0');
             $table->string('remarques', 200)->nullable();
             $table->unsignedBigInteger('manifestation_id');
             $table->unsignedBigInteger('frais_couvert_id');

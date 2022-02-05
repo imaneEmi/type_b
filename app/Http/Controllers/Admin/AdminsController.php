@@ -112,9 +112,9 @@ class AdminsController extends Controller
         return view('admin/edit_fraisCouvert');
     }
 
- public function archive(DemandeService $demandeService,BudgetAnnuelService $budgetService)
+    public function archive(DemandeService $demandeService, BudgetAnnuelService $budgetService)
     {
-         if(count($budgetService->findAll())==0) return view('admin.edit_budgetFixe');
+        if (count($budgetService->findAll()) == 0) return view('admin.edit_budgetFixe');
         else return view('admin/archive', $demandeService->getAll($this->chercheurService));
     }
 
@@ -207,11 +207,48 @@ class AdminsController extends Controller
 
     public function editMontant(Request $request)
     {
-        Log::error("***********************************editMontant");
-        return response()
-            ->json([
-                'code' => 200,
-                'message' => "editMontant"
-            ]);
+        $manifestation = $this->manifestationService->findById($request->get('manifestation'));
+        $soutienSollicites = $manifestation->soutienSollicite;
+        $soutienAccordes = $manifestation->soutienAccorde;
+        $montantOk = $request->get('montantOk');
+        $nbrOk = $request->get('nbrOk');
+        $error = "";
+        $success = "";
+        if (sizeof($soutienAccordes) == 0) {
+            if (sizeof($soutienSollicites) == sizeof($montantOk)) {
+                for ($i = 0; $i < sizeof($montantOk); $i++) {
+                    $soutienAccorde = new SoutienAccorde();
+                    $soutienAccorde->manifestation_id = $manifestation->id;
+                    $soutienAccorde->frais_couvert_id = $soutienSollicites[$i]->id;
+                    if ($montantOk[$i] != null) {
+                        $soutienAccorde->nbr = $nbrOk[$i];
+                        $soutienAccorde->montant = $montantOk[$i];
+                    }
+                    try {
+                    $soutienAccorde->save();
+                    } catch (\Exception $ex) {
+                        $error = "Une erreur est survenue!! Les montants n'ont pas été enregistrer!!";
+                        Log::error($ex->getMessage());
+                    }
+                }
+            }
+        }else{
+            foreach ($soutienAccordes as $key => $soutienAccorde) {
+                if($soutienAccorde->pivot->frais_couvert_id == $soutienSollicites[$key]->id ){
+                    if ($montantOk[$key] != null) {
+                        $soutienAccorde->pivot->nbr = $nbrOk[$key];
+                        $soutienAccorde->pivot->montant = $montantOk[$key];
+                    }
+                    try {
+                        $soutienAccorde->pivot->update();
+                    } catch (\Exception $ex) {
+                        $error = "Une erreur est survenue!! Les montants n'ont pas été modifier!!";
+                        Log::error($ex->getMessage());
+                    }
+                }
+            }
+        }
+        $success = "Montants Enregistrés.";
+        return redirect()->back()->with(['success'=>$success,'error'=>$error]);
     }
 }

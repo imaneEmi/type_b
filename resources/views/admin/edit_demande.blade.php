@@ -4,11 +4,27 @@
 Traitement de dossier
 @endsection
 @section('content')
-
 <section class="section">
-    @isset($success)
-    <div class="alert alert-success">{{ $success }}</div>
-    @endisset
+    @if(Session::get('success') != null)
+    <div class="alert alert-success alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+            {{ Session::get('success') }}
+        </div>
+    </div>
+    @endif
+    @if(Session::get('error') != null)
+    <div class="alert alert-danger alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+            {{ Session::get('error') }}
+        </div>
+    </div>
+    @endif
     <div class="section-header d-flex justify-content-between pl-2 pr-3">
         @if ($manifestation != null )
         <div class="d-inline mr-2"><i class="fa fa-university fa-lg mr-1 label" aria-hidden="true"></i>
@@ -207,13 +223,14 @@ Traitement de dossier
         </div>
         <div class="row">
             <div class="col-12 col-sm-12 col-lg-12">
-                <form method="post" action="" name="edit-montant-form">
-                    @csrf
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>Soutien de l'Université</h4>
-                        </div>
-                        <div class="card-body">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Soutien de l'Université</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="{{ route('edit.montant') }}" id="edit-montant-form"
+                            name="edit-montant-form">
+                            @csrf
                             <div class="table-responsive">
                                 <table class="table table-bordered table-md">
                                     <thead>
@@ -267,30 +284,29 @@ Traitement de dossier
                                     </tbody>
                                 </table>
                             </div>
+                        </form>
+                    </div>
+                    <div class="card-footer bg-whitesmoke">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-md">
+                                <tr>
+                                    <th>Total demandé</th>
+                                    <th class="text-right"><input class="form-control" disabled type="number" name=""
+                                            id="" value="{{ $manifestation->soutienSollicite()->sum('montant') }}"></th>
+                                    <th>Total accordé</th>
+                                    <th class="text-right"><input class="form-control totalmontant text-right" disabled
+                                            type="number" name="totalmontant" id="totalmontant" @if($soutienAccorde
+                                            !=null) value="{{ $manifestation->soutienAccorde()->sum('montant') }}"
+                                            @endif>
+                                    </th>
+                                </tr>
+                            </table>
                         </div>
-                        <div class="card-footer bg-whitesmoke">
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-md">
-                                    <tr>
-                                        <th>Total demandé</th>
-                                        <th class="text-right"><input class="form-control" disabled type="number"
-                                                name="" id=""
-                                                value="{{ $manifestation->soutienSollicite()->sum('montant') }}"></th>
-                                        <th>Total accordé</th>
-                                        <th class="text-right"><input class="form-control totalmontant text-right"
-                                                disabled type="number" name="totalmontant" id="totalmontant"
-                                                @if($soutienAccorde !=null)
-                                                value="{{ $manifestation->soutienAccorde()->sum('montant') }}" @endif>
-                                        </th>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="card-footer text-right">
-                                <button class="btn btn-success" id="editMontant">Enregistrer</button>
-                            </div>
+                        <div class="card-footer text-right">
+                            <button class="btn btn-success" id="editMontant">Enregistrer</button>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
@@ -340,13 +356,11 @@ Traitement de dossier
             </div>
         </form>
     </div>
-    <div id="editMontantBody">
-        <div>Vous êtes sur le point de changer le montant de cette demande.</div>
-    </div>
 </div>
 @endsection
 @section('scripts')
 <script src="{{asset('../assets/js/page/bootstrap-modal.js')}}"></script>
+<script src="{{asset('../assets/js/sweetalert/dist/sweetalert.min.js')}}"></script>
 <script type="text/javascript">
     let rubrique_body = '<div class="table-responsive">';
 rubrique_body += '<table class="table table-bordered table-md">';
@@ -427,58 +441,22 @@ $("#accepter").fireModal({
         }
     ]
 });
-$("#editMontant").fireModal({
-    title: "Modifier le montant sollicité",
-    body: $('#editMontantBody'),
-    onFormSubmit: function(modal,event,form){
-       /* url = "{{ route('upload.lettre',['id'=>$demande->id]) }}"
-        $.ajax({
-          url: url,
-          dataType: 'text', // what to expect back from the PHP script, if anything
-          cache: false,
-          contentType: false,
-          processData: false,
-          data: $('#uploadForm').serialize(),
-          type: 'POST',
-          headers: {
-            'X-CSRF-Token': $('meta[name="_token"]').attr('content')
-          },
-          success: function(response) {
-            response = JSON.parse(response);
-            form.stopProgress();
-            if (response.code === 200) {
-              modal.find('.modal-body').prepend('<div class="alert alert-info">' + response.message + '</div>')
-
-            } else {
-              modal.find('.modal-body').prepend('<div class="alert alert-danger">' + response.message + '</div>')
-
-            }
-          },
-          error: function(error) {
-            console.log("error", error);
-            form.stopProgress();
-            modal.find('.modal-body').prepend('<div class="alert alert-danger">Please try again!</div>')
-          }
-        });
-        event.preventDefault();*/
-    },
-    buttons: [
-        {
-            text: 'Continuer',
-            class: 'btn btn-success btn-shadow',
-            submit: true,
-            handler: function (modal) {
-                modal.modal('toggle');
-            }
-        },
-        {
-            text: 'Annuler',
-            class: 'btn btn-danger btn-shadow',
-            handler: function (modal) {
-                modal.modal('toggle');
-            }
-        }
-    ]
+$("#editMontant").click(function() {
+  swal({
+      title: '?',
+      text: "Vous êtes sur le point de changer l'état de cette demande.",
+      icon: 'warning',
+      buttons: ['Annuler','Continuer'],
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+         $('#edit-montant-form').submit();
+      } else {
+        $('#edit-montant-form')[0].reset();
+        $('#totalmontant').val(0);
+      }
+    });
 });
 $("#refuser").fireModal({
     title: "Changer l'état de cette demande",
