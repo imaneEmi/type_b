@@ -15,12 +15,12 @@ class IsAdmin
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle()
+    public function handle(Request $request)
     {
-        if (Auth::user() &&  Auth::user()->is_admin == 1) {
+        $user = $request->user();
+        if ($user != null && $user->hasRole('admin')) {
             return redirect('/dashboard-admin');
         }
-
         return redirect('/dashboard-user');
     }
 }

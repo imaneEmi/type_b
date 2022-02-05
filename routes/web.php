@@ -57,7 +57,7 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 //Admin should be authenticated and the current annual budget should be set to access these routes
-Route::group(['middleware' => ['auth', 'budgetFixeSet']], function () {
+Route::group(['middleware' => ['auth', 'budgetFixeSet', 'admin']], function () {
     Route::get('/dashboard-admin', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard.admin');
     Route::get('/traitement-dossier/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'getManifestation']);
     Route::get('/statistiques-admin', [App\Http\Controllers\Admin\StatistiquesController::class, 'index'])->name('statistiques.admin');
