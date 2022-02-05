@@ -5,20 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ManifestationContributeur extends Model
+class NatureContributionManifestation extends Model
 {
     use HasFactory;
     protected $connection = 'mysql';
+    protected $with = ['natureContribution'];
     public $fillable = [
-        'contributeur_id',
+        'nature_con_id',
         'manifestation_id',
     ];
 
-    public function contributeur()
+    public function  natureContribution()
     {
-        return $this->belongsTo(Contributeur::class, 'contributeur_id');
+        return $this->belongsTo(NatureContribution::class, 'nature_con_id');
     }
-
 }
-
-

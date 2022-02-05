@@ -13,12 +13,12 @@ class CreateManifestationTypeContributeurs extends Migration
      */
     public function up()
     {
-        Schema::create('manifestation_type_contributeurs', function (Blueprint $table) {
+        Schema::connection('mysql')->create('manifestation_type_contributeurs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('manifestation_id');
             $table->unsignedBigInteger('type_contributeur_id');
 
-            $table->foreign('manifestation_id')->references('id')->on('manifestations') ;
+            $table->foreign('manifestation_id')->references('id')->on('manifestations');
             $table->index('manifestation_id');
             $table->foreign('type_contributeur_id')->references('id')->on('type_contributeurs');
             $table->timestamps();

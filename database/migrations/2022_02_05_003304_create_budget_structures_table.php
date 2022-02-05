@@ -13,7 +13,7 @@ class CreateBudgetStructuresTable extends Migration
      */
     public function up()
     {
-        Schema::create('budget_structures', function (Blueprint $table) {
+        Schema::connection('mysql')->create('budget_structures', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('labo_id')->unique();
             $table->integer('annee')->unique()->nullable(false);
