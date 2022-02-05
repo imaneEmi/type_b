@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Mail\NotificationMail;
-use App\Models\Dto\Chercheur;
 use App\Models\FileManifestation;
-use App\Models\Manifestation;
 use App\Models\SoutienAccorde;
 use App\Services\ChercheurService;
 use App\Services\ManifestationService;
@@ -21,7 +19,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use PDF;

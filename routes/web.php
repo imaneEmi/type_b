@@ -46,17 +46,18 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 //Admin should be authenticated to access these routes
 Route::group(['middleware' => ['auth']], function () {
 
-Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
-Route::get('/edit-profile', [App\Http\Controllers\Admin\AdminsController::class, 'profile'])->name('edit.profile');
-Route::get('/edit-pieces', [App\Http\Controllers\Admin\AdminsController::class, 'pieceDemandee'])->name('edit.pieces');
-Route::get('/edit-frais', [App\Http\Controllers\Admin\AdminsController::class, 'fraisCouverts'])->name('edit.frais');
-Route::post('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'save'])->name('save.budgetFixe');
-Route::get('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'edit'])->name('edit.budgetFixe');
-Route::get('/archive', [App\Http\Controllers\Admin\AdminsController::class, 'archive'])
-->name('archive');
+    Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/edit-profile', [App\Http\Controllers\Admin\AdminsController::class, 'profile'])->name('edit.profile');
+    Route::get('/edit-pieces', [App\Http\Controllers\Admin\AdminsController::class, 'pieceDemandee'])->name('edit.pieces');
+    Route::get('/edit-frais', [App\Http\Controllers\Admin\AdminsController::class, 'fraisCouverts'])->name('edit.frais');
+    Route::post('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'save'])->name('save.budgetFixe');
+    Route::get('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'edit'])->name('edit.budgetFixe');
+    Route::get('/archive', [App\Http\Controllers\Admin\AdminsController::class, 'archive'])
+        ->name('archive');
 });
+
 //Admin should be authenticated and the current annual budget should be set to access these routes
-Route::group(['middleware' => ['auth','budgetFixeSet']], function () {
+Route::group(['middleware' => ['auth', 'budgetFixeSet']], function () {
     Route::get('/dashboard-admin', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard.admin');
     Route::get('/traitement-dossier/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'getManifestation']);
     Route::get('/statistiques-admin', [App\Http\Controllers\Admin\StatistiquesController::class, 'index'])->name('statistiques.admin');
@@ -87,4 +88,29 @@ Route::group(['middleware' => ['auth','budgetFixeSet']], function () {
     Route::post('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'save'])->name('save.budgetFixe');
     Route::get('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'edit'])->name('edit.budgetFixe');
     Route::get('/notification-email', [App\Http\Controllers\Admin\AdminsController::class, 'notificationEmail'])->name('emails.notify');
+
+    Route::post('/create-piece', [App\Http\Controllers\Admin\PieceDemandeController::class, 'create'])->name('piece_demandee.create');
+    Route::post('/update-piece', [App\Http\Controllers\Admin\PieceDemandeController::class, 'update'])->name('piece_demandee.update');
+    Route::get('/delete-piece/{id}', [App\Http\Controllers\Admin\PieceDemandeController::class, 'delete'])->name('piece_demandee.delete');
+    Route::get('/pieces', [App\Http\Controllers\Admin\PieceDemandeController::class, 'index'])->name('piece_demandee.list');
+
+    Route::post('/frais_couvert', [App\Http\Controllers\Admin\FraisCouvetController::class, 'create'])->name('frais_couvert.create');
+    Route::post('/update-frais_couvert', [App\Http\Controllers\Admin\FraisCouvetController::class, 'update'])->name('frais_couvert.update');
+    Route::get('/delete-frais_couvert/{id}', [App\Http\Controllers\Admin\FraisCouvetController::class, 'delete'])->name('frais_couvert.delete');
+    Route::get('/frais_couvert', [App\Http\Controllers\Admin\FraisCouvetController::class, 'index'])->name('frais_couvert.list');
+
+    Route::post('/type_contributeur', [App\Http\Controllers\Admin\TypeContributeurController::class, 'create'])->name('type_contributeur.create');
+    Route::post('/update-type_contributeur', [App\Http\Controllers\Admin\TypeContributeurController::class, 'update'])->name('type_contributeur.update');
+    Route::get('/delete-type_contributeur/{id}', [App\Http\Controllers\Admin\TypeContributeurController::class, 'delete'])->name('type_contributeur.delete');
+    Route::get('/type_contributeur', [App\Http\Controllers\Admin\TypeContributeurController::class, 'index'])->name('type_contributeur.list');
+
+    Route::post('/nature_contribution', [App\Http\Controllers\Admin\NatureContributionController::class, 'create'])->name('nature_contribution.create');
+    Route::post('/update-nature_contribution', [App\Http\Controllers\Admin\NatureContributionController::class, 'update'])->name('nature_contribution.update');
+    Route::get('/delete-nature_contribution/{id}', [App\Http\Controllers\Admin\NatureContributionController::class, 'delete'])->name('nature_contribution.delete');
+    Route::get('/nature_contribution', [App\Http\Controllers\Admin\NatureContributionController::class, 'index'])->name('nature_contribution.list');
+
+    Route::post('/conditions_generale', [App\Http\Controllers\Admin\ConditionsGeneraleController::class, 'create'])->name('conditions_generale.create');
+    Route::post('/update-conditions_generale', [App\Http\Controllers\Admin\ConditionsGeneraleController::class, 'update'])->name('conditions_generale.update');
+    Route::get('/delete-conditions_generale/{id}', [App\Http\Controllers\Admin\ConditionsGeneraleController::class, 'delete'])->name('conditions_generale.delete');
+    Route::get('/conditions_generale', [App\Http\Controllers\Admin\ConditionsGeneraleController::class, 'index'])->name('conditions_generale.list');
 });

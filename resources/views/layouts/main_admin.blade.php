@@ -100,13 +100,16 @@
                             </a></li>
 
                         <li class="menu-header">Paramétres</li>
-                        <li class="nav-item dropdown {{Route::is('edit.budgetFixe') || Route::is('edit.frais') || Route::is('edit.pieces') ?'active':''}}">
+                        <li class="nav-item dropdown {{Route::is('edit.budgetFixe') || Route::is('frais_couvert.list') || Route::is('piece_demandee.list') ?'active':''}}">
                             <a href="#" class="nav-link has-dropdown"><i class="fas fa-cog"></i><span>Liste des
                                     paramétres</span></a>
                             <ul class="dropdown-menu ">
                                 <li class="{{Route::is('edit.budgetFixe') ? 'active':''}}"><a class="{{Route::is('edit.budgetFixe') ? 'beep beep-sidebar':''}}" href="{{ route('edit.budgetFixe') }}">Budget Total Fixe</a></li>
-                                <li class="{{Route::is('edit.frais')?'active':''}}"><a class="{{Route::is('edit.frais')?'beep beep-sidebar':''}}" href="{{ route('edit.frais') }}">Frais couvert</a></li>
-                                <li class="{{Route::is('edit.pieces')?'active':''}}"><a class="{{Route::is('edit.pieces')?'beep beep-sidebar':''}}" href="{{ route('edit.pieces') }}">Pieces demandées</a></li>
+                                <li class="{{Route::is('frais_couvert.list')?'active':''}}"><a class="{{Route::is('frais_couvert.list')?'beep beep-sidebar':''}}" href="{{ route('frais_couvert.list') }}">Frais couvert</a></li>
+                                <li class="{{Route::is('piece_demandee.list')?'active':''}}"><a class="{{Route::is('piece_demandee.list')?'beep beep-sidebar':''}}" href="{{ route('piece_demandee.list') }}">Pieces demandées</a></li>
+                                <li class="{{Route::is('type_contributeur.list')?'active':''}}"><a class="{{Route::is('type_contributeur.list')?'beep beep-sidebar':''}}" href="{{ route('type_contributeur.list') }}">Types de contributeurs</a></li>
+                                <li class="{{Route::is('nature_contribution.list')?'active':''}}"><a class="{{Route::is('nature_contribution.list')?'beep beep-sidebar':''}}" href="{{ route('nature_contribution.list') }}">Type de cotisation</a></li>
+                                <li class="{{Route::is('conditions_generale.list')?'active':''}}"><a class="{{Route::is('conditions_generale.list')?'beep beep-sidebar':''}}" href="{{ route('conditions_generale.list') }}">Conditions générales</a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown {{Route::is('edit.profile')?'active':''}}">
