@@ -10,11 +10,13 @@ use App\Services\DemandeService;
 use App\Services\util\Common;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use PhpParser\Node\Expr\Cast\Array_;
 
 
 class DemandeServiceImpl implements DemandeService
 {
+
     public function __construct()
     {
     }
@@ -24,10 +26,15 @@ class DemandeServiceImpl implements DemandeService
         return Demande::all();
     }
 
-    public function getAll()
+    public function getAll($chercheurService)
     {
-        $demandes = Demande::with('coordonnateur', 'manifestation')->get();
-        return ['demandes' => $demandes];
+        $demandes = Demande::with('manifestation')->get();
+        $coordonnateurs = [];
+        foreach ($demandes as $demande) {
+            $coordonnateur = $chercheurService->findByIdNull($demande->coordonnateur_id);
+            $coordonnateurs[] = $coordonnateur;
+        }
+        return ['demandes' => $demandes, 'coordonnateurs' => $coordonnateurs];
     }
 
     public function findById($id)
@@ -59,10 +66,15 @@ class DemandeServiceImpl implements DemandeService
         return $demande->delete();
     }
 
-    public function findByEtat($etat)
+    public function findByEtat($etat, $chercheurService)
     {
-        $demandes = Demande::whereYear('created_at', date('Y'))->where('etat', $etat)->with('coordonnateur', 'manifestation')->get();
-        return ['demandes' => $demandes];
+        $demandes = Demande::whereYear('created_at', date('Y'))->where('etat', $etat)->with('manifestation')->get();
+        $coordonnateurs = [];
+        foreach ($demandes as $demande) {
+            $coordonnateur = $chercheurService->findByIdNull($demande->coordonnateur_id);
+            $coordonnateurs[] = $coordonnateur;
+        }
+        return ['demandes' => $demandes, 'coordonnateurs' => $coordonnateurs];
     }
 
     public function getNbrDemandesAnneeCour()
@@ -100,16 +112,15 @@ class DemandeServiceImpl implements DemandeService
 
     public function isAllRapportLaboratoireExists($chercheur)
     {
-
-            $chercheurs = $chercheur->laboratoire->chercheurs;
-            foreach ($chercheurs as $chercheur) {
-                $demandes = $this->findByCoordonnateurId($chercheur->id_cher);
-                foreach ($demandes as $demande) {
-                    if ($demande->manifestation->file_manifestation_rapport_id == null) {
-                        return false;
-                    }
+        $chercheurs = $chercheur->laboratoire->chercheurs;
+        foreach ($chercheurs as $chercheur) {
+            $demandes = $this->findByCoordonnateurId($chercheur->id_cher);
+            foreach ($demandes as $demande) {
+                if ($demande->manifestation->file_manifestation_rapport_id == null) {
+                    return false;
                 }
             }
-            return true;
+        }
+        return true;
     }
 }

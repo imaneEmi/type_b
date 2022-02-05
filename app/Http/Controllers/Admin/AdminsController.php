@@ -4,16 +4,20 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Mail\NotificationMail;
+use App\Models\Dto\Chercheur;
 use App\Models\FileManifestation;
 use App\Models\Manifestation;
 use App\Models\SoutienAccorde;
+use App\Services\ChercheurService;
 use App\Services\ManifestationService;
 use App\Services\DemandeService;
+use App\Services\EtablissementService;
 use App\Services\UserService;
 use App\Services\util\Common;
 use App\Services\util\Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -27,16 +31,19 @@ class AdminsController extends Controller
 
     private ManifestationService $manifestationService;
     private DemandeService $demandeService;
+    private ChercheurService $chercheurService;
+    private EtablissementService $etablissementService;
 
-    public function __construct(ManifestationService $manifestationService, DemandeService $demandeService)
+    public function __construct(ChercheurService $chercheurService, EtablissementService $etablissementService,ManifestationService $manifestationService)
     {
+        $this->chercheurService = $chercheurService;
+        $this->etablissementService = $etablissementService;
         $this->manifestationService = $manifestationService;
-        $this->demandeService = $demandeService;
     }
 
     public function getManifestation($id, ManifestationService $manifestationService, DemandeService $demandeService)
     {
-        return view('admin/edit_demande', $manifestationService->getManifestation($id, $demandeService));
+        return view('admin/edit_demande', $manifestationService->getManifestation($id, $demandeService,$this->chercheurService));
     }
 
     public function delete(Request $request, DemandeService $demandeService)
@@ -74,21 +81,21 @@ class AdminsController extends Controller
 
     public function getManifestationDetails($id, ManifestationService $manifestationService, DemandeService $demandeService)
     {
-        return view('admin/manif_details', $manifestationService->getManifestationDetails($id, $demandeService));
+        return view('admin/manif_details', $manifestationService->getManifestationDetails($id, $demandeService,$this->chercheurService,$this->etablissementService));
     }
 
-    public function getDemandesCourantes(DemandeService $demandeService, ManifestationService $manifestationService)
+    public function getDemandesCourantes(DemandeService $demandeService, ChercheurService $chercheurService)
     {
-        return view('admin/liste_demandes', $demandeService->findByEtat(Config::$COURANTE, $manifestationService));
+        return view('admin/liste_demandes', $demandeService->findByEtat(Config::$COURANTE, $chercheurService));
     }
 
-    public function getDemandesAcceptees(DemandeService $demandeService, ManifestationService $manifestationService)
+    public function getDemandesAcceptees(DemandeService $demandeService, ChercheurService $chercheurService)
     {
-        return view('admin/liste_demandes', $demandeService->findByEtat(Config::$ACCEPTEE, $manifestationService));
+        return view('admin/liste_demandes', $demandeService->findByEtat(Config::$ACCEPTEE, $chercheurService));
     }
-    public function getDemandesResfusees(DemandeService $demandeService, ManifestationService $manifestationService)
+    public function getDemandesResfusees(DemandeService $demandeService, ChercheurService $chercheurService)
     {
-        return view('admin/liste_demandes', $demandeService->findByEtat(Config::$REFUSEE, $manifestationService));
+        return view('admin/liste_demandes', $demandeService->findByEtat(Config::$REFUSEE, $chercheurService));
     }
     public function profile(UserService $userService)
     {
@@ -103,9 +110,9 @@ class AdminsController extends Controller
         return view('admin/edit_fraisCouvert');
     }
 
-    public function archive(DemandeService $demandeService)
+    public function archive(DemandeService $demandeService,ChercheurService $chercheurService)
     {
-        return view('admin/archive', $demandeService->getAll());
+        return view('admin/archive', $demandeService->getAll($chercheurService));
     }
 
     public function generatePdf(Request $request)
@@ -152,18 +159,12 @@ class AdminsController extends Controller
 
             $manifestation->lettre_acceptation_id = $lettreManif->getAttributes()["id"];
             $manifestation->update($manifestation->getAttributes());
-            return response()
-                ->json([
-                    'code' => 200,
-                    'message' => "lettre téléchargé!"
-                ]);
-        }
+            $success = 'Lettre téléchargé!';
 
-        return response()
-            ->json([
-                'code' => 500,
-                'message' => "FAIL"
-            ]);
+            return redirect()->back()->with('success',$success);
+        }
+        $error = "La lettre n'a pas été télécharger!!";
+        return redirect()->back()->with('error',$error);
     }
 
     public function getLettre(Request $request)
@@ -199,5 +200,14 @@ class AdminsController extends Controller
         } catch (\Throwable $th) {
             error_log($th->getMessage());
         }
+    }
+
+    public function editMontant(Request $request){
+        Log::error("***********************************editMontant");
+        return response()
+        ->json([
+            'code' => 200,
+            'message' => "editMontant"
+        ]);
     }
 }

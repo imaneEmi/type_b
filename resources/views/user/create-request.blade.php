@@ -152,7 +152,7 @@
                                                 <div class="row">
                                                     <div class="col-md-6 col-lg-6">
                                                         <div class="form-group">
-                                                            <label>Numbre enseignants locaux <label style="color: red ">*</label></label>
+                                                            <label>Nombre enseignants locaux <label style="color: red ">*</label></label>
                                                             <input type="number" class="form-control"
                                                                    name="nbr_enseignants_locaux" min="0" required="">
                                                         </div>
@@ -171,7 +171,7 @@
                                                 <div class="row">
                                                     <div class="col-md-6 col-lg-6">
                                                         <div class="form-group">
-                                                            <label>Numbre enseignants non locaux <label
+                                                            <label>Nombre enseignants non locaux <label
                                                                     style="color: red ">*</label> </label>
                                                             <input type="number" class="form-control"
                                                                    name="nbr_enseignants_non_locaux" min="0"
@@ -180,7 +180,7 @@
                                                     </div>
                                                     <div class="col-md-6 col-lg-6">
                                                         <div class="form-group">
-                                                            <label>Numbre etudiants non locaux <label
+                                                            <label>Nombre etudiants non locaux <label
                                                                     style="color: red ">*</label></label>
                                                             <input type="number" class="form-control"
                                                                    name="nbr_etudiants_non_locaux" min="0" required="">

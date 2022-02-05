@@ -18,8 +18,12 @@ class ChercheurServiceImpl implements ChercheurService
     {
         return Chercheur::findOrFail($id);
     }
+    public  function findByIdNull($id)
+    {
+        return Chercheur::find($id);
+    }
     public  function findByEmail($email)
     {
-        return Chercheur::where("email",$email)->with('laboratoire')->first();
+        return Chercheur::where("email", $email)->with('laboratoire')->first();
     }
 }

@@ -2,38 +2,38 @@
 
 @section('content')
 
-    <section class="section">
-        <div class="section-header">
-            <h1>Liste des demandes</h1>
-            <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item">Demandes</div>
-                <div class="breadcrumb-item">Liste des demandes</div>
-            </div>
+<section class="section">
+    <div class="section-header">
+        <h1>Liste des demandes</h1>
+        <div class="section-header-breadcrumb">
+            <div class="breadcrumb-item">Demandes</div>
+            <div class="breadcrumb-item">Liste des demandes</div>
         </div>
+    </div>
 
 
-        <div class="section-body">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Résultats</h4>
-                                <div class="card-header-action">
-                                    <form>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" placeholder="chercher">
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-primary"><i class="fas fa-search"></i></button>
-                                            </div>
+    <div class="section-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Résultats</h4>
+                            <div class="card-header-action">
+                                <form>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="chercher">
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-primary"><i class="fas fa-search"></i></button>
                                         </div>
-                                    </form>
-                                </div>
+                                    </div>
+                                </form>
                             </div>
-                            <div class="card-body p-0">
-                                <div class="table-responsive">
-                                    <table class="table table-striped" id="sortable-table">
-                                        <thead>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="sortable-table">
+                                    <thead>
                                         <tr>
                                             <th class="text-center">
                                                 <i class="fas fa-th"></i>
@@ -41,89 +41,82 @@
                                             <th>Reference</th>
                                             <th>Date d'envoi</th>
                                             <th>Remarques</th>
-                                            <th>état</th>
+                                            <th class="text-center">Etat</th>
                                             <th>Rapport</th>
-                                            <th>lettre d'acceptation</th>
+                                            <th class="text-center">Lettre d'acceptation</th>
                                             <th>Action</th>
                                         </tr>
-                                        </thead>
-                                        <tbody>
+                                    </thead>
+                                    <tbody>
                                         @foreach ($demandes as $demande)
-                                            <tr>
-                                                <td>
-                                                    <div class="sort-handler">
-                                                        <i class="fas fa-th"></i>
-                                                    </div>
-                                                </td>
-                                                <td>{{$demande->code}}</td>
-                                                <td class="align-middle">
-                                                    {{$demande->date_envoie}}
-                                                </td>
-                                                <td> {{$demande->remarques}}</td>
-                                                <td>
-                                                    @if ($demande->etat === $demandeStatus::COURANTE)
-                                                        <div class="badge badge-info">{{$demande->etat}}</div>
-                                                    @elseif($demande->etat === $demandeStatus::ACCEPTEE )
-                                                        <div class="badge badge-success">{{$demande->etat}}</div>
-                                                    @elseif($demande->etat === $demandeStatus::REFUSEE )
-                                                        <div class="badge badge-danger">{{$demande->etat}}</div>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <button style=" max-width: 80px;min-width: 80px;"
-                                                            class="btn btn-primary dashboard-user-bnt"
-                                                            id="modal-5{{$demande->id}}">
-                                                        @if (!is_null($demande->manifestation->rapport))
-                                                            éditer
-                                                        @else
-                                                            upload
-                                                        @endif
-                                                    </button>
+                                        <tr>
+                                            <td>
+                                                <div class="sort-handler">
+                                                    <i class="fas fa-th"></i>
+                                                </div>
+                                            </td>
+                                            <td>{{$demande->code}}</td>
+                                            <td class="align-middle">
+                                                {{$demande->date_envoie->format('d/m/Y H:i')}}
+                                            </td>
+                                            <td> {{$demande->remarques}}</td>
+                                            <td>
+                                                @if ($demande->etat === App\Services\util\Config::$COURANTE)
+                                                <div class="badge badge-light text-capitalize">{{$demande->etat}}</div>
+                                                @elseif($demande->etat === App\Services\util\Config::$ACCEPTEE)
+                                                <div class="badge badge-success text-capitalize">{{$demande->etat}}</div>
+                                                @elseif($demande->etat === App\Services\util\Config::$REFUSEE )
+                                                <div class="badge badge-danger text-capitalize">{{$demande->etat}}</div>
+                                                @endif
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="" class=" has-icon" id="modal-5{{$demande->id}}">
                                                     @if (!is_null($demande->manifestation->rapport))
-                                                        <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->rapport->url)])}}"
-                                                           class="btn btn-primary dashboard-user-bnt"
-                                                           style=" max-width: 80px; min-width: 80px;"   target="_blank"> voir </a>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if (!is_null($demande->manifestation->lettreAcceptation) )
-                                                        <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->lettreAcceptation->url)])}}"
-                                                           class="btn btn-primary dashboard-user-bnt"
-                                                           style=" max-width: 80px;min-width: 80px; "  target="_blank">voir</a>
+                                                    <i class="fas fa-pen fa-lg" aria-hidden="true" title="Modifier le rapport"></i>
                                                     @else
-                                                        indisponible pour le moment
+                                                    <i class="fa fa-upload fa-lg" aria-hidden="true" title="Télécharger le rapport"></i>
                                                     @endif
-                                                </td>
-                                                <td>
-                                                    @if ($demande->editable)
-                                                        <button class="btn btn-primary dashboard-user-bnt"
-                                                                style=" max-width: 80px;min-width: 80px; "
-                                                                id="modal-6{{$demande->id}}">
-                                                            +fichier
-                                                        </button>
+                                                </a>
+                                                @if (!is_null($demande->manifestation->rapport))
+                                                <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->rapport->url)])}}" class="has-icon ml-2"><i class="fa fa-file-pdf fa-lg" aria-hidden="true" title="Consulter le rapport"></i></a>
+                                                @endif
+                                            </td>
+                                            <td class="text-center">
+                                                <a @if (!is_null($demande->manifestation->lettreAcceptation) )
+                                                    href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->lettreAcceptation->url)])}}"
+                                                    disabled
                                                     @endif
-                                                    <a href="{{route('request.pdf',['id'=>$demande->id])}}"
-                                                       class="btn btn-primary dashboard-user-bnt"
-                                                       style=" max-width: 80px;min-width: 80px;"  target="_blank">PDF</a>
-                                                </td>
-                                            </tr>
+                                                    class="has-icon" target="_blank">
+                                                    <i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a>
+                                            </td>
+                                            <td class="text-center">
+                                                @if ($demande->editable)
+                                                <a class="has-icon m-1" href="" id="modal-6{{$demande->id}}">
+                                                    <i class="fa fa-upload fa-lg" aria-hidden="true" title="Télécharger les documents manquants"></i>
+                                                </a>
+                                                @endif
+                                                <a href="{{route('request.pdf',['id'=>$demande->id])}}"
+                                                    class="has-icon m-1" target="_blank">
+                                                    <i class="fa fa-plus fa-lg" aria-hidden="true" title="Plus de détails"></i></a>
+                                            </td>
+                                        </tr>
                                         @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <meta name="_token" content="{{ csrf_token() }}">
-    </section>
+    </div>
+    <meta name="_token" content="{{ csrf_token() }}">
+</section>
 
 @endsection
 @section('scripts')
-    <script>
-        demandes = @json($demandes);
+<script>
+    demandes = @json($demandes);
         for (var i = 0; i < demandes.length; i < i++) {
 
             var form = document.createElement("form");
@@ -277,5 +270,5 @@
             });
 
         }
-    </script>
+</script>
 @endsection

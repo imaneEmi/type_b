@@ -4,18 +4,21 @@
 Traitement de dossier
 @endsection
 @section('content')
+
 <section class="section">
+    @isset($success)
+    <div class="alert alert-success">{{ $success }}</div>
+    @endisset
     <div class="section-header d-flex justify-content-between pl-2 pr-3">
         @if ($manifestation != null )
         <div class="d-inline mr-2"><i class="fa fa-university fa-lg mr-1 label" aria-hidden="true"></i>
             <h6 class="d-inline label mr-1">Etab: </h6>
-            <span class="d-inline-block text-capitalize lead"> Faculté des Sciences Juridiques, Economiques et
-                Sociales</span>
+            <span class="d-inline-block text-capitalize lead">{{ $coordonnateur->laboratoire->etablissement->nom
+                }}</span>
         </div>
         <div class="d-inline"><i class="fa fa-flask fa-lg mr-1 label" aria-hidden="true"></i>
             <h6 class="d-inline label mr-1">Structure: </h6>
-            <span class="d-inline-block text-capitalize lead"> laboratoire de recherche en management des organisations
-                droit des affaires et développement durable </span>
+            <span class="d-inline-block text-capitalize lead">{{ $coordonnateur->laboratoire->nom }}</span>
         </div>
         @endif
     </div>
@@ -64,7 +67,7 @@ Traitement de dossier
                             <h6 class="d-inline label mr-1"><i class="fa fa-tag label mr-1"
                                     aria-hidden="true"></i>Titre: </h6>
                             <span class="d-inline-block text-capitalize lead">
-                                laboratoire de recherche en management des organisations
+                                {{ $manifestation->intitule }}
                             </span>
                         </div>
                         <div class="d-inline">
@@ -78,12 +81,16 @@ Traitement de dossier
                         <div class="d-inline mr-2">
                             <i class="fa fa-calendar fa-lg mr-1 label" aria-hidden="true"></i>
                             <h6 class="d-inline label mr-1">Lieu&Date:</h6>
-                            <h5 class="d-inline">MARRAKECH - {{ date('d/m/Y H:i') }}</h5>
+                            <h5 class="d-inline text-muted"><span class="text-uppercase">{{ $manifestation->lieu
+                                    }}</span> - <span class="label">Du</span>
+                                {{ $manifestation->date_debut->format('d/m/Y') }}
+                                <span class="label">Au</span> {{ $manifestation->date_fin->format('d/m/Y') }}
+                            </h5>
                         </div>
                         <div class="d-inline">
                             <i class="fa fa-users fa-lg mr-1 label" aria-hidden="true"></i>
                             <h6 class="d-inline label mr-1">Nbre participants: </h6>
-                            <h5 class="d-inline">102365 </h5>
+                            <h5 class="d-inline  text-muted">{{ $manifestation->nbr_participants_prevus }}</h5>
                         </div>
                     </div>
                 </div>
@@ -91,30 +98,44 @@ Traitement de dossier
         </div>
         <div class="row">
             <div class="col-12 col-sm-12 col-lg-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Informations sur BUDGET</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-md">
-                                <tr>
-                                    <td>Budget engagé de l'UCA ({{ now()->year }})</td>
-                                    <td><input class="form-control text-right" style="font-weight:bold !important"
-                                            readonly value="1.150.234 DHS" /></td>
-                                    <td class="border-left">Budget octroyé à l'établissement</td>
-                                    <td>1.235 DHS</td>
-                                </tr>
-                                <tr>
-                                    <td>Budget de la structure</td>
-                                    <td>1.150.234 DHS</td>
-                                    <td class="border-left">Estimation de dotation</td>
-                                    <td>1.235 DHS</td>
-                                </tr>
-                            </table>
+                <form action="" method="POST">
+                    @csrf
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Informations sur BUDGET (en MAD)</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-md">
+                                    <tr>
+                                        <td>Budget engagé de l'UCA ({{ now()->year }})</td>
+                                        <td><input class="form-control text-right" name="budgetRestant"
+                                                style="font-weight:bold !important" readonly
+                                                value="{{ $budgetRestant->budget_restant }}" /></td>
+                                        <td class="border-left">Budget octroyé à l'établissement</td>
+                                        <td><input class="form-control text-right" type="number" min="0"
+                                                max="{{ $budgetRestant->budget_restant }}" name="budgetEtab"
+                                                style="font-weight:bold !important" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Budget de la structure</td>
+                                        <td><input class="form-control text-right" type="number" min="0"
+                                                name="budgetStructure" style="font-weight:bold !important" value="" />
+                                        </td>
+                                        <td class="border-left">Estimation de dotation</td>
+                                        <td><input class="form-control text-right" type="number" min="0"
+                                                name="estimationDotation" style="font-weight:bold !important"
+                                                value="" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white text-right">
+                            <button class="btn btn-success" type="submit">Enregistrer</button>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
         <div class="row">
@@ -159,8 +180,18 @@ Traitement de dossier
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>Total:10.000 &nbsp;-Locaux:5.000 </td>
-                                        <td>Total:100.000 &nbsp;- Locaux:50.000</td>
+                                        <td class="border-right border-bottom">Total: <span
+                                                class="label mr-1 ml-1 font-weight-bold">{{
+                                                ($manifestation->nbr_enseignants_locaux +
+                                                $manifestation->nbr_enseignants_non_locaux) }}</span>
+                                            -Locaux: <span class="label mr-1 ml-1 font-weight-bold">{{
+                                                $manifestation->nbr_enseignants_locaux }}</span> </td>
+                                        <td class="border-right border-bottom">Total: <span
+                                                class="label mr-1 ml-1 font-weight-bold">{{
+                                                ($manifestation->nbr_etudiants_locaux +
+                                                $manifestation->nbr_etudiants_non_locaux) }}</span>
+                                            - Locaux: <span class="label mr-1 ml-1 font-weight-bold">{{
+                                                $manifestation->nbr_etudiants_locaux }}</span></td>
                                     </tr>
                                     <tr>
                                         <td class="colspan-2">Les frais d'inscription couvrent:
@@ -176,30 +207,31 @@ Traitement de dossier
         </div>
         <div class="row">
             <div class="col-12 col-sm-12 col-lg-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Soutien de l'Université</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-md">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">Rubrique &nbsp;&nbsp;
-                                            <a href="#" id="rubrique"><i class="fa fa-book" aria-hidden="true"></i></a>
-                                        </th>
-                                        <th class="text-center">Nombre demandé</th>
-                                        <th class="text-center">Montant demandé</th>
-                                        <th class="text-center">Nombre accordé</th>
-                                        <th class="text-center">Montant accordé</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <form method="post" action="{{ route('accept.demande') }}" name="accepter-demande">
+                <form method="post" action="" name="edit-montant-form">
+                    @csrf
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Soutien de l'Université</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-md">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Rubrique &nbsp;&nbsp;
+                                                <a href="#" id="rubrique"><i class="fa fa-book"
+                                                        aria-hidden="true"></i></a>
+                                            </th>
+                                            <th class="text-center">Nombre demandé</th>
+                                            <th class="text-center">Montant demandé</th>
+                                            <th class="text-center">Nombre accordé</th>
+                                            <th class="text-center">Montant accordé</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
                                         <input type="text" hidden name="demande" value="{{ $demande->id }}" id="">
                                         <input type="text" hidden name="manifestation" value="{{ $manifestation->id }}"
                                             id="">
-                                        @csrf
                                         @for ($i = 0; $i < sizeof($soutienSollicite); $i++) <tr>
                                             <td name="forfaits" class="text-center">{{ $soutienSollicite[$i]->libelle }}
                                                 &nbsp;({{
@@ -212,45 +244,53 @@ Traitement de dossier
                                             <td class="">{{ $soutienSollicite[$i]->pivot->nbr }}</td>
                                             <td class="text-center">{{ $soutienSollicite[$i]->pivot->montant }}
                                                 &nbsp;&nbsp;
+                                                @if($soutienSollicite[$i]->pivot->remarques_ != "")
                                                 <i class="fa fa-info-circle" aria-hidden="true" data-container="body"
                                                     data-toggle="popover" data-placement="right"
                                                     data-content="{{ $soutienSollicite[$i]->pivot->remarques_ }}"
                                                     role="button">
                                                 </i>
+                                                @endif
                                             </td>
                                             <td class="text-right"><input class="form-control text-right nbrOk"
                                                     type="number" min="0" placeholder="0" name="nbrOk[{{ $i }}]" id=""
-                                                    value="">
+                                                    @if (sizeof($soutienAccorde) !=0 )
+                                                    value="{{ $soutienAccorde[$i]->pivot->nbr }}" @endif>
                                             </td>
                                             <td class="text-right"><input class="form-control montantOk text-right"
                                                     type="number" min="0" placeholder="0" id=""
-                                                    name="montantOk[{{ $i }}]" value="" readonly>
+                                                    name="montantOk[{{ $i }}]" @if (sizeof($soutienAccorde) !=0)
+                                                    value="{{ $soutienAccorde[$i]->pivot->montant }}" @endif readonly>
                                             </td>
                                             </tr>
                                             @endfor
-                                    </form>
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-whitesmoke">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-md">
+                                    <tr>
+                                        <th>Total demandé</th>
+                                        <th class="text-right"><input class="form-control" disabled type="number"
+                                                name="" id=""
+                                                value="{{ $manifestation->soutienSollicite()->sum('montant') }}"></th>
+                                        <th>Total accordé</th>
+                                        <th class="text-right"><input class="form-control totalmontant text-right"
+                                                disabled type="number" name="totalmontant" id="totalmontant"
+                                                @if($soutienAccorde !=null)
+                                                value="{{ $manifestation->soutienAccorde()->sum('montant') }}" @endif>
+                                        </th>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="card-footer text-right">
+                                <button class="btn btn-success" id="editMontant">Enregistrer</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-footer bg-whitesmoke">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-md">
-                                <tr>
-                                    <th>Total demandé</th>
-                                    <th class="text-right"><input class="form-control" disabled type="number" name=""
-                                            id="" value="{{ $manifestation->soutienSollicite()->sum('montant') }}"></th>
-                                    <th>Total accordé</th>
-                                    <th class="text-right"><input class="form-control totalmontant text-right" disabled
-                                            type="number" name="totalmontant" id="totalmontant"></th>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="card-footer text-right">
-                            <button class="btn btn-success" id="accepter-demande">Enregistrer</button>
-                        </div>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -299,6 +339,9 @@ Traitement de dossier
                 <input type="text" value="" name="etat" hidden>
             </div>
         </form>
+    </div>
+    <div id="editMontantBody">
+        <div>Vous êtes sur le point de changer le montant de cette demande.</div>
     </div>
 </div>
 @endsection
@@ -371,6 +414,59 @@ $("#accepter").fireModal({
             text: 'Continuer',
             class: 'btn btn-success btn-shadow',
             submite: true,
+            handler: function (modal) {
+                modal.modal('toggle');
+            }
+        },
+        {
+            text: 'Annuler',
+            class: 'btn btn-danger btn-shadow',
+            handler: function (modal) {
+                modal.modal('toggle');
+            }
+        }
+    ]
+});
+$("#editMontant").fireModal({
+    title: "Modifier le montant sollicité",
+    body: $('#editMontantBody'),
+    onFormSubmit: function(modal,event,form){
+       /* url = "{{ route('upload.lettre',['id'=>$demande->id]) }}"
+        $.ajax({
+          url: url,
+          dataType: 'text', // what to expect back from the PHP script, if anything
+          cache: false,
+          contentType: false,
+          processData: false,
+          data: $('#uploadForm').serialize(),
+          type: 'POST',
+          headers: {
+            'X-CSRF-Token': $('meta[name="_token"]').attr('content')
+          },
+          success: function(response) {
+            response = JSON.parse(response);
+            form.stopProgress();
+            if (response.code === 200) {
+              modal.find('.modal-body').prepend('<div class="alert alert-info">' + response.message + '</div>')
+
+            } else {
+              modal.find('.modal-body').prepend('<div class="alert alert-danger">' + response.message + '</div>')
+
+            }
+          },
+          error: function(error) {
+            console.log("error", error);
+            form.stopProgress();
+            modal.find('.modal-body').prepend('<div class="alert alert-danger">Please try again!</div>')
+          }
+        });
+        event.preventDefault();*/
+    },
+    buttons: [
+        {
+            text: 'Continuer',
+            class: 'btn btn-success btn-shadow',
+            submit: true,
             handler: function (modal) {
                 modal.modal('toggle');
             }

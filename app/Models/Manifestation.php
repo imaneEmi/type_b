@@ -10,6 +10,7 @@ class Manifestation extends Model
     use HasFactory;
     protected $connection = 'mysql';
     protected $with = ['rapport', 'lettreAcceptation'];
+    protected $dates = ['date_debut','date_fin'];
 
     public $fillable = [
         'intitule',

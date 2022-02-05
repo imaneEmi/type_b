@@ -66,6 +66,7 @@ Route::group(['middleware' => ['auth']], function () {
         ->name('demandes.refusees');
     Route::get('/archive', [App\Http\Controllers\Admin\AdminsController::class, 'archive'])
         ->name('archive');
+    Route::post('/edit-montant', [App\Http\Controllers\Admin\AdminsController::class, 'editMontant'])->name('edit.montant');
     Route::post('/accept-demande', [App\Http\Controllers\Admin\AdminsController::class, 'accept'])->name('accept.demande');
     Route::post('/delete-demande', [App\Http\Controllers\Admin\AdminsController::class, 'delete'])->name('delete.demande');
     Route::get('/edit-profile', [App\Http\Controllers\Admin\AdminsController::class, 'profile'])->name('edit.profile');

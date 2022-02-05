@@ -22,6 +22,10 @@ class Laboratoire extends Model
     {
         return $this->belongsTo(Etablissement::class, 'etab_id');
     }
+    public function responsable()
+    {
+        return $this->hasOne(Chercheur::class,"lab_id");
+    }
 
     public function chercheurs()
     {

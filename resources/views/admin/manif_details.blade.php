@@ -42,7 +42,8 @@
                             <ul class="dropdown-menu">
                                 <li class="nav-item"><a href="#entite" class="nav-link">Entité</a></li>
                                 <li class="nav-item"><a href="#coordonnateur" class="nav-link">Coordonnateur</a></li>
-                                <li class="nav-item"><a href="#comite" class="nav-link">Comité</a></li>
+                                <li class="nav-item"><a href="#comite" class="nav-link">Comité d'organisation</a></li>
+                                <li class="nav-item"><a href="#comiteS" class="nav-link">Comité scientifique</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -97,7 +98,6 @@
 
                     <div class="section-body">
                         <h2 class="section-title">{{ $manifestation->type }}</h2>
-                        <p class="section-lead">This page is just an example for you to create your own page.</p>
                         <div class="card">
                             <div class="card-header">
                                 <h4>Informations concernant la manifestation</h4>
@@ -129,7 +129,10 @@
                                 </div>
                             </div>
                             <div class="card-footer bg-whitesmoke">
-                                site web: <a href="{{ $manifestation->site_web}}"> {{ $manifestation->site_web}}</a>
+                                @if ( $manifestation->site_web != null)
+                                <i class="fas fa-globe mr-1"></i>Site web: <a href="{{ $manifestation->site_web}}"> {{
+                                    $manifestation->site_web}}</a>
+                                @endif
                             </div>
                         </div>
                         @if ($gestionFinanciere != null )
@@ -157,15 +160,17 @@
                                     <thead>
                                         <tr>
                                             <th>Etablissement</th>
-                                            <th>Intitule</th>
+                                            <th>Ville</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($etablissements as $etablissement )
+                                        @if ($etablissement != null)
                                         <tr>
-                                            <td>{{ $etablissement->libelle }}</td>
-                                            <td>{{ $etablissement->intitule }}</td>
+                                            <td>{{ $etablissement->nom }}</td>
+                                            <td>{{ $etablissement->ville }}</td>
                                         </tr>
+                                        @endif
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -191,8 +196,8 @@
                                     <tbody>
                                         <tr>
                                             <td>{{ $entiteOrganisatrice->nom }}</td>
-                                            <td>{{ $entiteOrganisatrice->responsable }}</td>
-                                            <td>{{ $entiteOrganisatrice->etablissement->libelle }}</td>
+                                            <td>{{ $entiteOrganisatrice->responsable->nom }}</td>
+                                            <td>{{ $entiteOrganisatrice->etablissement->nom }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -211,28 +216,32 @@
                                 <h4>Coordonnateur</h4>
                             </div>
                             <div class="card-body">
+                                @if ($coordonnateur == null)
+                                <span class="text-danger">!! Introuvable !!</span>
+                                @else
                                 <table class="table table-striped" id="table-1">
                                     <thead>
                                         <tr>
                                             <th>Nom Prenom</th>
+                                            <th>Specialité</th>
                                             <th>Grade</th>
                                             <th>Etablissement</th>
                                             <th>E-mail</th>
                                             <th>N° tel personnel</th>
-                                            <th>Fax</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>{{ $coordonnateur->name }}&nbsp;{{ $coordonnateur->prenom }}</td>
-                                            <td>{{ $coordonnateur->profession }}</td>
-                                            <td>{{ $coordonnateur->etablissement->libelle }}</td>
+                                            <td>{{ $coordonnateur->nom }}&nbsp;{{ $coordonnateur->prenom }}</td>
+                                            <td>{{ $coordonnateur->specialite }}</td>
+                                            <td>{{ $coordonnateur->grade }}</td>
+                                            <td>{{ $coordonnateur->laboratoire->etablissement->nom }}</td>
                                             <td>{{ $coordonnateur->email }}</td>
                                             <td>{{ $coordonnateur->tel }}</td>
-                                            <td>{{ $coordonnateur->fax }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
+                                @endif
                             </div>
                             <div class="card-footer bg-whitesmoke">
                             </div>
@@ -244,22 +253,148 @@
                             <h4>Comité d'organisation</h4>
                         </div>
                         <div class="card-body">
+                            <h5>Local</h5>
                             <table class="table table-striped" id="table-1">
                                 <thead>
                                     <tr>
-                                        <th>Nom Prénom</th>
-                                        <th>Etablissement</th>
+                                        <th>NOM Prénom</th>
                                         <th>Contact</th>
+                                        <th>Etablissement</th>
                                     </tr>
                                 </thead>
+                                @if($membresComiteOrganisationsLocal != null)
                                 <tbody>
-
+                                    @foreach ($membresComiteOrganisationsLocal as $membre)
+                                    @if($membre != null)
                                     <tr>
-                                        <td> $comiteOrganisation->nom }}&nbsp; $comiteOrganisation->prenom }}</td>
-                                        <td> $comiteOrganisation->etablissement->libelle }}</td>
-                                        <td> $comiteOrganisation->email }}&nbsp;/ $comiteOrganisation->tel }}</td>
+                                        <td><span class="text-uppercase mr-1">{{ $membre->nom
+                                                }}</span>
+                                            <span class="text-capitalize">{{ $membre->prenom
+                                                }}</span>
+                                        </td>
+                                        <td>{{ $membre->email }}&nbsp;/{{
+                                            $membre->tel }}</td>
+                                        <td class="text-capitalize">{{
+                                            $membre->laboratoire->etablissement->nom }}</td>
                                     </tr>
+                                    @endif
+                                    @endforeach
                                 </tbody>
+                                @endif
+                            </table>
+                            <h5>Non local</h5>
+                            <table class="table table-striped" id="table-1">
+                                <thead>
+                                    <tr>
+                                        <th>NOM Prénom</th>
+                                        <th>Contact</th>
+                                        <th>Entité</th>
+                                        <th>Université / Etablissement</th>
+                                        <th>Ville</th>
+                                    </tr>
+                                </thead>
+                                @if ($comiteOrganisationsNonLocal != null)
+                                <tbody>
+                                    @foreach ($comiteOrganisationsNonLocal as $comite )
+                                    @if ($comite != null)
+                                    <tr>
+                                        <td><span class="mr-1 text-uppercase">{{ $comite->nom }}</span>
+                                            <span class="text-capitalize">{{ $comite->prenom }}</span>
+                                        </td>
+                                        <td> <span class="mr-1">{{ $comite->email }}</span>
+                                            <span>/ {{ $comite->tel }}</span>
+                                        </td>
+                                        <td><span class="mr-1 text-capitalize">{{ $comite->type_entite }}:</span>
+                                            <span class="text-capitalize"> {{ $comite->nom_entite }}</span>
+                                        </td>
+                                        <td><span class="mr-1 text-capitalize">{{ $comite->universite }}</span>
+                                            <span class="text-capitalize">/ {{ $comite->etablissement }}</span>
+                                        </td>
+                                        <td class="text-uppercase">{{ $comite->ville }}</td>
+                                    </tr>
+                                    @endif
+                                    @endforeach
+                                </tbody>
+                                @endif
+                            </table>
+                        </div>
+                        <div class="card-footer bg-whitesmoke">
+                        </div>
+                    </div>
+                    <div class="card" id="comiteS">
+                        <div class="card-header">
+                            <h4>Comité scientifique</h4>
+                        </div>
+                        <div class="card-body">
+                            <h5>Local</h5>
+                            <table class="table table-striped" id="table-1">
+                                <thead>
+                                    <tr>
+                                        <th>NOM Prénom</th>
+                                        <th>Contact</th>
+                                        <th>Entité</th>
+                                        <th>Université / Etablissement</th>
+                                        <th>Ville</th>
+                                    </tr>
+                                </thead>
+                                @if ($comiteScientifiqueLocal != null)
+                                <tbody>
+                                    @foreach ($comiteScientifiqueLocal as $comite )
+                                    @if ($comite != null)
+                                    <tr>
+                                        <td><span class="mr-1 text-uppercase">{{ $comite->nom }}</span>
+                                            <span class="text-capitalize">{{ $comite->prenom }}</span>
+                                        </td>
+                                        <td> <span class="mr-1">{{ $comite->email }}</span>
+                                            <span>/ {{ $comite->tel }}</span>
+                                        </td>
+                                        <td><span class="mr-1 text-capitalize">{{ $comite->type_entite }}:</span>
+                                            <span class="text-capitalize"> {{ $comite->nom_entite }}</span>
+                                        </td>
+                                        <td><span class="mr-1 text-capitalize">{{ $comite->universite }}</span>
+                                            <span class="text-capitalize">/ {{ $comite->etablissement }}</span>
+                                        </td>
+                                        <td class="text-uppercase">{{ $comite->ville }}</td>
+                                    </tr>
+                                    @endif
+                                    @endforeach
+                                </tbody>
+                                @endif
+                            </table>
+                            <h5>Non local</h5>
+                            <table class="table table-striped" id="table-1">
+                                <thead>
+                                    <tr>
+                                        <th>NOM Prénom</th>
+                                        <th>Contact</th>
+                                        <th>Entité</th>
+                                        <th>Université / Etablissement</th>
+                                        <th>Pays</th>
+                                    </tr>
+                                </thead>
+                                @if ($comiteScientifiqueNonLocal != null)
+                                <tbody>
+                                    @foreach ($comiteScientifiqueNonLocal as $comite )
+                                    @if ($comite != null)
+                                    <tr>
+                                        <td><span class="mr-1 text-uppercase">{{ $comite->nom }}</span>
+                                            <span class="text-capitalize">{{ $comite->prenom }}</span>
+                                        </td>
+                                        <td> <span class="mr-1">{{ $comite->email }}</span>
+                                            <span>/ {{ $comite->tel }}</span>
+                                        </td>
+                                        <td><span class="mr-1 text-capitalize">{{ $comite->type_entite }}:</span>
+                                            <span class="text-capitalize"> {{ $comite->nom_entite }}</span>
+                                        </td>
+                                        <td><span class="mr-1 text-capitalize">{{ $comite->universite }}</span>
+                                            <span class="text-capitalize">/ {{ $comite->etablissement }}</span>
+                                        </td>
+                                        <td class="text-uppercase">{{ $comite->pays }}</td>
+                                    </tr>
+                                    @endif
+                                    @endforeach
+                                </tbody>
+                                @endif
                             </table>
                         </div>
                         <div class="card-footer bg-whitesmoke">
@@ -374,7 +509,8 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                           <span class="text-capitalize">{{ $manifestation->lettreAcceptation->titre }}</span>
+                                            <span class="text-capitalize">{{ $manifestation->lettreAcceptation->titre
+                                                }}</span>
                                         </td>
                                         <td>
                                             @if($demande->manifestation->lettreAcceptation != null)

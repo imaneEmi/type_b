@@ -42,8 +42,11 @@ Archive
                                         </td>
                                         <td>{{ $demande->manifestation->intitule }}</td>
                                         <td class="align-middle">
-                                            {{ $demande->coordonnateur->name }}&nbsp;{{ $demande->coordonnateur->prenom
+                                            @if ($coordonnateurs[$loop->index] != null)
+                                            {{ $coordonnateurs[$loop->index]->nom }}&nbsp;{{
+                                            $coordonnateurs[$loop->index]->prenom
                                             }}
+                                            @endif
                                         </td>
                                         <td>
                                             @if ($demande->etat === App\Services\util\Config::$ACCEPTEE)

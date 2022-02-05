@@ -20,6 +20,7 @@ class CreateDemandesTable extends Migration
             $table->timestamp('date_envoie');
             $table->string('etat', 20);
             $table->string('remarques', 500)->nullable();
+            $table->double('estimationDeDotaionMax')->nullable();
             $table->unsignedBigInteger('coordonnateur_id');
             $table->boolean('editable');
             $table->timestamps();

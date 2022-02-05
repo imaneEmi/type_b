@@ -62,8 +62,13 @@ Demandes refusées
                                         </td>
                                         <td>{{ $demande->manifestation->intitule }}</td>
                                         <td class="align-middle">
-                                            {{ $demande->coordonnateur->name }}&nbsp;{{ $demande->coordonnateur->prenom
+                                            @if ($coordonnateurs[$loop->index] != null)
+                                            {{ $coordonnateurs[$loop->index]->nom }}&nbsp;{{
+                                            $coordonnateurs[$loop->index]->prenom
                                             }}
+                                            @else
+                                            <span class="text-danger">!! Introuvable !!</span>
+                                            @endif
                                         </td>
                                         <td>
                                             @if (Route::is('demandes.acceptees'))
@@ -79,7 +84,8 @@ Demandes refusées
                                                 class=" has-icon"><i class="fas fa-pen"></i>
                                             </a>
                                             @else
-                                            <a href="{{ route('manifestation.details',['id'=>$demande->id]) }}" title="Plus de détails"><i class="fa fa-plus fa-lg"></i>
+                                            <a href="{{ route('manifestation.details',['id'=>$demande->id]) }}"
+                                                title="Plus de détails"><i class="fa fa-plus fa-lg"></i>
                                             </a>
                                             @endif
                                         </td>
