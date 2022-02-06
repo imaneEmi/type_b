@@ -16,9 +16,9 @@ class AcceptanceMail extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($name)
     {
-        //
+        $this->name = $name;
     }
 
     /**
@@ -28,6 +28,11 @@ class AcceptanceMail extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->from(env('MAIL_FROM_ADDRESS'), 'UCA Présidence')
+        ->subject("Lettre d'acceptaion")
+        ->markdown('emails.acceptanceEmail')
+        ->with([
+            'name' => $this->name,
+        ]);
     }
 }

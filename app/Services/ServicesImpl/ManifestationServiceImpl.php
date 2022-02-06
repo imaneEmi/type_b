@@ -44,9 +44,12 @@ class ManifestationServiceImpl implements ManifestationService
         $soutienSollicites = $manifestation->soutienSollicite;
         $soutienAccordes = $manifestation->soutienAccorde;
         $budgetRestant = BudgetAnnuel::whereYear('annee', date('Y'))->first();
+        $contributeurs = $manifestation->contributeurs;
+        $natureContributionParticipant = $manifestation->natureContributionParticipant;
         return [
             'demande' => $demande, 'manifestation' => $manifestation, 'coordonnateur' => $coordonnateur, 'soutienSollicite' => $soutienSollicites,
-            'soutienAccorde' => $soutienAccordes, 'frais' => $frais,'budgetRestant'=>$budgetRestant
+            'soutienAccorde' => $soutienAccordes, 'frais' => $frais,'budgetRestant'=>$budgetRestant,'contributeurs'=>$contributeurs,
+            'natureContributionParticipant'=>$natureContributionParticipant
         ];
     }
 
@@ -96,6 +99,6 @@ class ManifestationServiceImpl implements ManifestationService
     }
 
     public function editMontant($id){
-        dd('WTF');
+
     }
 }

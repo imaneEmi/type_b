@@ -10,7 +10,7 @@ class Manifestation extends Model
     use HasFactory;
     protected $connection = 'mysql';
     protected $with = ['rapport', 'lettreAcceptation'];
-    protected $dates = ['date_debut','date_fin'];
+    protected $dates = ['date_debut', 'date_fin'];
 
     public $fillable = [
         'intitule',
@@ -35,6 +35,10 @@ class Manifestation extends Model
         'entite_organisatrice_id',
     ];
 
+    public function demande()
+    {
+        return $this->belongsTo(Demande::class,'demande_id');
+    }
     public function rapport()
     {
         return $this->belongsTo(FileManifestation::class, 'file_manifestation_rapport_id');
@@ -44,8 +48,6 @@ class Manifestation extends Model
     {
         return $this->belongsTo(FileManifestation::class, 'lettre_acceptation_id');
     }
-
-
 
     public function soutienSollicite()
     {
@@ -76,5 +78,10 @@ class Manifestation extends Model
     public function gestionFinanciere()
     {
         return $this->hasOne(GestionFinanciere::class);
+    }
+
+    public function natureContributionParticipant()
+    {
+        return $this->hasMany(NatureContributionManifestation::class, 'manifestation_id');
     }
 }

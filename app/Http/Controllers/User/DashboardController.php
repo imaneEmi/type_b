@@ -358,6 +358,7 @@ class DashboardController extends Controller
                     $path = Storage::disk('local')->put("manifestation_files", $pieces[$i]);
                     $fileManifestation = new FileManifestation();
                     $fileManifestation->url = $path;
+                    $fileManifestation1->titre = Str::of($pieces[$i]->getClientOriginalName())->trim('.pdf');
                     $fileManifestation->manifestation_id = $manifestation->getAttributes()["id"];
                     FileManifestation::create($fileManifestation->getAttributes());
                 }

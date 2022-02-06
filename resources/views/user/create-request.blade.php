@@ -333,6 +333,7 @@
                                         <div class="section-title mt-0"></div>
                                         <label> Chercheurs </label>
                                         <select class="js-example-basic-multiple" name="comiteOrganisationLocal[]" multiple="multiple">
+                                            <option  disabled selected>"Chercheur / Etablissement / Structure</option>
                                             @foreach ($chercheurs as $chercheur)
                                             <option value="{{$chercheur->id_cher}}" id="{{$chercheur->id_cher}}">{{$chercheur->nom}} {{$chercheur->prenom}}
                                                 ({{$chercheur->laboratoire->etablissement->nom}}
@@ -581,6 +582,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
+                                        <p class="text-danger">*Le fichier à télécharger doit porter le même nom que la pièce concernée. Merci</p>
                                         <div class="custom-file">
                                             <input type="file" class="custom-file-input" id="customFile" name="pieces[]" multiple required>
                                             <label class="custom-file-label" for="customFile">Choose

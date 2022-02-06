@@ -74,7 +74,8 @@ Route::group(['middleware' => ['auth','budgetFixeSet']], function () {
     Route::get('/archive', [App\Http\Controllers\Admin\AdminsController::class, 'archive'])
         ->name('archive');
     Route::post('/edit-montant', [App\Http\Controllers\Admin\AdminsController::class, 'editMontant'])->name('edit.montant');
-    Route::post('/accept-demande', [App\Http\Controllers\Admin\AdminsController::class, 'accept'])->name('accept.demande');
+    Route::get('/accept-demande/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'accept'])->name('accept.demande');
+    Route::get('/reject-demande/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'reject'])->name('reject.demande');
     Route::post('/delete-demande', [App\Http\Controllers\Admin\AdminsController::class, 'delete'])->name('delete.demande');
     Route::get('/edit-profile', [App\Http\Controllers\Admin\AdminsController::class, 'profile'])->name('edit.profile');
     Route::get('/edit-pieces', [App\Http\Controllers\Admin\AdminsController::class, 'pieceDemandee'])->name('edit.pieces');
@@ -86,5 +87,7 @@ Route::group(['middleware' => ['auth','budgetFixeSet']], function () {
     Route::post('/save-admin', [App\Http\Controllers\Admin\AdminsController::class, 'saveAdmin'])->name('save-admin');
     Route::post('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'save'])->name('save.budgetFixe');
     Route::get('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'edit'])->name('edit.budgetFixe');
-    Route::get('/notification-email', [App\Http\Controllers\Admin\AdminsController::class, 'notificationEmail'])->name('emails.notify');
+    Route::post('/notification-email', [App\Http\Controllers\Admin\AdminsController::class, 'notificationEmail'])->name('emails.notify');
+    Route::post('/custom-email', [App\Http\Controllers\Admin\AdminsController::class, 'customEmail'])->name('emails.custom');
+    Route::get('/disable-upload/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'disableUpload'])->name('disableUpload');
 });

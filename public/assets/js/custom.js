@@ -21,9 +21,18 @@ $('.back-to-top').on('click',function () {
 });
 function total() {
     var total = 0;
+    var max = $(".totalmontant").attr("max");
     $(".montantOk").each(function () {
         if (!isNaN(parseFloat($(this).val()))) {
             total += parseFloat($(this).val());
+            if (total > max) {
+                console.log('Total > max')
+                $("#errorBudget").css('visibility', 'visible');
+                $("#editMontant").prop("disabled",true);
+            }else{
+                $("#editMontant").prop("disabled",false);
+                $("#errorBudget").css('visibility', 'hidden');
+            }
         }
     });
     $(".totalmontant").val(total);

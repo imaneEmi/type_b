@@ -419,12 +419,18 @@
                                 <tbody>
                                     @foreach ($contributeurs as $contributeur )
                                     <tr>
-                                        <td> $contributeur->typeContributeur->libelle }}</td>
+                                        <td>{{ $contributeur->typeContributeur->libelle }}</td>
+
+                                        @if ($contributeur->nom !='')
                                         <td>
-                                            @if ($contributeur->nom !='')
                                             {{ $contributeur->nom }}
-                                            @endif
                                         </td>
+                                        @else
+                                        <td>
+                                        --------
+                                        </td>
+                                        @endif
+
                                         <td>{{ $contributeur->montant }}&nbsp;DH</td>
                                         <td>{{ $contributeur->natureContribution->libelle }}</td>
                                     </tr>
@@ -467,9 +473,8 @@
                                                 value="{{ $soutienAccorde[$i]->pivot->nbr }}" @endif>
                                         </td>
                                         <td class="text-right"><input class="form-control montantOk text-right"
-                                                type="number" disabled id=""
-                                                @if (sizeof($soutienAccorde) !=0 )
-                                                    value="{{ $soutienAccorde[$i]->pivot->montant }}" @endif>
+                                                type="number" disabled id="" @if (sizeof($soutienAccorde) !=0 )
+                                                value="{{ $soutienAccorde[$i]->pivot->montant }}" @endif>
                                         </td>
                                         </tr>
                                         @endfor

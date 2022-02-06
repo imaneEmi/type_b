@@ -3,15 +3,12 @@
 namespace App\Services\ServicesImpl;
 
 use App\Models\Demande;
+use App\Models\DemandeStatus;
 use App\Models\Manifestation;
 use App\Services\LaboratoireService;
-use App\Services\util\Config;
 use App\Services\DemandeService;
 use App\Services\util\Common;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use PhpParser\Node\Expr\Cast\Array_;
 
 
 class DemandeServiceImpl implements DemandeService
@@ -95,7 +92,7 @@ class DemandeServiceImpl implements DemandeService
             ->join('entite_organisatrices', 'manifestations.entite_organisatrice_id', '=', 'entite_organisatrices.id')
             ->join('etablissements', 'entite_organisatrices.etablissement_id', '=', 'etablissements.id')
             ->whereYear('date_envoie', '=', date(Common::getAnneeActuelle()))
-            ->where('etat', '=', Config::$ACCEPTEE)
+            ->where('etat', '=', DemandeStatus::ACCEPTEE)
             ->select('libelle', DB::raw('count(*) as total'))
             ->groupBy('libelle')->get();
     }
@@ -112,7 +109,7 @@ class DemandeServiceImpl implements DemandeService
 
     public function isAllRapportLaboratoireExists($chercheur)
     {
-        $chercheurs = $chercheur->laboratoire->chercheurs;
+        /*$chercheurs = $chercheur->laboratoire->chercheurs;
         foreach ($chercheurs as $chercheur) {
             $demandes = $this->findByCoordonnateurId($chercheur->id_cher);
             foreach ($demandes as $demande) {
@@ -120,7 +117,7 @@ class DemandeServiceImpl implements DemandeService
                     return false;
                 }
             }
-        }
+        }*/
         return true;
     }
 }

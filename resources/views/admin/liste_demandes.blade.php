@@ -11,6 +11,26 @@ Demandes refusées
 @endsection
 @section('content')
 <section class="section">
+    @if(Session::get('success') != null)
+    <div class="alert alert-success alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+            {{ Session::get('success') }}
+        </div>
+    </div>
+    @endif
+    @if(Session::get('error') != null)
+    <div class="alert alert-danger alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+            {{ Session::get('error') }}
+        </div>
+    </div>
+    @endif
     <div class="section-header">
         @if (Route::is('demandes.courantes'))
         <h1>Demandes courantes</h1>
@@ -84,6 +104,11 @@ Demandes refusées
                                                 class=" has-icon"><i class="fas fa-pen"></i>
                                             </a>
                                             @else
+                                            @if ($demande->etat ===\App\Models\DemandeStatus::ACCEPTEE && $demande->manifestation->lettreAcceptation == null)
+                                            <a href="#" id="upload" class="mr-2" title="Télécharger la lettre d'acceptation"><i
+                                                    class="fa fa-upload fa-lg"></i>
+                                            </a>
+                                            @endif
                                             <a href="{{ route('manifestation.details',['id'=>$demande->id]) }}"
                                                 title="Plus de détails"><i class="fa fa-plus fa-lg"></i>
                                             </a>
@@ -100,8 +125,44 @@ Demandes refusées
         </div>
     </div>
 </section>
+<div id="uploadBody" hidden>
+    <form method="POST" action="{{ route('upload.lettre',['id'=>$demande->id]) }}" enctype="multipart/form-data"
+        id="uplodaForm">
+        @csrf
+        <div class="form-group">
+            <div class="custom-file">
+                <label for="customFile" class="custom-file-label">Télécharger la lettre d'acceptation</label>
+                <input type="file" class="custom-file-input" id="customFile" required name="lettre"
+                    accept="application/pdf">
+            </div>
+        </div>
+    </form>
+</div>
 @endsection
 @section('scripts')
 <script src="{{ mix('js/app.js') }}"></script>
 <script src="{{asset('../assets/js/page/modules-datatables.js')}}"></script>
+<script type="text/javascript">
+    $("#upload").fireModal({
+    title: "Télécharger la lettre d'acceptation",
+    body: $('#uploadBody'),
+    buttons: [
+        {
+            text: 'Télécharger',
+            class: 'btn btn-success btn-shadow',
+            submit: true,
+            handler: function (modal) {
+                modal.modal('toggle');
+            }
+        },
+        {
+            text: 'Annuler',
+            class: 'btn btn-danger btn-shadow',
+            handler: function (modal) {
+                modal.modal('toggle');
+            }
+        }
+    ]
+});
+</script>
 @endsection

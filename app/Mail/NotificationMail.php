@@ -28,7 +28,7 @@ class NotificationMail extends Mailable
      */
     public function build()
     {
-        return $this->from('imane.elaimani@gmail.com', 'UCA Présidence')
+        return $this->from(env('MAIL_FROM_ADDRESS'), 'UCA Présidence')
         ->subject('Demande acceptée')
         ->markdown('emails.notification')
         ->with([

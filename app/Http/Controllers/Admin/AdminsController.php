@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\AcceptanceMail;
+use App\Mail\CustomMail;
 use App\Mail\NotificationMail;
+use App\Mail\RejectionMail;
+use App\Models\DemandeStatus;
 use App\Models\Dto\Chercheur;
 use App\Models\FileManifestation;
 use App\Models\Manifestation;
@@ -16,7 +20,7 @@ use App\Services\UserService;
 use App\Services\util\Common;
 use App\Services\BudgetAnnuelService;
 
-use App\Services\util\Config;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Log;
@@ -35,12 +39,20 @@ class AdminsController extends Controller
     private DemandeService $demandeService;
     private ChercheurService $chercheurService;
     private EtablissementService $etablissementService;
+    private BudgetAnnuelService $budgetAnnuelService;
 
-    public function __construct(ChercheurService $chercheurService, EtablissementService $etablissementService, ManifestationService $manifestationService)
-    {
+    public function __construct(
+        ChercheurService $chercheurService,
+        EtablissementService $etablissementService,
+        ManifestationService $manifestationService,
+        DemandeService $demandeService,
+        BudgetAnnuelService $budgetAnnuelService
+    ) {
         $this->chercheurService = $chercheurService;
         $this->etablissementService = $etablissementService;
         $this->manifestationService = $manifestationService;
+        $this->demandeService = $demandeService;
+        $this->budgetAnnuelService = $budgetAnnuelService;
     }
 
     public function getManifestation($id, ManifestationService $manifestationService, DemandeService $demandeService)
@@ -61,23 +73,76 @@ class AdminsController extends Controller
             return redirect('/admin_edit_form');
         }
     }
-    public function accept(Request $request, DemandeService $demandeService)
+    public function accept($id)
     {
         try {
-            $soutienAccorde = new SoutienAccorde();
-            for ($i = 0; $i < sizeof($request->forfait_id); $i++) {
-                $soutienAccorde->nbr = $request->nbrOk[$i];
-                $soutienAccorde->montant = $request->montantOk[$i];
-                $soutienAccorde->frais_couvert_id = $request->forfait_id[$i];
-                $soutienAccorde->manifestation_id = $request->manifestation;
-                SoutienAccorde::create($soutienAccorde->getAttributes());
+            $demande = $this->demandeService->findById($id);
+            $manifestation = $demande->manifestation;
+            $soutienAccorde = $manifestation->soutienAccorde;
+            $error = "";
+            $success = "";
+            if (sizeof($soutienAccorde) == 0) {
+                $error = "Echec de l'opération! Aucun montant octroyé pour cette demande!";
+                return redirect()->back()->with('error', $error);
             }
-            $demandeService->changeEtat($request->demande, 'Acceptée');
-            $msg = "Demande acceptée";
-            return redirect('/demandes-acceptees');
+            // Edit Budget
+            $annee = $demande->created_at->format('Y');
+            $budget = $this->budgetAnnuelService->findBudgetParAnnee($annee);
+            $totalAccorde = $manifestation->soutienAccorde()->sum('montant');
+            if($budget->budget_restant == 0){
+                $budget->budget_restant = $budget->budget_fixe - $totalAccorde;
+            }else{
+                $budget->budget_restant = $budget->budget_restant - $totalAccorde;
+            }
+            if($budget->budget_restant < 0){
+                $error = "Echec!Dépassement du budget fixé!!";
+                return redirect()->back()->with('error', $error);
+            }
+            $this->budgetAnnuelService->update($budget);
+            $this->demandeService->changeEtat($demande->id, DemandeStatus::ACCEPTEE);
+            $coordonnateur = $this->chercheurService->findById($demande->coordonnateur_id);
+            $responsableStructure = $coordonnateur->laboratoire->responsable->email;
+            try {
+                Mail::to($coordonnateur->email)
+                    ->cc($responsableStructure)
+                    ->send(new NotificationMail($coordonnateur->nom . " " . $coordonnateur->prenom));
+            } catch (\Exception $ex) {
+                $error = "Oups!L'email n'as pas pu être envoyé!";
+                error_log($ex->getMessage());
+            }
+            $success = "Demande acceptée";
+            return redirect('/demandes-acceptees')->with('success', $success);
         } catch (\Exception $ex) {
+            $error = "Echec de l'opération! Une erreure est survenue!";
             error_log($ex->getMessage());
-            return redirect()->back();
+            return redirect()->back()->with('error', $error);
+        }
+    }
+
+    public function reject($id)
+    {
+        try {
+            $demande = $this->demandeService->findById($id);
+            $error = "";
+            $success = "";
+
+            $this->demandeService->changeEtat($demande->id, DemandeStatus::REFUSEE);
+            $coordonnateur = $this->chercheurService->findById($demande->coordonnateur_id);
+            $responsableStructure = $coordonnateur->laboratoire->responsable->email;
+            try {
+                Mail::to($coordonnateur->email)
+                    ->cc($responsableStructure)
+                    ->send(new RejectionMail($coordonnateur->nom . " " . $coordonnateur->prenom));
+                $success = "Demande refusée";
+                return redirect('/demandes-refusees')->with('success', $success);
+            } catch (\Exception $ex) {
+                $error = "Oups!L'email n'as pas pu être envoyé!";
+                error_log($ex->getMessage());
+            }
+        } catch (\Exception $ex) {
+            $error = "Echec de l'opération! Une erreure est survenue!";
+            error_log($ex->getMessage());
+            return redirect()->back()->with('error', $error);
         }
     }
 
@@ -88,16 +153,16 @@ class AdminsController extends Controller
 
     public function getDemandesCourantes(DemandeService $demandeService, ChercheurService $chercheurService)
     {
-        return view('admin/liste_demandes', $demandeService->findByEtat(Config::$COURANTE, $chercheurService));
+        return view('admin/liste_demandes', $demandeService->findByEtat(DemandeStatus::COURANTE, $chercheurService));
     }
 
     public function getDemandesAcceptees(DemandeService $demandeService, ChercheurService $chercheurService)
     {
-        return view('admin/liste_demandes', $demandeService->findByEtat(Config::$ACCEPTEE, $chercheurService));
+        return view('admin/liste_demandes', $demandeService->findByEtat(DemandeStatus::ACCEPTEE, $chercheurService));
     }
-    public function getDemandesResfusees(DemandeService $demandeService, ChercheurService $chercheurService)
+    public function getDemandesResfusees(ChercheurService $chercheurService)
     {
-        return view('admin/liste_demandes', $demandeService->findByEtat(Config::$REFUSEE, $chercheurService));
+        return view('admin/liste_demandes', $this->demandeService->findByEtat(DemandeStatus::REFUSEE, $chercheurService));
     }
     public function profile(UserService $userService)
     {
@@ -162,11 +227,21 @@ class AdminsController extends Controller
 
             $manifestation->lettre_acceptation_id = $lettreManif->getAttributes()["id"];
             $manifestation->update($manifestation->getAttributes());
-            $success = 'Lettre téléchargé!';
+
+            try {
+                $coordonnateur = $this->chercheurService->findById($manifestation->demande->coordonnateur_id);
+                Mail::to($coordonnateur->email)
+                    ->send(new AcceptanceMail($coordonnateur->nom . " " . $coordonnateur->prenom));
+            } catch (\Exception $ex) {
+                $error = "Oups!L'email n'a pas pu être envoyé!";
+                error_log($ex->getMessage());
+            }
+
+            $success = 'Lettre téléchargée!';
 
             return redirect()->back()->with('success', $success);
         }
-        $error = "La lettre n'a pas été télécharger!!";
+        $error = "La lettre n'a pas pu être téléchargée!!";
         return redirect()->back()->with('error', $error);
     }
 
@@ -193,25 +268,87 @@ class AdminsController extends Controller
 
     public function customEmail(Request $request)
     {
-        if ($request->has('cc')) {
+        $validator = Validator::make($request->all(), [
+            'objet' => 'required',
+            'corpsEmail' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()
+                ->back()
+                ->withErrors($validator)
+                ->with('error_code', 1);
         }
-        try {
-            Mail::to('me@uca.ma')
-                ->cc(['me2@uca.ma', 'me3@uca.ma'])
-                ->send(new NotificationMail('EL AIMANI Imane'));
-            return redirect()->back();
-        } catch (\Throwable $th) {
-            error_log($th->getMessage());
+
+        $nom = $request->get('nom');
+        $email = $request->get('email');
+        $objet = $request->get('objet');
+        $corpsEmail = $request->get('corpsEmail');
+        $cc = $request->get('cc');
+        $editable = $request->get('editable');
+        $demandeId = $request->get('demandeId');
+        $success = "";
+        $error = "";
+        if ($cc != null) {
+            try {
+                Mail::to($email)
+                    ->cc($cc)
+                    ->send(new CustomMail($nom, $objet, $corpsEmail));
+                if ($editable != null) {
+                    $demande = $this->demandeService->findById($demandeId);
+                    $demande->editable = true;
+                    $this->demandeService->update($demande);
+                }
+                $success = "Email envoyé!";
+                return redirect()->back()->with('success', $success);
+            } catch (\Exception $ex) {
+                $error = "Echec!Une erreur est survenue";
+                error_log($ex->getMessage());
+                return redirect()->back()->with('error', $error);
+            }
+        } else {
+            try {
+                Mail::to($email)
+                    ->send(new CustomMail($nom, $objet, $corpsEmail));
+                if ($editable > 0) {
+                    $demande = $this->demandeService->findById($editable[0]);
+                    $demande->editable = true;
+                    $this->demandeService->update($demande);
+                }
+                $success = "Email envoyé!";
+                return redirect()->back()->with('success', $success);
+            } catch (\Exception $ex) {
+                $error = "Echec!Une erreur est survenue";
+                error_log($ex->getMessage());
+                return redirect()->back()->with('error', $error);
+            }
         }
     }
 
     public function editMontant(Request $request)
     {
+        /*$validator = Validator::make($request->all(), [
+            'objet' => 'required',
+            'corpsEmail' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()
+                ->back()
+                ->withErrors($validator)
+                ->with('error_code', 1);
+        }*/
+
         $manifestation = $this->manifestationService->findById($request->get('manifestation'));
         $soutienSollicites = $manifestation->soutienSollicite;
         $soutienAccordes = $manifestation->soutienAccorde;
         $montantOk = $request->get('montantOk');
         $nbrOk = $request->get('nbrOk');
+        $demande = $manifestation->demande;
+        $demande->remarques = $request->get('observations');
+        if ($demande->etat === DemandeStatus::COURANTE) {
+            $demande->etat = DemandeStatus::ENCOURS;
+        }
         $error = "";
         $success = "";
         if (sizeof($soutienAccordes) == 0) {
@@ -225,22 +362,24 @@ class AdminsController extends Controller
                         $soutienAccorde->montant = $montantOk[$i];
                     }
                     try {
-                    $soutienAccorde->save();
+                        $soutienAccorde->save();
+                        $this->demandeService->update($demande);
                     } catch (\Exception $ex) {
                         $error = "Une erreur est survenue!! Les montants n'ont pas été enregistrer!!";
                         Log::error($ex->getMessage());
                     }
                 }
             }
-        }else{
+        } else {
             foreach ($soutienAccordes as $key => $soutienAccorde) {
-                if($soutienAccorde->pivot->frais_couvert_id == $soutienSollicites[$key]->id ){
+                if ($soutienAccorde->pivot->frais_couvert_id == $soutienSollicites[$key]->id) {
                     if ($montantOk[$key] != null) {
                         $soutienAccorde->pivot->nbr = $nbrOk[$key];
                         $soutienAccorde->pivot->montant = $montantOk[$key];
                     }
                     try {
                         $soutienAccorde->pivot->update();
+                        $this->demandeService->update($demande);
                     } catch (\Exception $ex) {
                         $error = "Une erreur est survenue!! Les montants n'ont pas été modifier!!";
                         Log::error($ex->getMessage());
@@ -249,6 +388,21 @@ class AdminsController extends Controller
             }
         }
         $success = "Montants Enregistrés.";
-        return redirect()->back()->with(['success'=>$success,'error'=>$error]);
+        return redirect()->back()->with(['success' => $success, 'error' => $error]);
+    }
+
+    public function disableUpload($id)
+    {
+        try {
+            $demande = $this->demandeService->findById($id);
+            $demande->editable = false;
+            $this->demandeService->update($demande);
+            $success = "Désactivation réussie!";
+            return redirect()->back()->with('success', $success);
+        } catch (\Exception $ex) {
+            $error = "Désactivation échouée !!";
+            error_log($ex->getMessage());
+            return redirect()->back()->with('error', $error);
+        }
     }
 }

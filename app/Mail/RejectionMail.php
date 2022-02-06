@@ -16,9 +16,9 @@ class RejectionMail extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($name)
     {
-        //
+        $this->name = $name;
     }
 
     /**
@@ -28,6 +28,11 @@ class RejectionMail extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->from(env('MAIL_FROM_ADDRESS'), 'UCA Présidence')
+        ->subject("Demande refusée")
+        ->markdown('emails.rejectionEmail')
+        ->with([
+            'name' => $this->name,
+        ]);
     }
 }

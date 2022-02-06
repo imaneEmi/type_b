@@ -49,20 +49,22 @@ Traitement de dossier
                         Accepter</a>
                     <a href="#" id="refuser" class="dropdown-item has-icon text-danger"><i class="fas fa-times"></i>
                         Resuser</a>
-                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-footer">
+                    </div>
                 </div>
             </div>
         </span>
-        @if($manifestation->lettreAcceptation == null)
-        <span class="m-2">
-            <a href="#" id="upload" title="Télécharger la lettre d'acceptation"><i class="fa fa-upload fa-lg"></i>
-            </a>
-        </span>
-        @endif
         <span class="m-2">
             <a href="#" id="sendEmail" title="Envoyer un email"><i class="fa fa-envelope fa-lg"></i>
             </a>
         </span>
+        @if ($demande->editable)
+        <span class="m-2">
+            <a href="#" id="disableUpload" title="Désactiver l'upload de nouveaux documents"><i
+                    class="fas fa-toggle-on fa-5x"></i>
+            </a>
+        </span>
+        @endif
         <span class="m-2">
             <a href="{{ route('pdf',['id'=>$demande->id]) }}" title="Télécharger fiche traitement de dossier"><i
                     class="fa fa-download fa-lg"></i>
@@ -148,7 +150,7 @@ Traitement de dossier
                             </div>
                         </div>
                         <div class="card-footer bg-white text-right">
-                            <button class="btn btn-success" type="submit">Enregistrer</button>
+                            <button class="btn btn-success" type="">Enregistrer</button>
                         </div>
                     </div>
                 </form>
@@ -169,12 +171,18 @@ Traitement de dossier
                                         <th>Montant</th>
                                     </tr>
                                 </thead>
+                                @if ($contributeurs != null)
                                 <tbody>
+                                    @foreach ($contributeurs as $sponsor )
+                                    @if ($sponsor->typeContributeur->libelle == "Sponsor")
                                     <tr>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{ $sponsor->nom }}</td>
+                                        <td>{{ $sponsor->montant }}</td>
                                     </tr>
+                                    @endif
+                                    @endforeach
                                 </tbody>
+                                @endif
                             </table>
                         </div>
                     </div>
@@ -211,7 +219,17 @@ Traitement de dossier
                                     </tr>
                                     <tr>
                                         <td class="colspan-2">Les frais d'inscription couvrent:
-                                            <p>lol</p>
+                                            @if($natureContributionParticipant != null)
+                                            <p>
+                                                @foreach ($natureContributionParticipant as $contribution)
+                                                @if ($loop->index != 0)
+                                                ,
+                                                @endif
+                                                <span class="mr-1">{{ $contribution->natureContribution->libelle
+                                                    }}</span>
+                                                @endforeach
+                                            </p>
+                                            @endif
                                         </td>
                                     </tr>
                                 </tbody>
@@ -275,7 +293,7 @@ Traitement de dossier
                                                     value="{{ $soutienAccorde[$i]->pivot->nbr }}" @endif>
                                             </td>
                                             <td class="text-right"><input class="form-control montantOk text-right"
-                                                    type="number" min="0" placeholder="0" id=""
+                                                    type="number" min="0"  placeholder="0" id=""
                                                     name="montantOk[{{ $i }}]" @if (sizeof($soutienAccorde) !=0)
                                                     value="{{ $soutienAccorde[$i]->pivot->montant }}" @endif readonly>
                                             </td>
@@ -283,6 +301,14 @@ Traitement de dossier
                                             @endfor
                                     </tbody>
                                 </table>
+                            </div>
+                            <div>
+                                <input type="text" class="form-control" name="observations" placeholder="Observations"
+                                    @if ($demande->remarques != "")
+                                value="{{ $demande->remarques }}"
+                                @endif
+                                @if (sizeof($soutienSollicite)==0)
+                                disabled @endif>
                             </div>
                         </form>
                     </div>
@@ -295,15 +321,17 @@ Traitement de dossier
                                             id="" value="{{ $manifestation->soutienSollicite()->sum('montant') }}"></th>
                                     <th>Total accordé</th>
                                     <th class="text-right"><input class="form-control totalmontant text-right" disabled
-                                            type="number" name="totalmontant" id="totalmontant" @if($soutienAccorde
+                                            type="number" name="totalmontant" max="{{ $budgetRestant->budget_restant }}" id="totalmontant" @if($soutienAccorde
                                             !=null) value="{{ $manifestation->soutienAccorde()->sum('montant') }}"
                                             @endif>
+                                            <div class="text-danger" id="errorBudget" style="visibility :hidden">ATTENTION! Budget dépassé! </div>
                                     </th>
                                 </tr>
                             </table>
                         </div>
                         <div class="card-footer text-right">
-                            <button class="btn btn-success" id="editMontant">Enregistrer</button>
+                            <button class="btn btn-success" id="editMontant" @if (sizeof($soutienSollicite)==0) disabled
+                                @endif>Enregistrer</button>
                         </div>
                     </div>
                 </div>
@@ -313,36 +341,45 @@ Traitement de dossier
 </section>
 <div hidden>
     <div id="emailBody">
-        <form action="" id="">
+        <form method="POST" action=" {{ route('emails.custom') }}" id="email-form" name="email-form">
             @csrf
             <div class="form-group">
                 <div class="">
-                    <label for="objet">Destinataire:</label>
-                    <input type="email" class="form-control" name="email" disabled value="{{ $coordonnateur->email }}">
+                    <label for="email">Destinataire:</label>
+                    <input type="email" class="form-control" name="email" readonly value="{{ $coordonnateur->email }}">
+                    <input type="text" class="form-control" name="nom" hidden
+                        value="{{ $coordonnateur->nom }}&nbsp;{{ $coordonnateur->prenom }}">
+                    <input type="text" hidden name="demandeId" value="{{ $demande->id }}">
                     <label for="objet">Objet:</label>
-                    <input type="text" class="form-control" name="objet" placeholder="Objet">
+                    <input type="text" class="form-control" name="objet" required placeholder="Objet">
+                    @error('objet')
+                    <div class="text-danger">* Ce champs est requis</div>
+                    @enderror
                 </div>
                 <div class=" form-check form-check-inline m-2">
                     <label for="cc" class="form-check-label">CC:</label>
-                    <input type="checkbox" class="form-check m-1" name="cc" value="Respo structure">Respo structure
-                    <input type="checkbox" class="form-check m-1" name="cc" value="Respo dep">Respo dep
+                    <input type="checkbox" class="form-check m-1" name="cc[]"
+                        value="{{ $coordonnateur->laboratoire->responsable->email }}">Responsable structure<small
+                        class="ml-1 text-danger">(Envoyer une copie au responsable)</small>
                 </div>
-                <div class=" m-2">
+                <div class="form-group">
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text"><i class="fa fa-envelope fa-lg"></i></div>
+                        </div>
+                        <input type="email" id="autreEmail" class="form-control" name="cc[]"
+                            placeholder="envoyer une copie à une autre adresse" value="">
+                    </div>
+                </div>
+                <div class=" form-group mt-2">
                     <textarea name="corpsEmail" class="form-control form-control-lg " id=""
-                        placeholder="Votre message ici..."></textarea>
+                        placeholder="Votre message ici..." required></textarea>@error('corpsEmail')
+                    <div class="text-danger">* Ce champs est requis</div>
+                    @enderror
                 </div>
-            </div>
-        </form>
-    </div>
-    <div id="uploadBody">
-        <form method="POST" action="{{ route('upload.lettre',['id'=>$demande->id]) }}" enctype="multipart/form-data"
-            id="uplodaForm">
-            @csrf
-            <div class="form-group">
-                <div class="custom-file">
-                    <label for="customFile" class="custom-file-label">Télécharger la lettre d'acceptation</label>
-                    <input type="file" class="custom-file-input" id="customFile" required name="lettre"
-                        accept="application/pdf">
+                <div class=" form-check form-check-inline m-2">
+                    <input type="checkbox" class="form-check m-1" id="editable" name="editable" value="1">Demande de
+                    pièces manquantes
                 </div>
             </div>
         </form>
@@ -361,6 +398,12 @@ Traitement de dossier
 @section('scripts')
 <script src="{{asset('../assets/js/page/bootstrap-modal.js')}}"></script>
 <script src="{{asset('../assets/js/sweetalert/dist/sweetalert.min.js')}}"></script>
+@if(!empty(Session::get('error_code')) && Session::get('error_code') == 1)
+<script>
+    $(document).ready(function(){
+    $('#sendEmail').click()});
+</script>
+@endif
 <script type="text/javascript">
     let rubrique_body = '<div class="table-responsive">';
 rubrique_body += '<table class="table table-bordered table-md">';
@@ -387,63 +430,25 @@ $("#rubrique").fireModal({
     ],
     size:'modal-lg'
 });
-$("#accepter").fireModal({
-    title: "Changer l'état de cette demande",
-    body: $('#etatBody'),
-    onFormSubmit: function(modal, e, form) {
-        let etat = '{{ App\Services\util\Config::$ACCEPTEE }}';
-        url = "{{route('accept.demande')}}"
-        $.ajax({
-          url: url,
-          dataType: 'text', // what to expect back from the PHP script, if anything
-          cache: false,
-          contentType: false,
-          processData: false,
-          data: etat,
-          type: 'POST',
-          headers: {
-            'X-CSRF-Token': $('meta[name="_token"]').attr('content')
-          },
-          success: function(response) {
-            response = JSON.parse(response);
-            form.stopProgress();
-            if (response.code === 200) {
-              modal.find('.modal-body').prepend('<div class="alert alert-info">' + response.message + '</div>')
-
-            } else {
-              modal.find('.modal-body').prepend('<div class="alert alert-danger">' + response.message + '</div>')
-
-            }
-          },
-          error: function(error) {
-            console.log("error", error);
-            form.stopProgress();
-            modal.find('.modal-body').prepend('<div class="alert alert-danger">Please try again!</div>')
-          }
-        });
-        e.preventDefault();
-      },
-    buttons: [
-        {
-            text: 'Continuer',
-            class: 'btn btn-success btn-shadow',
-            submite: true,
-            handler: function (modal) {
-                modal.modal('toggle');
-            }
-        },
-        {
-            text: 'Annuler',
-            class: 'btn btn-danger btn-shadow',
-            handler: function (modal) {
-                modal.modal('toggle');
-            }
-        }
-    ]
+$("#accepter").click(function(){
+    swal({
+      title: '',
+      text: "Vous êtes sur le point d'accepter cette demande.",
+      icon: 'warning',
+      buttons: ['Annuler','Continuer'],
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        window.location.href ="{{ route('accept.demande',['id'=>$demande->id]) }}";
+      } else {
+      }
+    });
 });
 $("#editMontant").click(function() {
+   
   swal({
-      title: '?',
+      title: '',
       text: "Vous êtes sur le point de changer l'état de cette demande.",
       icon: 'warning',
       buttons: ['Annuler','Continuer'],
@@ -458,47 +463,51 @@ $("#editMontant").click(function() {
       }
     });
 });
-$("#refuser").fireModal({
-    title: "Changer l'état de cette demande",
-    body: $('#etatBody'),
-    buttons: [
-        {
-            text: 'Continuer',
-            class: 'btn btn-success btn-shadow',
-            submite: true,
-            handler: function (modal) {
-                modal.modal('toggle');
-            }
-        },
-        {
-            text: 'Annuler',
-            class: 'btn btn-danger btn-shadow',
-            handler: function (modal) {
-                modal.modal('toggle');
-            }
-        }
-    ]
+$("#refuser").click(function(){
+    swal({
+      title: '',
+      text: "Vous êtes sur le point de refuser cette demande.",
+      icon: 'warning',
+      buttons: ['Annuler','Continuer'],
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        window.location.href ="{{ route('reject.demande',['id'=>$demande->id]) }}";
+      } else {
+      }
+    });
 });
 
 $("#sendEmail").fireModal({
     title: 'Envoyer un email',
     body: $('#emailBody'),
-    onFormSubmit: function(event){
-        event.preventDefault();
-    },
     buttons: [
         {
             text: 'Envoyer',
             class: 'btn btn-success btn-shadow',
-            submit: true,
-            handler: function (modal) {
-                modal.modal('toggle');
+            handler: function () {
+                swal({
+                    title: '?',
+                    text: "Voulez-vous vraiment envoyer cet e-mail?.",
+                    icon: 'warning',
+                    buttons: ['NON','OUI'],
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $('#email-form').submit();
+                    } else {
+                        $('#email-form')[0].reset();
+                    }
+                });
             }
         },
         {
             text: 'Annuler',
             class: 'btn btn-danger btn-shadow',
             handler: function (modal) {
+                $('#email-form')[0].reset();
                 modal.modal('toggle');
             }
         }
@@ -506,58 +515,20 @@ $("#sendEmail").fireModal({
     size:'modal-lg'
 });
 
-$("#upload").fireModal({
-    title: "Télécharger la lettre d'acceptation",
-    body: $('#uploadBody'),
-    onFormSubmit: function(modal,event,form){
-       /* url = "{{ route('upload.lettre',['id'=>$demande->id]) }}"
-        $.ajax({
-          url: url,
-          dataType: 'text', // what to expect back from the PHP script, if anything
-          cache: false,
-          contentType: false,
-          processData: false,
-          data: $('#uploadForm').serialize(),
-          type: 'POST',
-          headers: {
-            'X-CSRF-Token': $('meta[name="_token"]').attr('content')
-          },
-          success: function(response) {
-            response = JSON.parse(response);
-            form.stopProgress();
-            if (response.code === 200) {
-              modal.find('.modal-body').prepend('<div class="alert alert-info">' + response.message + '</div>')
-
-            } else {
-              modal.find('.modal-body').prepend('<div class="alert alert-danger">' + response.message + '</div>')
-
-            }
-          },
-          error: function(error) {
-            console.log("error", error);
-            form.stopProgress();
-            modal.find('.modal-body').prepend('<div class="alert alert-danger">Please try again!</div>')
-          }
-        });
-        event.preventDefault();*/
-    },
-    buttons: [
-        {
-            text: 'Télécharger',
-            class: 'btn btn-success btn-shadow',
-            submit: true,
-            handler: function (modal) {
-                modal.modal('toggle');
-            }
-        },
-        {
-            text: 'Annuler',
-            class: 'btn btn-danger btn-shadow',
-            handler: function (modal) {
-                modal.modal('toggle');
-            }
-        }
-    ]
+$("#disableUpload").click(function(){
+    swal({
+      title: "Désactiver l'ajout de nouveaux document pour cette demande",
+      text: "",
+      icon: 'warning',
+      buttons: ['Annuler','Continuer'],
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        window.location.href ="{{ route('disableUpload',['id'=>$demande->id]) }}";
+      } else {
+      }
+    });
 });
 </script>
 @endsection

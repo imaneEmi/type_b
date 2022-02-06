@@ -85,4 +85,14 @@ class BudgetAnnuelServiceImpl implements BudgetAnnuelService
     {
         return  BudgetAnnuel::create(['annee' => $annee, 'budget_fixe' => $budget_fixe, 'budget_restant' => $budget_fixe]);
     }
+    public  function findById($id)
+    {
+        return BudgetAnnuel::find($id);
+    }
+    public function update(BudgetAnnuel $budget)
+    {
+        if ($this->findById($budget->id) != null) {
+            return $budget->save();
+        }
+    }
 }

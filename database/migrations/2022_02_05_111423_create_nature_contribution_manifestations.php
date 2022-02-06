@@ -22,6 +22,7 @@ class CreateNatureContributionManifestations extends Migration
             $table->index('manifestation_id');
             $table->foreign('nature_con_id')->references('id')->on('nature_contributions');
             $table->index('nature_con_id');
+            $table->unique(['manifestation_id','nature_con_id'],'manifestation_id_nature_id');
             $table->timestamps();
         });
     }

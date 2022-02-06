@@ -11,14 +11,18 @@ class CustomMail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    private $objet;
+    private $msg;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($name,$objet,$msg)
     {
-        //
+        $this->name = $name;
+        $this->objet = $objet;
+        $this->msg = $msg;
     }
 
     /**
@@ -28,6 +32,12 @@ class CustomMail extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->from(env('MAIL_FROM_ADDRESS'), 'UCA Présidence')
+        ->subject($this->objet)
+        ->markdown('emails.customEmail')
+        ->with([
+            'name' => $this->name,
+            'msg' => $this->msg,
+        ]);
     }
 }
