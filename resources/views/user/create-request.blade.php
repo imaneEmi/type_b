@@ -577,7 +577,6 @@
                                             <div class="section-title mt-0"></div>
                                             <p class="mb-0">Libelle: {{$item->libelle}}</p>
                                             <p class="mb-0">Description: {{$item->description}}</p>
-                                            <p class="mb-0">nombre de copie: {{$item->nbr_copie}}</p>
                                             @endforeach
                                         </div>
                                     </div>
@@ -587,6 +586,25 @@
                                             <input type="file" class="custom-file-input" id="customFile" name="pieces[]" multiple required>
                                             <label class="custom-file-label" for="customFile">Choose
                                                 files</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4>Conditions générales</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="accordion">
+                                        <div class="accordion-header" role="button" data-toggle="collapse" data-target="#conditionsGenerale" aria-expanded="true">
+                                            <h4>voir plus</h4>
+                                        </div>
+                                        <div class="accordion-body collapse " id="conditionsGenerale" data-parent="#accordion">
+                                            @foreach ($conditionsGenerale as $item)
+                                            <div class="section-title mt-0"></div>
+                                            <p class="mb-0">Libelle: {{$item->libelle}}</p>
+                                            <p class="mb-0">Description: {{$item->description}}</p>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>

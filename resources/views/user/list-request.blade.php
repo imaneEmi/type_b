@@ -186,7 +186,7 @@
                         form.stopProgress();
                         if (response.code === 200) {
                             modal.find('.modal-body').prepend('<div class="alert alert-info">' + response.message + '</div>')
-
+                            window.location.reload();
                         } else {
                             modal.find('.modal-body').prepend('<div class="alert alert-danger">' + response.message + '</div>')
 
@@ -241,7 +241,7 @@
                         form.stopProgress();
                         if (response.code === 200) {
                             modal.find('.modal-body').prepend('<div class="alert alert-info">' + response.message + '</div>')
-
+                            window.location.reload();
                         } else {
                             modal.find('.modal-body').prepend('<div class="alert alert-danger">' + response.message + '</div>')
 

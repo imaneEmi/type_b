@@ -10,8 +10,8 @@ use App\Mail\RejectionMail;
 use App\Models\DemandeStatus;
 use App\Models\Dto\Chercheur;
 use App\Models\FileManifestation;
-use App\Models\Manifestation;
 use App\Models\SoutienAccorde;
+use App\Models\User;
 use App\Services\ChercheurService;
 use App\Services\ManifestationService;
 use App\Services\DemandeService;
@@ -20,14 +20,16 @@ use App\Services\UserService;
 use App\Services\util\Common;
 use App\Services\BudgetAnnuelService;
 
-
+use App\Services\util\Config;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 use PDF;
 
 use function Psy\debug;
@@ -164,10 +166,7 @@ class AdminsController extends Controller
     {
         return view('admin/liste_demandes', $this->demandeService->findByEtat(DemandeStatus::REFUSEE, $chercheurService));
     }
-    public function profile(UserService $userService)
-    {
-        return view('admin/edit_profile');
-    }
+
     public function pieceDemandee()
     {
         return view('admin/edit_pieceDemandee');
@@ -327,18 +326,6 @@ class AdminsController extends Controller
 
     public function editMontant(Request $request)
     {
-        /*$validator = Validator::make($request->all(), [
-            'objet' => 'required',
-            'corpsEmail' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()
-                ->back()
-                ->withErrors($validator)
-                ->with('error_code', 1);
-        }*/
-
         $manifestation = $this->manifestationService->findById($request->get('manifestation'));
         $soutienSollicites = $manifestation->soutienSollicite;
         $soutienAccordes = $manifestation->soutienAccorde;
@@ -404,5 +391,51 @@ class AdminsController extends Controller
             error_log($ex->getMessage());
             return redirect()->back()->with('error', $error);
         }
+    }
+
+
+    public function profile(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            $data = $request->all();
+
+            if ($request->filled('updateProfile')) {
+
+                $user = $request->user();
+                $user->name =  $data['name'];
+                $user->prenom =  $data['prenom'];
+                $user->tel =  $data['tel'];
+                $user->fax =  $data['fax'];
+                $user->update();
+            }
+
+            if ($request->filled('addAdmin')) {
+
+                $request->validate([
+                    'nameAdmin' => 'required',
+                    'prenomAdmin' => 'required',
+                    'email' => 'required| email | unique:users',
+                    'password' => 'required|confirmed|min:8',
+                    'password_confirmation' => 'same:password',
+                ]);
+
+                $user = User::create([
+                    'name' => $data['nameAdmin'],
+                    'prenom' => $data['prenomAdmin'],
+                    'email' => $data['email'],
+                    'password' => Hash::make($data['password']),
+                ]);
+
+                try {
+                    $userRole = Role::findByName('admin');
+                    $user->assignRole($userRole);
+                } catch (Exception $e) {
+
+                    $userRole = Role::create(['name' => 'admin']);
+                    $user->assignRole($userRole);
+                }
+            }
+        }
+        return view('admin/edite_profile', ["user" =>  $request->user()]);
     }
 }

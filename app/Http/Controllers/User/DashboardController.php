@@ -10,6 +10,7 @@ use App\Models\ComiteOrganisationLocal;
 use App\Models\ComiteOrganisationNonLocal;
 use App\Models\ComiteScientifiqueLocal;
 use App\Models\ComiteScientifiqueNonLocal;
+use App\Models\ConditionsGenerale;
 use App\Models\Contributeur;
 use App\Models\ContributionParticipant;
 use App\Models\Demande;
@@ -198,6 +199,7 @@ class DashboardController extends Controller
         $fraisCouvert = $this->fraisCouvertService->findAll();
         $natureContributions = $this->natureContributionService->findAll();
         $piecesDemande = PieceDemande::all();
+        $conditionsGenerale = ConditionsGenerale::all();
 
         $chercheurs = $this->chercheurService->findAll();
 
@@ -366,7 +368,7 @@ class DashboardController extends Controller
             return redirect()->route('dashboard.user');
         }
 
-        return view('user/create-request', ["piecesDemande" => $piecesDemande, "chercheurs" => $chercheurs, "natureContributions" => $natureContributions, "typeContributeurs" => $typeContributeurs, "etablissements" => $etablissements, 'user' => $user, 'fraisCouvert' => $fraisCouvert]);
+        return view('user/create-request', ["conditionsGenerale" => $conditionsGenerale, "piecesDemande" => $piecesDemande, "chercheurs" => $chercheurs, "natureContributions" => $natureContributions, "typeContributeurs" => $typeContributeurs, "etablissements" => $etablissements, 'user' => $user, 'fraisCouvert' => $fraisCouvert]);
     }
 
     public function uploadRapport(Request $request)
