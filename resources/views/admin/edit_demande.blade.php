@@ -222,6 +222,10 @@ Traitement de dossier
                                                 $manifestation->nbr_etudiants_locaux }}</span></td>
                                     </tr>
                                     <tr>
+                                        <td class="colspan-2">Total contribution:
+                                            <span class="label mr-1 ml-1 font-weight-bold">{{ $contributionParticipants }} MAD</span>
+                                        </td>
+                                    <tr>
                                         <td class="colspan-2">Les frais d'inscription couvrent:
                                             @if($natureContributionParticipant != null)
                                             <p>
@@ -229,7 +233,7 @@ Traitement de dossier
                                                 @if ($loop->index != 0)
                                                 ,
                                                 @endif
-                                                <span class="mr-1">{{ $contribution->natureContribution->libelle
+                                                <span class="label font-weight-bold mr-1">{{ $contribution->natureContribution->libelle
                                                     }}</span>
                                                 @endforeach
                                             </p>

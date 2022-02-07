@@ -46,10 +46,12 @@ class ManifestationServiceImpl implements ManifestationService
         $budgetRestant = BudgetAnnuel::whereYear('annee', date('Y'))->first();
         $contributeurs = $manifestation->contributeurs;
         $natureContributionParticipant = $manifestation->natureContributionParticipant;
+        $contributionParticipants = $manifestation->contributionParticipants()->sum('montant');
         return [
             'demande' => $demande, 'manifestation' => $manifestation, 'coordonnateur' => $coordonnateur, 'soutienSollicite' => $soutienSollicites,
             'soutienAccorde' => $soutienAccordes, 'frais' => $frais,'budgetRestant'=>$budgetRestant,'contributeurs'=>$contributeurs,
-            'natureContributionParticipant'=>$natureContributionParticipant
+            'natureContributionParticipant'=>$natureContributionParticipant,
+            'contributionParticipants'=>$contributionParticipants,
         ];
     }
 

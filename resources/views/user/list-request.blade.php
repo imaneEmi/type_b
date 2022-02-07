@@ -61,12 +61,12 @@
                                             </td>
                                             <td> {{$demande->remarques}}</td>
                                             <td>
-                                                @if ($demande->etat === $demandeStatus::COURANTE)
-                                                <div class="badge badge-light text-capitalize">{{$demande->etat}}</div>
-                                                @elseif($demande->etat === $demandeStatus::ACCEPTEE)
+                                                @if($demande->etat === $demandeStatus::ACCEPTEE)
                                                 <div class="badge badge-success text-capitalize">{{$demande->etat}}</div>
                                                 @elseif($demande->etat === $demandeStatus::REFUSEE )
                                                 <div class="badge badge-danger text-capitalize">{{$demande->etat}}</div>
+                                                @else
+                                                <div class="badge badge-light text-capitalize">{{$demande->etat}}</div>
                                                 @endif
                                             </td>
                                             <td class="text-center">
