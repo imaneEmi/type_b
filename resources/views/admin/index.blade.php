@@ -8,10 +8,13 @@
         <div class="col-lg-6 col-md-6 col-sm-12">
             <div class="card card-statistic-2">
                 <div class="card-stats">
-                    <div class="card-stats-title">
+                    <div class="card-stats-title card-header  ">
                         Statistiques sur le budget de l'année courante
+                        <div style="float: right;"> <a href="#" class="btn btn-primary" id="modal-5">Modifier</a></div>
 
                     </div>
+
+
                     <div class="row">
                         <div class="card-icon shadow-primary bg-primary">
                             <i class="fas fa-dollar-sign"></i>
@@ -60,7 +63,7 @@
         </div>
 
         <div class="col-lg-6 col-md-6 col-sm-12">
-            <div class="card card-statistic-2">
+            <div class="card card-statistic-2 card-warning">
                 <div class="card-stats">
                     <div class="card-stats-title">Statistiques sur les demandes de l'année courante
 
@@ -105,7 +108,7 @@
     <div class="row">
 
         <div class="col-12 col-sm-12 col-lg-6">
-            <div class="card">
+            <div class="card card-warning">
                 <div class="card-header">
                     <h4>Statistiques sur le budget annuel des 4 dernières années</h4>
 
@@ -131,7 +134,7 @@
 
         </div>
         <div class="col-lg-6 col-md-6 col-12">
-            <div class="card">
+            <div class="card card-warning">
                 <div class="card-header">
                     <h4>Demandes Acceptées Par établissement</h4>
                 </div>
@@ -141,7 +144,7 @@
                         <div class="alert-icon"><i class="far fa-lightbulb"></i></div>
                         <div class="alert-body">
                             <div class="alert-title">Infos</div>
-                            Aucune demande n'est acceptée
+                            Aucune demande n'est acceptée jusqu'à présent !
                         </div>
                     </div>@else
                     @foreach($demandesAcceParEtab as $demandeacc)
@@ -179,12 +182,66 @@
 
 
 </section>
+<form class="modal-part" id="modal-login-part" method="post" id="saveBudgetForm" class="needs-validation" novalidate="" action="{{route('budget.update')}}">
+    @csrf
+    <p>Veuillez saisir le nouvez budget annuel</p>
 
+    <div class="form-group">
+        <label>Budget en (MAD)</label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <div class="input-group-text">
+                    MAD
+                </div>
+            </div>
+            <input type="number" class="form-control currency @error('budget') is-invalid @enderror" value="{{ old('annee') }}" min=0 name="budget" required>
+            @error('budget')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+            @enderror
+        </div>
+    </div>
+</form>
 @endsection
 @section('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
-<script src="{{asset('../assets/js/page/components-statistic.js')}}" async></script>
+<script src="{{asset('../assets/js/sweetalert/dist/sweetalert.min.js')}}"></script>
+
+@if (!empty(Session::get('succes')))
 <script>
+    swal('Succés', 'le budget a été bien modifié!', 'success');
+</script>
+@endif
+@if (!empty(Session::get('error')))
+<script>
+    swal('Succés', 'le budget ne peut pas etre modifié car il est déjà consommé!', 'error');
+</script>
+@endif
+
+<script>
+    $("#modal-5").fireModal({
+        title: 'Modifier le budget annuel de cette année courante',
+        body: $("#modal-login-part"),
+        footerClass: 'bg-whitesmoke',
+        autoFocus: false,
+        onFormSubmit: function(modal, e, form) {
+
+        },
+        shown: function(modal, form) {
+            console.log(form)
+        },
+
+
+
+        buttons: [{
+            text: 'Modifier',
+            submit: true,
+            class: 'btn btn-primary btn-shadow',
+            handler: function(modal) {}
+        }]
+    });
+
     function convertToAray(data) {
 
         var myvar = data.substr(1, ((data.length) - 2));

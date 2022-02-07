@@ -43,10 +43,10 @@ class RegisterController extends Controller
      *
      * @return void
      */
-    public function __construct(ChercheurService $chercheurService )
+    public function __construct(ChercheurService $chercheurService)
     {
         $this->middleware('guest');
-        $this->chercheurService =$chercheurService;
+        $this->chercheurService = $chercheurService;
     }
 
     /**
@@ -63,10 +63,9 @@ class RegisterController extends Controller
             'prenom' => ['required', 'string', 'max:255'],
             'profession' => ['required', 'string', 'max:255'],
             'tel' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email','email_uca_rech', 'max:255', 'unique:users' ],
+            'email' => ['required', 'string', 'email', 'email_uca_rech', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
-
     }
 
     /**
@@ -92,7 +91,6 @@ class RegisterController extends Controller
             $userRole = Role::findByName('user');
             $user->assignRole($userRole);
             return $user;
-
         } catch (Exception $e) {
 
             $userRole = Role::create(['name' => 'user']);

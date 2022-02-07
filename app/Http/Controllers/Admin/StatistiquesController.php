@@ -6,22 +6,23 @@ use App\Http\Controllers\Controller;
 use App\Services\BudgetAnnuelService;
 use App\Services\EtablissementService;
 use App\Services\LaboratoireService;
+use COM;
+use Illuminate\Contracts\Session\Session as SessionSession;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Session;
 
 class StatistiquesController extends Controller
 {
     // protected $demandeService;
     protected $budgetAnnuelService;
-
     private EtablissementService $etablissementService;
     protected LaboratoireService $laboratoireService;
     public function __construct(
         BudgetAnnuelService $d,
         EtablissementService $etablissementService,
         LaboratoireService $laboratoireService,
-
-
     ) {
         $this->budgetAnnuelService = $d;
         $this->etablissementService  = $etablissementService;
@@ -42,6 +43,7 @@ class StatistiquesController extends Controller
         Session::put('annees', $annees);
         Session::put('etablissements', $etablissements);
         Session::put('entiteOrganisatrices', $entiteOrganisatrice);
+        // dd(Session::get('entiteOrganisatrices'));
 
 
         return view('admin/statistiques', [
@@ -49,44 +51,30 @@ class StatistiquesController extends Controller
             'entiteOrganisatrices' => $entiteOrganisatrice
         ]);
     }
+
     public function search(Request $request)
     {
 
         $etab = $request->etablissements;
         $entite = $request->structuresScientifiques;
         $annee = $request->annees;
-        $isBudget = false;
-        $isDemande = false;
-        Session::put('result', null);
-
+        Session::put('etab', $etab);
+        Session::put('entite', $entite);
+        Session::put('annee', (int)$annee);
+        Session::put('budgetDemandes', $request->budgetDemandes);
         if ($request->budgetDemandes == "budget") {
             $isBudget = true;
-            if ($etab == "all" && $entite == "all" && $annee == "all") {
-                Session::put('result', $this->budgetAnnuelService->findBudgetConsommee());
-            } else if ($etab != "all" && $entite != "all" && $annee != "all") {
-                Session::put('result', $this->budgetAnnuelService->findBudgetConsommeeParEtabParEntiteParAnnee($etab, $entite, $annee));
-                $etabIsNull = false;
-                $anneeIsNull = false;
-                $entiteIsNull = false;
-            } else if ($etab == "all" && $entite == "all" && $annee) {
-                Session::put('result', $this->budgetAnnuelService->findBudgetConsommeeParAnnee($annee));
-                $anneeIsNull = false;
-            } else if ($etab  && $entite == "all"  && $annee) {
-                Session::put('result', $this->budgetAnnuelService->findBudgetConsommeeParEtabParAnnee($etab, $annee));
-                $etabIsNull = false;
-                $anneeIsNull = false;
-            } else if ($etab && $entite  && $annee == "all") {
-                $etabIsNull = false;
-                $entiteIsNull = false;
-                Session::put('result', $this->budgetAnnuelService->findBudgetConsommeeParEtabParEntite($etab, $entite));
-            }
+            $result = $this->budgetAnnuelService->searchBudget($etab, $entite, $annee);
+        } else  if ($request->budgetDemandes == "demande") {
+            $isBudget = false;
+            $result = $this->budgetAnnuelService->searchDemande($etab, $entite, $annee);
         }
-        // dd(Session::get('result'));
+
+        //making sure that all the varibales arrived
+
         return view('admin/statistiques', [
-            'etabIsNull' => $etabIsNull,
-            'entiteIsNull' => $entiteIsNull,
-            'anneeIsNull' => $anneeIsNull,
-            'isBudget' => $isBudget, 'isDemande' => $isDemande
+
+            'isBudget' => $isBudget, 'result' => $result
         ]);
     }
 }

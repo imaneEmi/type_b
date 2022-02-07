@@ -45,18 +45,20 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 //Admin should be authenticated to access these routes
 Route::group(['middleware' => ['auth']], function () {
-    
-Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
-Route::get('/edit-profile', [App\Http\Controllers\Admin\AdminsController::class, 'profile'])->name('edit.profile');
-Route::get('/edit-pieces', [App\Http\Controllers\Admin\AdminsController::class, 'pieceDemandee'])->name('edit.pieces');
-Route::get('/edit-frais', [App\Http\Controllers\Admin\AdminsController::class, 'fraisCouverts'])->name('edit.frais');
-Route::post('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'save'])->name('save.budgetFixe');
-Route::get('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'edit'])->name('edit.budgetFixe');
-Route::get('/archive', [App\Http\Controllers\Admin\AdminsController::class, 'archive'])
-->name('archive');
+
+    Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/edit-profile', [App\Http\Controllers\Admin\AdminsController::class, 'profile'])->name('edit.profile');
+    Route::get('/edit-pieces', [App\Http\Controllers\Admin\AdminsController::class, 'pieceDemandee'])->name('edit.pieces');
+    Route::get('/edit-frais', [App\Http\Controllers\Admin\AdminsController::class, 'fraisCouverts'])->name('edit.frais');
+    Route::post('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'save'])->name('save.budgetFixe');
+    Route::get('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'edit'])->name('edit.budgetFixe');
+    Route::get('/archive', [App\Http\Controllers\Admin\AdminsController::class, 'archive'])
+        ->name('archive');
+    Route::post('/budget_update', [App\Http\Controllers\Admin\EditBudgetController::class, 'update'])
+        ->name('budget.update');
 });
 //Admin should be authenticated and the current annual budget should be set to access these routes
-Route::group(['middleware' => ['auth','budgetFixeSet']], function () {
+Route::group(['middleware' => ['auth', 'budgetFixeSet']], function () {
     Route::get('/dashboard-admin', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard.admin');
     Route::get('/statistiques-admin', [App\Http\Controllers\Admin\StatistiquesController::class, 'index'])->name('statistiques.admin');
     Route::post('/rechercher', [App\Http\Controllers\Admin\StatistiquesController::class, 'search'])->name('statistiques.search');
@@ -72,4 +74,4 @@ Route::group(['middleware' => ['auth','budgetFixeSet']], function () {
         ->name('demandes.refusees');
     Route::post('/accept-demande', [App\Http\Controllers\Admin\AdminsController::class, 'accept'])->name('acedit.budgetFixecept.demande');
     Route::post('/delete-demande', [App\Http\Controllers\Admin\AdminsController::class, 'delete'])->name('delete.demande');
-  });
+});

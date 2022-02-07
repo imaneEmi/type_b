@@ -15,8 +15,18 @@ use PhpParser\Node\Expr\Cast\Array_;
 
 class DemandeServiceImpl implements DemandeService
 {
+    protected  $manifestations;
+    protected $soutien_accordes;
+    protected $demandes;
+    protected $laboratoire;
+    protected $etablissement;
     public function __construct()
     {
+        $this->manifestations = env('DB_DATABASE') . ".manifestations";
+        $this->soutien_accordes = env('DB_DATABASE') . ".soutien_accordes";
+        $this->demandes = env('DB_DATABASE') . ".demandes";
+        $this->laboratoires  = env('DB_DATABASE2') . ".laboratoire";
+        $this->etablissements  = env('DB_DATABASE2') . ".etablissement";
     }
 
     public function findAll()
@@ -78,14 +88,14 @@ class DemandeServiceImpl implements DemandeService
     public function nbrDemandeParEtablissAnneeCour()
     {
 
-        return DB::table('manifestations')
-            ->join('demandes', 'manifestations.demande_id', '=', 'demandes.id')
-            ->join('entite_organisatrices', 'manifestations.entite_organisatrice_id', '=', 'entite_organisatrices.id')
-            ->join('etablissements', 'entite_organisatrices.etablissement_id', '=', 'etablissements.id')
-            ->whereYear('date_envoie', '=', date(Common::getAnneeActuelle()))
-            ->where('etat', '=', Config::$ACCEPTEE)
-            ->select('libelle', DB::raw('count(*) as total'))
-            ->groupBy('libelle')->get();
+        return DB::table($this->manifestations)
+            ->join($this->demandes, $this->manifestations . '.demande_id', '=', $this->demandes . '.id')
+            ->join($this->laboratoires, $this->manifestations . '.entite_organisatrice_id', '=', $this->laboratoires . '.id')
+            ->join($this->etablissements, $this->laboratoires . '.etablissement_id', '=', $this->etablissements . '.id')
+            ->whereYear('date_debut', '=', date(Common::getAnneeActuelle()))
+            ->where('etat', '=', 'acceptée')
+            ->select($this->etablissements . '.nom', DB::raw('count(*) as total'))
+            ->groupBy($this->etablissements . '.nom')->get();
     }
 
     public function countCoordonnateurDemandeByCurrentYear($chercheur)

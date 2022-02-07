@@ -34,10 +34,12 @@
                                     <i class="fas fa-calendar"></i>
                                 </div>
                             </div>
-                            <input type="text" class="form-control year" name="annee" required onkeyup="manage(this)">
-                            <div class="invalid-feedback">
-                                Veuillez remplir ce champs
-                            </div>
+                            <input type="number" class="form-control @error('annee') is-invalid @enderror year" value="{{ old('annee') }}" min=1800 name="annee" required onkeyup="manage(this)">
+                            @error('annee')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
 
 
@@ -52,10 +54,12 @@
                                     MAD
                                 </div>
                             </div>
-                            <input type="number" class="form-control " min=0 name="budget" required onkeyup="manage(this)">
-                            <div class="invalid-feedback">
-                                Veuillez remplir ce champs
-                            </div>
+                            <input type="number" class="form-control currency @error('budget') is-invalid @enderror" value="{{ old('annee') }}" min=0 name="budget" required onkeyup="manage(this)">
+                            @error('budget')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                     </div>
 
@@ -92,7 +96,7 @@
         for (i = 0; i < ele.length; i++) {
 
             // Check the element type
-            if (ele[i].type == 'text' && ele[i].value == '') {
+            if (ele[i].type == 'number' && ele[i].value == '') {
                 bt.disabled = true; // Disable the button.
                 return false;
             } else {
