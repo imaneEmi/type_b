@@ -392,15 +392,6 @@ Traitement de dossier
                         value="{{ $coordonnateur->laboratoire->responsable->email }}">Responsable structure<small
                         class="ml-1 text-danger">(Envoyer une copie au responsable)</small>
                 </div>
-                <div class="form-group">
-                    <div class="input-group mb-2">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text"><i class="fa fa-envelope fa-lg"></i></div>
-                        </div>
-                        <input type="email" id="autreEmail" class="form-control" name="cc[]"
-                            placeholder="envoyer une copie à une autre adresse" value="">
-                    </div>
-                </div>
                 <div class=" form-group mt-2">
                     <textarea name="corpsEmail" class="form-control form-control-lg " id=""
                         placeholder="Votre message ici..." required></textarea>@error('corpsEmail')
