@@ -54,6 +54,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'edit'])->name('edit.budgetFixe');
     Route::get('/archive', [App\Http\Controllers\Admin\AdminsController::class, 'archive'])
         ->name('archive');
+    Route::post('/budget_update', [App\Http\Controllers\Admin\EditBudgetController::class, 'update'])
+        ->name('budget.update');
 });
 
 

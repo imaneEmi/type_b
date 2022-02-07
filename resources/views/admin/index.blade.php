@@ -12,10 +12,16 @@ Tableau de bord
         <div class="col-lg-6 col-md-6 col-sm-12">
             <div class="card card-statistic-2">
                 <div class="card-stats">
-                    <div class="card-stats-title">
+                    <div class="card-stats-title card-header  ">
                         Statistiques sur le budget de l'année courante
+                        @if(!empty($error) && $error==0)
+                        <div style="float: right;"> <a href="#" class="btn btn-primary" id="modal-5">Modifier</a></div>
+
+                        @endif
 
                     </div>
+
+
                     <div class="row">
                         <div class="card-icon shadow-primary bg-primary">
                             <i class="fas fa-dollar-sign"></i>
@@ -64,7 +70,7 @@ Tableau de bord
         </div>
 
         <div class="col-lg-6 col-md-6 col-sm-12">
-            <div class="card card-statistic-2">
+            <div class="card card-statistic-2 card-warning">
                 <div class="card-stats">
                     <div class="card-stats-title">Statistiques sur les demandes de l'année courante
 
@@ -109,7 +115,7 @@ Tableau de bord
     <div class="row">
 
         <div class="col-12 col-sm-12 col-lg-6">
-            <div class="card">
+            <div class="card card-warning">
                 <div class="card-header">
                     <h4>Statistiques sur le budget annuel des 4 dernières années</h4>
 
@@ -135,7 +141,7 @@ Tableau de bord
 
         </div>
         <div class="col-lg-6 col-md-6 col-12">
-            <div class="card">
+            <div class="card card-warning">
                 <div class="card-header">
                     <h4>Demandes Acceptées Par établissement</h4>
                 </div>
@@ -145,18 +151,22 @@ Tableau de bord
                         <div class="alert-icon"><i class="far fa-lightbulb"></i></div>
                         <div class="alert-body">
                             <div class="alert-title">Infos</div>
-                            Aucune demande n'est acceptée
+                            Aucune demande n'est acceptée jusqu'à présent !
                         </div>
                     </div>@else
                     @foreach($demandesAcceParEtab as $demandeacc)
 
                     <div class="mb-4">
                         <div class="text-small float-right font-weight-bold text-muted">{{$demandeacc->total}}</div>
-                        <div class="font-weight-bold mb-1">{{$demandeacc->libelle}}</div>
+                        <div class="font-weight-bold mb-1">{{$demandeacc->nom_etablissement}}</div>
                         <div class="progress progress-bar-success" data-height="20">
 
                             <div class="progress-bar progress-bar-success" role="progressbar" data-width="{{ (($demandeacc->total)/$nbrTotalAccepte)*100}}%" aria-valuenow="{{ (($demandeacc->total)/$nbrTotal)*100}}" aria-valuemin="0" aria-valuemax="100">
-                                {{ (($demandeacc->total)/$nbrTotalAccepte)*100}}%
+                                @php
+                                $number= number_format(((($demandeacc->total)/$nbrTotalAccepte)*100), 2, '.', '');
+                                @endphp
+                                {{ $number}}%
+
                             </div>
                         </div>
 
@@ -183,12 +193,62 @@ Tableau de bord
 
 
 </section>
+<form class="modal-part" id="modal-login-part" method="post" id="saveBudgetForm" class="needs-validation" novalidate="" action="{{route('budget.update')}}">
+    @csrf
+    <p>Veuillez saisir le nouvez budget annuel</p>
 
+    <div class="form-group">
+        <label>Budget en (MAD)</label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <div class="input-group-text">
+                    MAD
+                </div>
+            </div>
+            <input type="number" class="form-control currency @error('budget') is-invalid @enderror" value="{{ old('annee') }}" min=0 name="budget" required>
+            @error('budget')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+            @enderror
+        </div>
+    </div>
+</form>
 @endsection
 @section('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
-<script src="{{asset('../assets/js/page/components-statistic.js')}}" async></script>
+<script src="{{asset('../assets/js/sweetalert/dist/sweetalert.min.js')}}"></script>
+
+@if (!empty(Session::get('succes')))
 <script>
+    swal('Succés', 'le budget a été bien modifié!', 'success');
+</script>
+@endif
+
+
+<script>
+    $("#modal-5").fireModal({
+        title: 'Modifier le budget annuel de cette année courante',
+        body: $("#modal-login-part"),
+        footerClass: 'bg-whitesmoke',
+        autoFocus: false,
+        onFormSubmit: function(modal, e, form) {
+
+        },
+        shown: function(modal, form) {
+            console.log(form)
+        },
+
+
+
+        buttons: [{
+            text: 'Modifier',
+            submit: true,
+            class: 'btn btn-primary btn-shadow',
+            handler: function(modal) {}
+        }]
+    });
+
     function convertToAray(data) {
 
         var myvar = data.substr(1, ((data.length) - 2));

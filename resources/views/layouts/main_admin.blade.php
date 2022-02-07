@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     <link rel="stylesheet" href="{{asset('../assets/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('../assets/css/components.css')}}">
-    <link rel="stylesheet" href="{{asset('../assets/css/custom.css')}}">
+    @yield('style')
 </head>
 
 <body>
@@ -83,7 +83,7 @@
 
                         <li class="menu-header">Liste des Demandes</li>
                         <li class="nav-item dropdown {{Route::is('demandes.enCours')?'active':''}}"><a class="" href="{{ route('demandes.enCours') }}">
-                            <i class="fas fa-tasks"></i>
+                                <i class="fas fa-tasks"></i>
                                 <span> En cours de traitement</span>
                             </a></li>
                         <li class="nav-item dropdown {{Route::is('demandes.courantes')?'active':''}}"><a class="" href="{{ route('demandes.courantes') }}">

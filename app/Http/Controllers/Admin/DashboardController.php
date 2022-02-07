@@ -35,11 +35,15 @@ class DashboardController extends Controller
     {
         $collection = $this->budgetAnnuelService->findAllWithLimit(4);
         $anneesarray = $collection->pluck('annee');
-
+        $error = 0;
         $budgetsAnnuelsFixes = $collection->pluck('budget_fixe');
         $budgetsAnnuelsRestant = $collection->pluck('budget_restant');
         $annee = Carbon::now()->format('Y');
-
+        $budget_fixe = $this->budgetAnnuelService->findBudgetParAnneeAndType($annee, 'budget_fixe');
+        $budget_restant =  $this->budgetAnnuelService->findBudgetParAnneeAndType($annee, 'budget_restant');
+        if ($budget_fixe != $budget_restant) {
+            $error = 1;
+        }
         return view('admin/index', [
             'nbrTotal' => $this->demandeService->getNbrDemandesAnneeCour(),
             'nbrTotalCourant' => $this->demandeService->getNbrDemandesParEtatAnneeCour(Config::$COURANTE),
@@ -47,7 +51,7 @@ class DashboardController extends Controller
             'nbrTotalRefused' => $this->demandeService->getNbrDemandesParEtatAnneeCour(Config::$REFUSEE),
             'budgetsAnnuelsFixes' => $budgetsAnnuelsFixes,
             'annees' => $anneesarray,
-
+            'error' => $error,
             'budgetsAnnuelsRestant' => $budgetsAnnuelsRestant,
             'budgetCourantFixe' => $this->budgetAnnuelService->findBudgetParAnneeAndType($annee, 'budget_fixe'),
             'budgetCourantRestant' => $this->budgetAnnuelService->findBudgetParAnneeAndType($annee, 'budget_restant'),

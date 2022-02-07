@@ -13,9 +13,18 @@ use Illuminate\Support\Facades\DB;
 
 class DemandeServiceImpl implements DemandeService
 {
-
+    protected  $manifestations;
+    protected $soutien_accordes;
+    protected $demandes;
+    protected $laboratoire;
+    protected $etablissement;
     public function __construct()
     {
+        $this->manifestations = env('DB_DATABASE') . ".manifestations";
+        $this->soutien_accordes = env('DB_DATABASE') . ".soutien_accordes";
+        $this->demandes = env('DB_DATABASE') . ".demandes";
+        $this->laboratoires  = env('DB_DATABASE2') . ".laboratoire";
+        $this->etablissements  = env('DB_DATABASE2') . ".etablissement";
     }
 
     public function findAll()
@@ -87,14 +96,31 @@ class DemandeServiceImpl implements DemandeService
     public function nbrDemandeParEtablissAnneeCour()
     {
 
-        return DB::table('manifestations')
-            ->join('demandes', 'manifestations.demande_id', '=', 'demandes.id')
-            ->join('entite_organisatrices', 'manifestations.entite_organisatrice_id', '=', 'entite_organisatrices.id')
-            ->join('etablissements', 'entite_organisatrices.etablissement_id', '=', 'etablissements.id')
-            ->whereYear('date_envoie', '=', date(Common::getAnneeActuelle()))
-            ->where('etat', '=', DemandeStatus::ACCEPTEE)
-            ->select('libelle', DB::raw('count(*) as total'))
-            ->groupBy('libelle')->get();
+
+        $query = "SELECT " . $this->etablissements . ".nom as nom_etablissement, count(*) as total FROM "
+            . $this->laboratoires
+            . ", "
+            . $this->etablissements
+            . ", "
+            . $this->demandes
+            . ", "
+
+            . $this->manifestations
+
+            . " where etab_id="
+            . $this->etablissements . '.id'
+            . " and "
+            . $this->laboratoire . 'id_labo'
+            . "="
+            . $this->manifestations . '.entite_organisatrice_id'
+            . " and "
+            . $this->demandes . '.id'
+            . "="
+            . $this->manifestations . '.demande_id 
+            and year(date_debut)=' . Common::getAnneeActuelle() . " and etat='" . DemandeStatus::ACCEPTEE . "'" . ' group by ' . $this->etablissements . '.nom;';
+        $result = DB::select($query);
+        // dd($result);
+        return $result;
     }
 
     public function countCoordonnateurDemandeByCurrentYear($chercheur)
