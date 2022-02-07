@@ -16,5 +16,9 @@ class LaboratoireServiceImpl implements LaboratoireService
     {
         return Laboratoire::findOrFail($id);
     }
- 
+    public  function findAllByEtablissement($id)
+    {
+        return Laboratoire::where("etab_id", $id)->get();
+    }
+
 }

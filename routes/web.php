@@ -67,6 +67,8 @@ Route::group(['middleware' => ['budgetFixeSet', 'admin']], function () {
         ->name('admin.edit.manifestation');
     Route::get('/manif-details/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'getManifestationDetails'])
         ->name('manifestation.details');
+    Route::get('/demandes-enCours', [App\Http\Controllers\Admin\AdminsController::class, 'getDemandesEnCours'])
+        ->name('demandes.enCours');
     Route::get('/demandes-courantes', [App\Http\Controllers\Admin\AdminsController::class, 'getDemandesCourantes'])
         ->name('demandes.courantes');
     Route::get('/demandes-acceptees', [App\Http\Controllers\Admin\AdminsController::class, 'getDemandesAcceptees'])
@@ -78,7 +80,7 @@ Route::group(['middleware' => ['budgetFixeSet', 'admin']], function () {
     Route::post('/edit-montant', [App\Http\Controllers\Admin\AdminsController::class, 'editMontant'])->name('edit.montant');
     Route::get('/accept-demande/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'accept'])->name('accept.demande');
     Route::get('/reject-demande/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'reject'])->name('reject.demande');
-    Route::post('/delete-demande', [App\Http\Controllers\Admin\AdminsController::class, 'delete'])->name('delete.demande');
+    Route::get('/delete-demande/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'delete'])->name('delete.demande');
     Route::get('/edit-profile', [App\Http\Controllers\Admin\AdminsController::class, 'profile'])->name('edit.profile');
     Route::get('/edit-pieces', [App\Http\Controllers\Admin\AdminsController::class, 'pieceDemandee'])->name('edit.pieces');
     Route::get('/edit-frais', [App\Http\Controllers\Admin\AdminsController::class, 'fraisCouverts'])->name('edit.frais');
@@ -92,6 +94,7 @@ Route::group(['middleware' => ['budgetFixeSet', 'admin']], function () {
     Route::post('/notification-email', [App\Http\Controllers\Admin\AdminsController::class, 'notificationEmail'])->name('emails.notify');
     Route::post('/custom-email', [App\Http\Controllers\Admin\AdminsController::class, 'customEmail'])->name('emails.custom');
     Route::get('/disable-upload/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'disableUpload'])->name('disableUpload');
+    Route::post('/demande-estimationDotation/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'estimationDotation'])->name('demande.estimationDotation');
 
     Route::post('/create-piece', [App\Http\Controllers\Admin\PieceDemandeController::class, 'create'])->name('piece_demandee.create');
     Route::post('/update-piece', [App\Http\Controllers\Admin\PieceDemandeController::class, 'update'])->name('piece_demandee.update');

@@ -18,7 +18,7 @@ class CreateNatureContributionManifestations extends Migration
             $table->unsignedBigInteger('manifestation_id');
             $table->unsignedBigInteger('nature_con_id');
 
-            $table->foreign('manifestation_id')->references('id')->on('manifestations');
+            $table->foreign('manifestation_id')->references('id')->on('manifestations')->onDelete('cascade');
             $table->index('manifestation_id');
             $table->foreign('nature_con_id')->references('id')->on('nature_contributions');
             $table->index('nature_con_id');

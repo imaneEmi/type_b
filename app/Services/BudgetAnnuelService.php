@@ -9,6 +9,7 @@ interface BudgetAnnuelService
 
     public function save($annee, $budget_fixe);
     public function findAll();
+    public   function findAllOrderByAnneeDesc();
     public function findAllWithLimit($limit);
 
     public function findById($id);

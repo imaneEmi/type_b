@@ -18,7 +18,8 @@ class CreateManifestationContributionParticipants extends Migration
             $table->unsignedBigInteger('manifestation_id');
             $table->unsignedBigInteger('cont_par_id');
 
-            $table->foreign('manifestation_id')->references('id')->on('manifestations');
+            $table->foreign('manifestation_id')->references('id')->on('manifestations')
+            ->onDelete('cascade');
             $table->index('manifestation_id');
             $table->foreign('cont_par_id')->references('id')->on('contribution_participants');
             $table->timestamps();

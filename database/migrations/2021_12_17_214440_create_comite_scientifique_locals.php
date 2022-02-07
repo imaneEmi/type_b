@@ -22,7 +22,8 @@ class CreateComiteScientifiqueLocals extends Migration
             $table->string('type_entite',500)->nullable();
             $table->string('nom_entite',500)->nullable();
             $table->unsignedBigInteger('manifestation_id');
-            $table->foreign('manifestation_id')->references('id')->on('manifestations') ;
+            $table->foreign('manifestation_id')->references('id')->on('manifestations')
+            ->onDelete('cascade');
             $table->timestamps();
         });
     }

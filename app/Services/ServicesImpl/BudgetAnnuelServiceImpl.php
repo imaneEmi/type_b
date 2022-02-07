@@ -15,6 +15,10 @@ class BudgetAnnuelServiceImpl implements BudgetAnnuelService
     {
         return BudgetAnnuel::all()->sortBy('annee');
     }
+    public   function findAllOrderByAnneeDesc()
+    {
+        return BudgetAnnuel::orderBy('annee', 'desc')->get();
+    }
     public   function findAllWithLimit($limit)
     {
         return BudgetAnnuel::orderBy('annee', 'desc')->take($limit)->get()->reverse();

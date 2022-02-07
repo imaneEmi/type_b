@@ -82,6 +82,10 @@
                         </li>
 
                         <li class="menu-header">Liste des Demandes</li>
+                        <li class="nav-item dropdown {{Route::is('demandes.enCours')?'active':''}}"><a class="" href="{{ route('demandes.enCours') }}">
+                            <i class="fas fa-tasks"></i>
+                                <span> En cours de traitement</span>
+                            </a></li>
                         <li class="nav-item dropdown {{Route::is('demandes.courantes')?'active':''}}"><a class="" href="{{ route('demandes.courantes') }}">
                                 <i class="fas fa-folder-open"></i>
                                 <span> Courantes</span>
@@ -100,7 +104,13 @@
                             </a></li>
 
                         <li class="menu-header">Paramétres</li>
-                        <li class="nav-item dropdown {{Route::is('edit.budgetFixe') || Route::is('frais_couvert.list') || Route::is('piece_demandee.list') ?'active':''}}">
+                        <li class="nav-item dropdown {{Route::is('edit.budgetFixe')
+                        || Route::is('frais_couvert.list')
+                        || Route::is('piece_demandee.list')
+                        || Route::is('type_contributeur.list')
+                        || Route::is('nature_contribution.list')
+                        || Route::is('conditions_generale.list')
+                        ?'active':''}}">
                             <a href="#" class="nav-link has-dropdown"><i class="fas fa-cog"></i><span>Liste des
                                     paramétres</span></a>
                             <ul class="dropdown-menu ">

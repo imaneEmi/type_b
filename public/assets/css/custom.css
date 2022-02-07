@@ -9,3 +9,8 @@
 .label{
     color: #a34f23
 }
+@media screen and (max-width: 1024px) {
+    .navbar-custom {
+        display: none !important;
+    }
+}

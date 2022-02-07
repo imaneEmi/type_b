@@ -17,4 +17,9 @@ class Etablissement extends Model
         'ville',
         'created_at',
     ];
+
+    public function laboratoires()
+    {
+        return $this->hasMany(Laboratoire::class,'etab_id');
+    }
 }

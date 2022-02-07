@@ -18,7 +18,7 @@ class CreateManifestationTypeContributeurs extends Migration
             $table->unsignedBigInteger('manifestation_id');
             $table->unsignedBigInteger('type_contributeur_id');
 
-            $table->foreign('manifestation_id')->references('id')->on('manifestations');
+            $table->foreign('manifestation_id')->references('id')->on('manifestations')->onDelete('cascade');
             $table->index('manifestation_id');
             $table->foreign('type_contributeur_id')->references('id')->on('type_contributeurs');
             $table->timestamps();

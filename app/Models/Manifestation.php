@@ -37,7 +37,7 @@ class Manifestation extends Model
 
     public function demande()
     {
-        return $this->belongsTo(Demande::class,'demande_id');
+        return $this->belongsTo(Demande::class, 'demande_id');
     }
     public function rapport()
     {
@@ -70,9 +70,24 @@ class Manifestation extends Model
         return $this->belongsToMany(Etablissement::class, 'manifestation_etablissements', 'manifestation_id', 'etablissement_id');
     }
 
-    public function comites()
+    public function comiteOrganisationLocal()
     {
-        return $this->belongsToMany(ComiteOrganisation::class, 'manifestation_comites', 'manifestation_id', 'comite_organisation_id');
+        return $this->hasMany(ComiteOrganisationLocal::class,'manifestation_id');
+    }
+
+    public function comiteOrganisationNonLocal()
+    {
+        return $this->hasMany(ComiteOrganisationNonLocal::class,'manifestation_id');
+    }
+
+    public function comiteScientifiqueLocal()
+    {
+        return $this->hasMany(ComiteScientifiqueLocal::class,'manifestation_id');
+    }
+
+    public function comiteScientifiqueNonLocal()
+    {
+        return $this->hasMany(ComiteScientifiqueNonLocal::class,'manifestation_id');
     }
 
     public function gestionFinanciere()
@@ -83,5 +98,15 @@ class Manifestation extends Model
     public function natureContributionParticipant()
     {
         return $this->hasMany(NatureContributionManifestation::class, 'manifestation_id');
+    }
+
+    public function files()
+    {
+        return $this->hasMany(FileManifestation::class, 'manifestation_id');
+    }
+
+    public function contributionParticipants()
+    {
+        return $this->belongsToMany(ContributionParticipant::class, 'manifestation_contribution_participants','manifestation_id','cont_par_id');
     }
 }

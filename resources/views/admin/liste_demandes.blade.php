@@ -5,8 +5,10 @@
 Demandes courantes
 @elseif (Route::is('demandes.acceptees'))
 Demandes acceptées
-@else
+@elseif (Route::is('demandes.refusées'))
 Demandes refusées
+@else
+Demandes en cours de traitement
 @endif
 @endsection
 @section('content')
@@ -36,8 +38,10 @@ Demandes refusées
         <h1>Demandes courantes</h1>
         @elseif (Route::is('demandes.acceptees'))
         <h1>Demandes acceptées</h1>
-        @else
+        @elseif (Route::is('demandes.refusees'))
         <h1>Demandes refusées</h1>
+        @else
+        <h1>Demandes en cours de traitements</h1>
         @endif
     </div>
     <div class="section-body">
@@ -66,7 +70,7 @@ Demandes refusées
                                             @endif
                                         </th>
                                         <th>Date reçu</th>
-                                        <th>@if (Route::is('demandes.courantes'))
+                                        <th>@if (Route::is('demandes.courantes') || Route::is('demandes.enCours'))
                                             Modifier
                                             @else
                                             Details
@@ -99,16 +103,11 @@ Demandes refusées
                                         </td>
                                         <td>{{ $demande->created_at->format('d/m/Y H:i') }}</td>
                                         <td class="text-center">
-                                            @if (Route::is('demandes.courantes'))
+                                            @if (Route::is('demandes.courantes') || Route::is('demandes.enCours'))
                                             <a href="{{ route('admin.edit.manifestation',['id'=>$demande->id]) }}"
                                                 class=" has-icon"><i class="fas fa-pen"></i>
                                             </a>
                                             @else
-                                            @if ($demande->etat ===\App\Models\DemandeStatus::ACCEPTEE && $demande->manifestation->lettreAcceptation == null)
-                                            <a href="#" id="upload" class="mr-2" title="Télécharger la lettre d'acceptation"><i
-                                                    class="fa fa-upload fa-lg"></i>
-                                            </a>
-                                            @endif
                                             <a href="{{ route('manifestation.details',['id'=>$demande->id]) }}"
                                                 title="Plus de détails"><i class="fa fa-plus fa-lg"></i>
                                             </a>
@@ -125,44 +124,8 @@ Demandes refusées
         </div>
     </div>
 </section>
-<div id="uploadBody" hidden>
-    <form method="POST" action="{{ route('upload.lettre',['id'=>$demande->id]) }}" enctype="multipart/form-data"
-        id="uplodaForm">
-        @csrf
-        <div class="form-group">
-            <div class="custom-file">
-                <label for="customFile" class="custom-file-label">Télécharger la lettre d'acceptation</label>
-                <input type="file" class="custom-file-input" id="customFile" required name="lettre"
-                    accept="application/pdf">
-            </div>
-        </div>
-    </form>
-</div>
 @endsection
 @section('scripts')
 <script src="{{ mix('js/app.js') }}"></script>
 <script src="{{asset('../assets/js/page/modules-datatables.js')}}"></script>
-<script type="text/javascript">
-    $("#upload").fireModal({
-    title: "Télécharger la lettre d'acceptation",
-    body: $('#uploadBody'),
-    buttons: [
-        {
-            text: 'Télécharger',
-            class: 'btn btn-success btn-shadow',
-            submit: true,
-            handler: function (modal) {
-                modal.modal('toggle');
-            }
-        },
-        {
-            text: 'Annuler',
-            class: 'btn btn-danger btn-shadow',
-            handler: function (modal) {
-                modal.modal('toggle');
-            }
-        }
-    ]
-});
-</script>
 @endsection

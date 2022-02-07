@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
@@ -59,20 +60,64 @@ class AdminsController extends Controller
 
     public function getManifestation($id, ManifestationService $manifestationService, DemandeService $demandeService)
     {
-        return view('admin/edit_demande', $manifestationService->getManifestation($id, $demandeService, $this->chercheurService));
+        $manifestationDetails = $manifestationService->getManifestation($id, $demandeService, $this->chercheurService);
+        $coordonnateur = $manifestationDetails['coordonnateur'];
+        $etablissement = $this->etablissementService->findById($coordonnateur->laboratoire->etab_id);
+        $labos = $etablissement->laboratoires;
+        // Calcule Budget octroyé à l'établissement
+        $budgetEtablissement = 0;
+        foreach ($labos as $labo) {
+            $chercheurs = $labo->chercheurs;
+            foreach ($chercheurs as $coordonnateur) {
+                $demandes = $demandeService->findAllByCoordonnateurIdAndCurrentYear($coordonnateur->id);
+                //dd($demandes);
+                foreach ($demandes as $demande) {
+                    //dd($demande->manifestation->soutienAccorde()->sum('montant'));
+                    $budgetEtablissement += $demande->manifestation->soutienAccorde()->sum('montant');
+                }
+            }
+        }
+        // Budget de la structure
+        $budgetStructure = 0;
+        $labo = $coordonnateur->laboratoire;
+        $chercheurs = $labo->chercheurs;
+        foreach ($chercheurs as $coordonnateur) {
+            $demandes = $demandeService->findAllByCoordonnateurIdAndCurrentYear($coordonnateur->id);
+            foreach ($demandes as $demande) {
+                $budgetStructure += $demande->manifestation->soutienAccorde()->sum('montant');
+            }
+        }
+        $manifestationDetails["budgetEtablissement"] = $budgetEtablissement;
+        $manifestationDetails["budgetStructure"] = $budgetStructure;
+        //dd($manifestationDetails);
+        return view('admin/edit_demande', $manifestationDetails);
     }
 
-    public function delete(Request $request, DemandeService $demandeService)
+    public function delete($id)
     {
         try {
-
-            $id = $request->demande;
-            $demandeService->delete($id);
-            $msg = "Demande deleted";
-            return redirect('/admin_edit_form');
+            $demande = $this->demandeService->findById($id);
+            $manifestation = $demande->manifestation;
+            $files = $manifestation->files;
+            //loop delete files from storage
+            foreach ($files as $file) {
+                Storage::delete($file->url);
+            }
+            $this->demandeService->delete($id);
+            $success = "Demande supprimée";
+            return response()
+                ->json([
+                    'code' => 200,
+                    'message' => $success
+                ]);
         } catch (\Exception $ex) {
             error_log($ex->getMessage());
-            return redirect('/admin_edit_form');
+            $error = "Echec!! La demande n'a pas pu être supprimer";
+            return response()
+                ->json([
+                    'code' => 500,
+                    'message' => $error
+                ]);
         }
     }
     public function accept($id)
@@ -83,7 +128,7 @@ class AdminsController extends Controller
             $soutienAccorde = $manifestation->soutienAccorde;
             $error = "";
             $success = "";
-            if (sizeof($soutienAccorde) == 0) {
+            if (sizeof($soutienAccorde) == 0 || $manifestation->soutienAccorde()->sum('montant') == 0) {
                 $error = "Echec de l'opération! Aucun montant octroyé pour cette demande!";
                 return redirect()->back()->with('error', $error);
             }
@@ -91,12 +136,12 @@ class AdminsController extends Controller
             $annee = $demande->created_at->format('Y');
             $budget = $this->budgetAnnuelService->findBudgetParAnnee($annee);
             $totalAccorde = $manifestation->soutienAccorde()->sum('montant');
-            if($budget->budget_restant == 0){
+            if ($budget->budget_restant == 0) {
                 $budget->budget_restant = $budget->budget_fixe - $totalAccorde;
-            }else{
+            } else {
                 $budget->budget_restant = $budget->budget_restant - $totalAccorde;
             }
-            if($budget->budget_restant < 0){
+            if ($budget->budget_restant < 0) {
                 $error = "Echec!Dépassement du budget fixé!!";
                 return redirect()->back()->with('error', $error);
             }
@@ -157,6 +202,10 @@ class AdminsController extends Controller
     {
         return view('admin/liste_demandes', $demandeService->findByEtat(DemandeStatus::COURANTE, $chercheurService));
     }
+    public function getDemandesEnCours(DemandeService $demandeService, ChercheurService $chercheurService)
+    {
+        return view('admin/liste_demandes', $demandeService->findByEtat(DemandeStatus::ENCOURS, $chercheurService));
+    }
 
     public function getDemandesAcceptees(DemandeService $demandeService, ChercheurService $chercheurService)
     {
@@ -167,19 +216,19 @@ class AdminsController extends Controller
         return view('admin/liste_demandes', $this->demandeService->findByEtat(DemandeStatus::REFUSEE, $chercheurService));
     }
 
-    public function pieceDemandee()
-    {
-        return view('admin/edit_pieceDemandee');
-    }
-    public function fraisCouverts()
-    {
-        return view('admin/edit_fraisCouvert');
-    }
-
     public function archive(DemandeService $demandeService, BudgetAnnuelService $budgetService)
     {
         if (count($budgetService->findAll()) == 0) return view('admin.edit_budgetFixe');
-        else return view('admin/archive', $demandeService->getAll($this->chercheurService));
+        else {
+            $annees = [];
+            $budgets = $budgetService->findAllOrderByAnneeDesc();
+            foreach ($budgets as $budget) {
+                $annees[] = $budget->annee;
+            }
+            $demandes = $demandeService->getAll($this->chercheurService);
+            $demandes['annees'] = $annees;
+            return view('admin/archive', $demandes);
+        }
     }
 
     public function generatePdf(Request $request)
@@ -189,35 +238,13 @@ class AdminsController extends Controller
         return  $pdf;
     }
 
-    public function saveAdmin(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'nom' => 'required',
-            'prenom' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|confirmed|min:8',
-            'password_confirmation' => 'same:password',
-        ]);
-
-        if ($validator->fails()) {
-            return response()
-                ->json([
-                    'code' => 500,
-                    'message' => 'le rapport est requis! '
-                ]);
-        }
-        dd(1);
-        return 1;
-    }
-
     public function uploadLettre(Request $request, $id)
     {
         if ($request->hasFile('lettre')) {
             $manifestation = $this->manifestationService->findByDemandeId($id);
 
             $file = $request->file('lettre');
-            //$lettrePath =  $file->storeAs('manifestation_files/lettres','Lettre'.$id.'.pdf');
-            $lettrePath =  $file->storeAs('manifestation_files/lettres', $file->getClientOriginalName());
+            $lettrePath =  $file->storeAs('manifestation_files', $file->getClientOriginalName());
             $lettreManif = new FileManifestation();
             $lettreManif->titre = Str::of($file->getClientOriginalName())->trim('.pdf');
             $lettreManif->url = $lettrePath;
@@ -392,7 +419,26 @@ class AdminsController extends Controller
             return redirect()->back()->with('error', $error);
         }
     }
-
+    public function estimationDotation(Request $request,$id)
+    {
+        try {
+            $demande = $this->demandeService->findById($id);
+            $demande->estimationDotationMax = $request->get('estimation');
+            $this->demandeService->update($demande);
+            return response()
+            ->json([
+                'code' => 200,
+                'message' => "Estmation de dotaion Modifiée!"
+            ]);
+        } catch (\Exception $ex) {
+            $error = "Echec!!";
+            error_log($ex->getMessage());
+            return response()
+            ->json([
+                'code' => 500,
+                'message' => $error]);
+        }
+    }
 
     public function profile(Request $request)
     {

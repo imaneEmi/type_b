@@ -116,43 +116,47 @@ Traitement de dossier
         </div>
         <div class="row">
             <div class="col-12 col-sm-12 col-lg-12">
-                <form action="" method="POST">
-                    @csrf
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>Informations sur BUDGET (en MAD)</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-md">
-                                    <tr>
-                                        <td>Budget engagé de l'UCA ({{ now()->year }})</td>
-                                        <td><input class="form-control text-right" name="budgetRestant"
-                                                style="font-weight:bold !important" readonly
-                                                value="{{ $budgetRestant->budget_restant }}" /></td>
-                                        <td class="border-left">Budget octroyé à l'établissement</td>
-                                        <td><input class="form-control text-right" type="number" min="0"
-                                                max="{{ $budgetRestant->budget_restant }}" name="budgetEtab"
-                                                style="font-weight:bold !important" value="" /></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Budget de la structure</td>
-                                        <td><input class="form-control text-right" type="number" min="0"
-                                                name="budgetStructure" style="font-weight:bold !important" value="" />
-                                        </td>
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Informations sur BUDGET (en MAD)</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-md">
+                                <tr>
+                                    <td>Budget engagé de l'UCA ({{ now()->year }})</td>
+                                    <td><input class="form-control text-right" name="budgetRestant"
+                                            style="font-weight:bold !important" disabled
+                                            value="{{ $budgetRestant->budget_restant }}" /></td>
+                                    <td class="border-left">Budget octroyé à l'établissement</td>
+                                    <td><input class="form-control text-right" type="number" disabled name="budgetEtab"
+                                            style="font-weight:bold !important" value="{{ $budgetEtablissement }}" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Budget de la structure</td>
+                                    <td><input class="form-control text-right" type="number" disabled
+                                            name="budgetStructure" style="font-weight:bold !important"
+                                            value="{{ $budgetStructure }}" />
+                                    </td>
+                                    <form action="{{ route('demande.estimationDotation',['id'=>$demande->id]) }}"
+                                        method="POST" name="estimationDotation-form">
                                         <td class="border-left">Estimation de dotation</td>
                                         <td><input class="form-control text-right" type="number" min="0"
-                                                name="estimationDotation" style="font-weight:bold !important"
-                                                value="" />
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="card-footer bg-white text-right">
-                            <button class="btn btn-success" type="">Enregistrer</button>
+                                                max="{{ $budgetRestant->budget_restant }}" name="estimation"
+                                                id="estimation" style="font-weight:bold !important"
+                                                value="{{ $demande->estimationDotationMax }}" required />
+
+                                    </form>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
+                    <div class="card-footer bg-white text-right">
+                        <button class="btn btn-success" type="" id="estimationDotation">Enregistrer</button>
+                    </div>
+                </div>
                 </form>
             </div>
         </div>
@@ -293,7 +297,7 @@ Traitement de dossier
                                                     value="{{ $soutienAccorde[$i]->pivot->nbr }}" @endif>
                                             </td>
                                             <td class="text-right"><input class="form-control montantOk text-right"
-                                                    type="number" min="0"  placeholder="0" id=""
+                                                    type="number" min="0" placeholder="0" id=""
                                                     name="montantOk[{{ $i }}]" @if (sizeof($soutienAccorde) !=0)
                                                     value="{{ $soutienAccorde[$i]->pivot->montant }}" @endif readonly>
                                             </td>
@@ -321,10 +325,11 @@ Traitement de dossier
                                             id="" value="{{ $manifestation->soutienSollicite()->sum('montant') }}"></th>
                                     <th>Total accordé</th>
                                     <th class="text-right"><input class="form-control totalmontant text-right" disabled
-                                            type="number" name="totalmontant" max="{{ $budgetRestant->budget_restant }}" id="totalmontant" @if($soutienAccorde
-                                            !=null) value="{{ $manifestation->soutienAccorde()->sum('montant') }}"
-                                            @endif>
-                                            <div class="text-danger" id="errorBudget" style="visibility :hidden">ATTENTION! Budget dépassé! </div>
+                                            type="number" name="totalmontant" max="{{ $budgetRestant->budget_restant }}"
+                                            id="totalmontant" @if($soutienAccorde !=null)
+                                            value="{{ $manifestation->soutienAccorde()->sum('montant') }}" @endif>
+                                        <div class="text-danger" id="errorBudget" style="visibility :hidden">ATTENTION!
+                                            Budget dépassé! </div>
                                     </th>
                                 </tr>
                             </table>
@@ -446,7 +451,9 @@ $("#accepter").click(function(){
     });
 });
 $("#editMontant").click(function() {
-   
+    if ($(".totalmontant").val() > $(".totalmontant").attr("max")) {
+
+    }
   swal({
       title: '',
       text: "Vous êtes sur le point de changer l'état de cette demande.",
@@ -528,6 +535,50 @@ $("#disableUpload").click(function(){
         window.location.href ="{{ route('disableUpload',['id'=>$demande->id]) }}";
       } else {
       }
+    });
+});
+
+$("#estimationDotation").click(function(){
+   var estimation = $("#estimation").val();
+    console.log(estimation);
+    $.ajax({
+            url: "{{ route('demande.estimationDotation',['id'=>$demande->id]) }}",
+            headers: {
+
+                    },
+            type: 'POST',
+            data: {
+        "_token": "{{ csrf_token() }}",
+        "estimation": estimation
+        },
+            success: function(response) {
+                if (response.code === 200) {
+                     //window.location.reload();
+                     $('.section').prepend('<div class="alert alert-success alert-dismissible show fade">'+
+                        '<div class="alert-body">'+
+                        '<button class="close" data-dismiss="alert">'+
+                        '<span>&times;</span>'+
+                        '</button>'+'Estimation de dotation ajoutée!'+
+                        '</div></div>');
+               } else {
+                    $('.section').prepend('<div class="alert alert-danger alert-dismissible show fade">'+
+                        '<div class="alert-body">'+
+                        '<button class="close" data-dismiss="alert">'+
+                        '<span>&times;</span>'+
+                        '</button>'+"Une erreure est survenue!L'estimation de dotation n'a pas été modifier"+
+                        '</div></div>');
+                    }
+            },
+            error: function(error) {
+                console.log("error", error);
+                $('.section').prepend('<div class="alert alert-danger alert-dismissible show fade">'+
+                        '<div class="alert-body">'+
+                        '<button class="close" data-dismiss="alert">'+
+                        '<span>&times;</span>'+
+                        '</button>'+"Une erreure est survenue! L'estimation de dotation n'a pas été modifier!"+
+                        '</div></div>');
+            }
+
     });
 });
 </script>

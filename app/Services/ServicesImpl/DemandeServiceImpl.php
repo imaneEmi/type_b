@@ -106,10 +106,14 @@ class DemandeServiceImpl implements DemandeService
     {
         return Demande::where("coordonnateur_id", $id)->get();
     }
+    public function findAllByCoordonnateurIdAndCurrentYear($id)
+    {
+        return Demande::whereYear('created_at', date('Y'))->where("coordonnateur_id", $id)->get();
+    }
 
     public function isAllRapportLaboratoireExists($chercheur)
     {
-        /*$chercheurs = $chercheur->laboratoire->chercheurs;
+        $chercheurs = $chercheur->laboratoire->chercheurs;
         foreach ($chercheurs as $chercheur) {
             $demandes = $this->findByCoordonnateurId($chercheur->id_cher);
             foreach ($demandes as $demande) {
@@ -117,7 +121,7 @@ class DemandeServiceImpl implements DemandeService
                     return false;
                 }
             }
-        }*/
+        }
         return true;
     }
 }

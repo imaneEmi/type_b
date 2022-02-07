@@ -14,10 +14,11 @@ interface DemandeService
     public function changeEtat($id, $etat);
     public function delete($id);
     public function countCoordonnateurDemandeByCurrentYear($chercheur);
-    public function findByEtat($etat,$chercheurService);
+    public function findByEtat($etat, $chercheurService);
     public function getNbrDemandesParEtatAnneeCour($etat);
     public function getNbrDemandesAnneeCour();
-    public  function nbrDemandeParEtablissAnneeCour();
+    public function nbrDemandeParEtablissAnneeCour();
     public function isAllRapportLaboratoireExists($chercheur);
-    public  function  findByCoordonnateurId($id);
+    public function  findByCoordonnateurId($id);
+    public function findAllByCoordonnateurIdAndCurrentYear($id);
 }

@@ -70,7 +70,7 @@
                         <div class="section-header-breadcrumb">
                             <div class="d-inline m-3">
                                 <span>
-                                    @if($demande->manifestation->lettreAcceptation != null)
+                                    @if($demande->etat === \App\Models\DemandeStatus::ACCEPTEE && $demande->manifestation->lettreAcceptation != null)
                                     <a href="{{route('manifastation.lettre',['url'=>Str::replace('/','-',$demande->manifestation->lettreAcceptation->url)])}}"
                                         title="Lettre d'acceptation"><i class="fa fa-file-pdf fa-lg"
                                             aria-hidden="true"></i>
@@ -78,6 +78,15 @@
                                     @endif
                                 </span>
                             </div>
+                            @if ($demande->etat ===\App\Models\DemandeStatus::ACCEPTEE &&
+                            $demande->manifestation->lettreAcceptation == null)
+                            <div class="d-inline m-3">
+                                <span><a href="#" id="upload" title="Télécharger la lettre d'acceptation">
+                                        <i class="fa fa-upload fa-lg"></i>
+                                    </a>
+                                </span>
+                            </div>
+                            @endif
                             <div class="d-inline">
                                 <span>
                                     <a href="{{ route('pdf',['id'=>$demande->id]) }}"
@@ -427,7 +436,7 @@
                                         </td>
                                         @else
                                         <td>
-                                        --------
+                                            --------
                                         </td>
                                         @endif
 
@@ -517,16 +526,9 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <span class="text-capitalize">{{ $manifestation->lettreAcceptation->titre
-                                                }}</span>
+
                                         </td>
                                         <td>
-                                            @if($demande->manifestation->lettreAcceptation != null)
-                                            <a href="{{route('manifastation.lettre',['url'=>Str::replace('/','-',$demande->manifestation->lettreAcceptation->url)])}}"
-                                                title="Lettre d'acceptation"><i class="fa fa-file-pdf fa-lg"
-                                                    aria-hidden="true"></i>
-                                            </a>
-                                            @endif
                                         </td>
                                     </tr>
                                 </tbody>
@@ -545,7 +547,21 @@
             </footer>
         </div>
     </div>
-
+    <div hidden>
+        <div id="uploadBody">
+            <form method="POST" action="{{ route('upload.lettre',['id'=>$demande->id]) }}" enctype="multipart/form-data"
+                id="uplodaForm">
+                @csrf
+                <div class="form-group">
+                    <div class="custom-file">
+                        <label for="customFile" class="custom-file-label">Télécharger la lettre d'acceptation</label>
+                        <input type="file" class="custom-file-input" id="customFile" required name="lettre"
+                            accept="application/pdf">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     <!-- General JS Scripts -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -566,6 +582,30 @@
     <!-- Template JS File -->
     <script src="{{asset('../assets/js/scripts.js')}}"></script>
     <script src="{{asset('../assets/js/custom.js')}}"></script>
+    <script src="{{asset('../assets/js/page/bootstrap-modal.js')}}"></script>
+    <script type="text/javascript">
+        $("#upload").fireModal({
+        title: "Télécharger la lettre d'acceptation",
+        body: $('#uploadBody'),
+        buttons: [
+            {
+                text: 'Télécharger',
+                class: 'btn btn-success btn-shadow',
+                submit: true,
+                handler: function (modal) {
+                    modal.modal('toggle');
+                }
+            },
+            {
+                text: 'Annuler',
+                class: 'btn btn-danger btn-shadow',
+                handler: function (modal) {
+                    modal.modal('toggle');
+                }
+            }
+        ]
+    });
+    </script>
 </body>
 
 </html>

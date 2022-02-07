@@ -18,7 +18,7 @@ class CreateComiteOrganisationLocalsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('id_cher');
             $table->unsignedBigInteger('manifestation_id');
-            $table->foreign('manifestation_id')->references('id')->on('manifestations');
+            $table->foreign('manifestation_id')->references('id')->on('manifestations')->onDelete('cascade');
             $table->timestamps();
         });
     }
