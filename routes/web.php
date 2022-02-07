@@ -47,7 +47,6 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
-
 });
 
 
@@ -84,10 +83,7 @@ Route::group(['middleware' => ['budgetFixeSet', 'admin']], function () {
     Route::post('/custom-email', [App\Http\Controllers\Admin\AdminsController::class, 'customEmail'])->name('emails.custom');
     Route::get('/disable-upload/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'disableUpload'])->name('disableUpload');
     Route::post('/demande-estimationDotation/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'estimationDotation'])->name('demande.estimationDotation');
-
-
-
- });
+});
 //User should be admin to access these routes
 Route::group(['middleware' => ['admin']], function () {
     Route::post('/admin/profile', [App\Http\Controllers\Admin\AdminsController::class, 'profile'])->name('profile.admin');

@@ -33,6 +33,7 @@ use App\Services\ComiteOrganisationLocalService;
 use App\Services\ComiteOrganisationNonLocalService;
 use App\Services\ComiteScientifiqueLocalService;
 use App\Services\ComiteScientifiqueNonLocalService;
+use App\Services\ConditionGeneraleService;
 use App\Services\DemandeService;
 use App\Services\EtablissementService;
 use App\Services\FraisCouvertService;
@@ -77,6 +78,7 @@ class DashboardController extends Controller
     private $manifestationTypeContributeurService;
     private $soutienSolliciteService;
     private $natureContributionManifestationService;
+    private $conditionsGeneraleService;
 
     /**
      * Create a new controller instance.
@@ -102,7 +104,8 @@ class DashboardController extends Controller
         ManifestationEtablissementService $manifestationEtablissementService,
         GestionFinanciereService $gestionFinanciereService,
         ComiteOrganisationLocalService $comiteOrganisationLocalService,
-        NatureContributionManifestationService $natureContributionManifestationService
+        NatureContributionManifestationService $natureContributionManifestationService,
+        ConditionGeneraleService $conditionsGeneraleService
     ) {
         $this->soutienSolliciteService = $soutienSolliciteService;
         $this->manifestationTypeContributeurService = $manifestationTypeContributeurService;
@@ -123,6 +126,7 @@ class DashboardController extends Controller
         $this->comiteOrganisationLocalService = $comiteOrganisationLocalService;
         $this->comiteOrganisationNonLocalService = $comiteOrganisationNonLocalService;
         $this->natureContributionManifestationService = $natureContributionManifestationService;
+        $this->conditionsGeneraleService = $conditionsGeneraleService;
     }
 
     /**
@@ -186,10 +190,16 @@ class DashboardController extends Controller
         try {
             $chercheur = $this->chercheurService->findByEmail($request->user()->email);
             $exists = $this->demandeService->isAllRapportLaboratoireExists($chercheur);
+            $verifyNatureManifest = $this->natureContributionService->findAll();
+            $verigyFraisCouverts = $this->fraisCouvertService->findAll();
+            $verifyConditionGeneral = $this->conditionsGeneraleService->findAll();
 
+            if (count($verifyNatureManifest) == 0 || count($verigyFraisCouverts))
+                return view('error/error-500');
             if (!$exists) {
                 return view('user/create-request', ["message" => "dsdd", 'fraisCouvert' => []]);
             }
+
 
             $etablissements = $this->etablissementService->findAll();
             $user = $request->user();
