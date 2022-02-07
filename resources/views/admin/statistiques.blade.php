@@ -6,6 +6,26 @@ Statistiques
 
 @section('content')
 <section class="section">
+    @if(Session::get('success') != null)
+    <div class="alert alert-success alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+            {{ Session::get('success') }}
+        </div>
+    </div>
+    @endif
+    @if(Session::get('error') != null)
+    <div class="alert alert-danger alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+            {{ Session::get('error') }}
+        </div>
+    </div>
+    @endif
     <div class="section-header">
         <h1>Statistiques</h1>
     </div>
@@ -24,8 +44,10 @@ Statistiques
 
                         <select id="budgetDemandes" class="form-control" name="budgetDemandes">
 
-                            <option value="budget" @if(Session::get('budgetDemandes')=="budget" ) selected @endif>Budget Consommé</option>
-                            <option value="demande" @if(Session::get('budgetDemandes')=="demande" ) selected @endif>Demande</option>
+                            <option value="budget" @if(Session::get('budgetDemandes')=="budget" ) selected @endif>Budget
+                                Consommé</option>
+                            <option value="demande" @if(Session::get('budgetDemandes')=="demande" ) selected @endif>
+                                Demande</option>
 
                         </select>
 
@@ -33,14 +55,17 @@ Statistiques
 
                     <div class="form-group col-md-3">
                         <label for="etablissements">Etablissement</label>
-                        <select id="etablissements" class="form-control" onChange="onChangeEtab();" name="etablissements">
+                        <select id="etablissements" class="form-control" onChange="onChangeEtab();"
+                            name="etablissements">
                             <option value="all" selected>Tous les établissement</option>
 
                             @foreach (Session::get('etablissements') as $etablissement)
                             @if( $etablissement->id == Session::get('etab'))
-                            <option id="{{$etablissement->id}}" selected value="{{$etablissement->id}}">{{$etablissement->nom}}</option>
+                            <option id="{{$etablissement->id}}" selected value="{{$etablissement->id}}">
+                                {{$etablissement->nom}}</option>
                             @else
-                            <option id="{{$etablissement->id}}" value="{{$etablissement->id}}">{{$etablissement->nom}}</option>
+                            <option id="{{$etablissement->id}}" value="{{$etablissement->id}}">{{$etablissement->nom}}
+                            </option>
                             @endif
                             @endforeach
 
@@ -48,12 +73,14 @@ Statistiques
                     </div>
                     <div class="form-group col-md-3">
                         <label for="structuresScientifiques">Structure scientifique</label>
-                        <select id="structuresScientifiques" class="form-control" name="structuresScientifiques" onChange="onChangeStructure();">
+                        <select id="structuresScientifiques" class="form-control" name="structuresScientifiques"
+                            onChange="onChangeStructure();">
                             <option value="all" selected>Toutes les structures scientifiques</option>
 
                             @foreach (Session::get('entiteOrganisatrices') as $entite)
                             @if( $entite->id_labo == Session::get('entite'))
-                            <option id="{{$entite->etab_id}}" selected value="{{$entite->id_labo}}">{{$entite->nom}}</option>
+                            <option id="{{$entite->etab_id}}" selected value="{{$entite->id_labo}}">{{$entite->nom}}
+                            </option>
                             @else
                             <option id="{{$entite->etab_id}}" value="{{$entite->id_labo}}">{{$entite->nom}}</option>
                             @endif
@@ -82,7 +109,10 @@ Statistiques
 
                     <div class="form-group col-md-2 text-center mt-1 ">
 
-                        <a href="#" id="inputState" class="mb-3 mt-4 h-50 w-50 btn btn-icon icon-left btn-primary bg-primary" onclick="document.getElementById('search_form').submit();"><i class="mt-2 fas fa-search"></i> </a>
+                        <a href="#" id="inputState"
+                            class="mb-3 mt-4 h-50 w-50 btn btn-icon icon-left btn-primary bg-primary"
+                            onclick="document.getElementById('search_form').submit();"><i
+                                class="mt-2 fas fa-search"></i> </a>
 
                     </div>
 
@@ -99,15 +129,7 @@ Statistiques
             <div class="card-header">
                 <h4>Résultats de la recherche</h4>
                 <div class="card-header-action">
-                    <form>
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search">
-                            <div class="input-group-btn">
 
-                                <button class="btn btn-primary bg-primary"><i class="fas fa-search"></i></button>
-                            </div>
-                        </div>
-                    </form>
                 </div>
             </div>
             <div class="card-body">

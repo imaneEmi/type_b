@@ -43,7 +43,7 @@ class ManifestationServiceImpl implements ManifestationService
         $coordonnateur = $chercheurService->findByIdNull($demande->coordonnateur_id);
         $soutienSollicites = $manifestation->soutienSollicite;
         $soutienAccordes = $manifestation->soutienAccorde;
-        $budgetRestant = BudgetAnnuel::whereYear('annee', date('Y'))->first();
+        $budgetRestant = BudgetAnnuel::where('annee', date('Y'))->first();
         $contributeurs = $manifestation->contributeurs;
         $natureContributionParticipant = $manifestation->natureContributionParticipant;
         $contributionParticipants = $manifestation->contributionParticipants()->sum('montant');
@@ -85,12 +85,14 @@ class ManifestationServiceImpl implements ManifestationService
         $comiteOrganisationsNonLocal = ComiteOrganisationNonLocal::where("manifestation_id", $manifestation->id)->get();
         $comiteScientifiqueLocal = ComiteScientifiqueLocal::where("manifestation_id", $manifestation->id)->get();
         $comiteScientifiqueNonLocal = ComiteScientifiqueNonLocal::where("manifestation_id", $manifestation->id)->get();
+        $files = $manifestation->files;
         $details = array_merge($details_part1, [
             'entiteOrganisatrice' => $entiteOrganisatrice,
             'etablissements' => $etablissements, 'contributeurs' => $contributeurs,
             'gestionFinanciere' => $gestionFinanciere, 'membresComiteOrganisationsLocal' => $membresComiteOrganisationsLocal,
             'comiteOrganisationsNonLocal' => $comiteOrganisationsNonLocal, 'comiteScientifiqueLocal' => $comiteScientifiqueLocal,
-            'comiteScientifiqueNonLocal' => $comiteScientifiqueNonLocal
+            'comiteScientifiqueNonLocal' => $comiteScientifiqueNonLocal,
+            'files'=> $files
         ]);
         return $details;
     }

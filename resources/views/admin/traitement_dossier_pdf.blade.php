@@ -23,6 +23,13 @@
         .ml-6 {
             margin-left: 6em;
         }
+
+        .text-dark{
+            font-weight: bold;
+        }
+        .text-color{
+            color: #a34f23;
+        }
     </style>
 </head>
 
@@ -37,25 +44,25 @@
             <h3 style="text-align: center">Type: B</h3>
             <h6 style="text-align: center;text-decoration: underline;">Traitement de dossier</h6>
         </div>
-
         <table class="table table-bordered mt-3 font">
             <tr>
-                <td>Etab: <span class="ml-1">FSTG</span></td>
-                <td class="border-left">Demandeur: <span class="ml-1">Moi Imane</span></td>
+                <td>Etab: <span class="ml-1 text-uppercase text-dark text-color">{{ $data['coordonnateur']->laboratoire->etablissement->nom }}</span></td>
+                <td class="border-left">Demandeur: <span class="ml-1 text-uppercase text-dark text-color">{{ $data['coordonnateur']->nom }} </span><span class="text-capitalize">{{ $data['coordonnateur']->prenom }}</span></td>
             </tr>
             <tr>
                 <td colspan="2">Structure de recherche:
-                    <span class="ml-1">FSTG</span>
+                    <span class="ml-1 text-uppercase text-color text-dark">{{ $data['coordonnateur']->laboratoire->nom }}</span>
                 </td>
             </tr>
             <tr>
                 <td colspan="2">Titre:
-                    <span class="ml-1">FSTG</span>
+                    <span class="ml-1 text-capitalize text-color text-dark">{{ $data['manifestation']->intitule }}</span>
                 </td>
             </tr>
             <tr>
-                <td>Lieu & Date: <span class="ml-1">{{ Date::now() }}</span></td>
-                <td class="border-left">Nbre de participants: <span class="ml-1 text-dark">10.020</span></td>
+                <td>Lieu & Date: <span class="ml-1"><span class="text-uppercase text-color text-dark">{{ $data['manifestation']->lieu }} </span>
+                - Du <span class="text-color text-dark"> {{ $data['manifestation']->date_debut->format('d/m/Y') }} </span> Au <span class="text-color text-dark">{{ $data['manifestation']->date_fin->format('d/m/Y') }}</span></span></td>
+                <td class="border-left">Nbre de participants: <span class="ml-1 text-color text-dark">{{ $data['manifestation']->nbr_participants_prevus }}</span></td>
             </tr>
         </table>
 
@@ -66,15 +73,15 @@
                     <table class="table table-bordered">
                         <tr>
                             <td>Budget engagé de l'UCA (DHS)</td>
-                            <td>1.150.234 </td>
+                            <td class="text-color text-dark">{{ $data['budgetRestant']->budget_fixe }}</td>
                             <td class="border-left">Budget octroyé à l'établissement (DHS)</td>
-                            <td>1.235</td>
+                            <td class="text-color text-dark">{{ $data['budgetEtablissement'] }}</td>
                         </tr>
                         <tr>
                             <td>Budget de la structure</td>
-                            <td>1.150.234 DHS</td>
+                            <td class="text-color text-dark">{{ $data['budgetStructure'] }}</td>
                             <td class="border-left">Estimation de dotation</td>
-                            <td>1.235 DHS</td>
+                            <td class="text-color text-dark">{{ $data['demande']->estimationDotationMax }}</td>
                         </tr>
                     </table>
                 </div>
@@ -89,12 +96,18 @@
                                 <th>Montant</th>
                             </tr>
                         </thead>
+                        @if ($data['contributeurs'] != null)
                         <tbody>
+                            @foreach ($data['contributeurs'] as $sponsor )
+                            @if ($sponsor->typeContributeur->libelle == "Sponsors")
                             <tr>
-                                <td></td>
-                                <td></td>
+                                <td>{{ $sponsor->nom }}</td>
+                                <td>{{ $sponsor->montant }} MAD</td>
                             </tr>
+                            @endif
+                            @endforeach
                         </tbody>
+                        @endif
                     </table>
                 </div>
                 <div class="m-3">
@@ -108,19 +121,44 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Total:10.000 &nbsp;-Locaux:5.000 </td>
-                                <td>Total:100.000 &nbsp;- Locaux:50.000</td>
+                                <td class="border-right border-bottom">Total: <span
+                                        class="label mr-1 ml-1 font-weight-bold">{{
+                                        ($data['manifestation']->nbr_enseignants_locaux +
+                                        $data['manifestation']->nbr_enseignants_non_locaux) }}</span>
+                                    -Locaux: <span class="label mr-1 ml-1 font-weight-bold">{{
+                                        $data['manifestation']->nbr_enseignants_locaux }}</span> </td>
+                                <td class="border-right border-bottom">Total: <span
+                                        class="label mr-1 ml-1 font-weight-bold">{{
+                                        ($data['manifestation']->nbr_etudiants_locaux +
+                                        $data['manifestation']->nbr_etudiants_non_locaux) }}</span>
+                                    - Locaux: <span class="label mr-1 ml-1 font-weight-bold">{{
+                                        $data['manifestation']->nbr_etudiants_locaux }}</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">Total contribution:
+                                    <span class="label mr-1 ml-1 font-weight-bold">{{ $data['contributionParticipants'] }} MAD</span>
+                                </td>
                             </tr>
                             <tr>
                                 <td colspan="2">Les frais d'inscription couvrent:
-                                    <span>lol</span>
+                                    @if($data['natureContributionParticipant'] != null)
+                                    <p>
+                                        @foreach ($data['natureContributionParticipant'] as $contribution)
+                                        @if ($loop->index != 0)
+                                        ,
+                                        @endif
+                                        <span class="label font-weight-bold mr-1">{{ $contribution->natureContribution->libelle
+                                            }}</span>
+                                        @endforeach
+                                    </p>
+                                    @endif
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div style="page-break-after: always;"></div>
+            <div style="break-after: avoid;"></div>
             <div class="">
                 <div class="font">
                     <h4>Soutien de l'Université</h4>
@@ -133,16 +171,18 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @for ($i = 0; $i < sizeof($data['soutienSollicite']); $i++)
                             <tr>
-                                <td></td>
-                                <td class="text-right"><span></span></td>
-                                <td class="text-right"><span></span></td>
+                                <td>{{ $data['soutienSollicite'][$i]->libelle }}</td>
+                                <td class="text-right text-dark text-color"><span>{{ $data['soutienSollicite'][$i]->pivot->montant }} MAD</span></td>
+                                <td class="text-right text-dark text-color"><span>{{ $data['soutienAccorde'][$i]->pivot->montant }} MAD</span></td>
                             </tr>
                             <tr>
-                                <td class="text-center">TOTAL</td>
-                                <td class="text-right"><span></span></td>
-                                <td class="text-right"><span></span></td>
+                                <td class="text-left">TOTAL</td>
+                                <td class="text-right text-dark text-color"><span>{{ $data['manifestation']->soutienSollicite()->sum('montant') }} MAD</span></td>
+                                <td class="text-right text-dark text-color"><span>{{ $data['manifestation']->soutienAccorde()->sum('montant') }} MAD</span></td>
                             </tr>
+                            @endfor
                         </tbody>
                     </table>
                 </div>

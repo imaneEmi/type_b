@@ -41,25 +41,17 @@ Route::middleware(['verified'])->group(function () {
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-// ********* Admin's routes *******
+
 
 //Admin should be authenticated to access these routes
 Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/edit-profile', [App\Http\Controllers\Admin\AdminsController::class, 'profile'])->name('edit.profile');
-    Route::get('/edit-pieces', [App\Http\Controllers\Admin\AdminsController::class, 'pieceDemandee'])->name('edit.pieces');
-    Route::get('/edit-frais', [App\Http\Controllers\Admin\AdminsController::class, 'fraisCouverts'])->name('edit.frais');
-    Route::post('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'save'])->name('save.budgetFixe');
-    Route::get('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'edit'])->name('edit.budgetFixe');
-    Route::get('/archive', [App\Http\Controllers\Admin\AdminsController::class, 'archive'])
-        ->name('archive');
-    Route::post('/budget_update', [App\Http\Controllers\Admin\EditBudgetController::class, 'update'])
-        ->name('budget.update');
+
 });
 
 
-//Admin should be authenticated and the current annual budget should be set to access these routes
+//User should be admin and the current annual budget should be set to access these routes
 Route::group(['middleware' => ['budgetFixeSet', 'admin']], function () {
     Route::get('/dashboard-admin', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard.admin');
     Route::get('/traitement-dossier/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'getManifestation']);
@@ -83,20 +75,31 @@ Route::group(['middleware' => ['budgetFixeSet', 'admin']], function () {
     Route::get('/accept-demande/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'accept'])->name('accept.demande');
     Route::get('/reject-demande/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'reject'])->name('reject.demande');
     Route::get('/delete-demande/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'delete'])->name('delete.demande');
-    Route::get('/edit-profile', [App\Http\Controllers\Admin\AdminsController::class, 'profile'])->name('edit.profile');
-    Route::get('/edit-pieces', [App\Http\Controllers\Admin\AdminsController::class, 'pieceDemandee'])->name('edit.pieces');
-    Route::get('/edit-frais', [App\Http\Controllers\Admin\AdminsController::class, 'fraisCouverts'])->name('edit.frais');
-    Route::get('/edit-budgetFixe', [App\Http\Controllers\Admin\AdminsController::class, 'budgetFixe'])->name('edit.budgetFixe');
+
     Route::get('/traitement-dossier-pdf/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'generatePdf'])->name('pdf');
     Route::post('/upload-lettre/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'uploadLettre'])->name('upload.lettre');
     Route::get('manifastation/lettre/{url}', [App\Http\Controllers\Admin\AdminsController::class, 'getLettre'])->name('manifastation.lettre');
-    Route::post('/admin/profile', [App\Http\Controllers\Admin\AdminsController::class, 'profile'])->name('profile.admin');
-    Route::post('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'save'])->name('save.budgetFixe');
-    Route::get('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'edit'])->name('edit.budgetFixe');
+
     Route::post('/notification-email', [App\Http\Controllers\Admin\AdminsController::class, 'notificationEmail'])->name('emails.notify');
     Route::post('/custom-email', [App\Http\Controllers\Admin\AdminsController::class, 'customEmail'])->name('emails.custom');
     Route::get('/disable-upload/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'disableUpload'])->name('disableUpload');
     Route::post('/demande-estimationDotation/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'estimationDotation'])->name('demande.estimationDotation');
+
+
+
+ });
+//User should be admin to access these routes
+Route::group(['middleware' => ['admin']], function () {
+    Route::post('/admin/profile', [App\Http\Controllers\Admin\AdminsController::class, 'profile'])->name('profile.admin');
+    Route::get('/edit-profile', [App\Http\Controllers\Admin\AdminsController::class, 'profile'])->name('edit.profile');
+
+    Route::get('/edit-budgetFixe', [App\Http\Controllers\Admin\AdminsController::class, 'budgetFixe'])->name('edit.budgetFixe');
+    Route::get('manifastation/lettre/{url}', [App\Http\Controllers\Admin\AdminsController::class, 'getLettre'])->name('manifastation.lettre');
+    Route::post('/admin/profile', [App\Http\Controllers\Admin\AdminsController::class, 'profile'])->name('profile.admin');
+    Route::post('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'save'])->name('save.budgetFixe');
+    Route::get('/edit-budgetFixe', [App\Http\Controllers\Admin\EditBudgetController::class, 'edit'])->name('edit.budgetFixe');
+    Route::post('/budget_update', [App\Http\Controllers\Admin\EditBudgetController::class, 'update'])
+        ->name('budget.update');
 
     Route::post('/create-piece', [App\Http\Controllers\Admin\PieceDemandeController::class, 'create'])->name('piece_demandee.create');
     Route::post('/update-piece', [App\Http\Controllers\Admin\PieceDemandeController::class, 'update'])->name('piece_demandee.update');

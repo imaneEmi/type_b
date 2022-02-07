@@ -65,11 +65,15 @@ Traitement de dossier
             </a>
         </span>
         @endif
+        @if ($demande->etat === \App\Models\DemandeStatus::ACCEPTEE || $demande->etat ===
+        \App\Models\DemandeStatus::ENCOURS)
         <span class="m-2">
-            <a href="{{ route('pdf',['id'=>$demande->id]) }}" title="Télécharger fiche traitement de dossier"><i
-                    class="fa fa-download fa-lg"></i>
+            <a href="{{ route('pdf',['id'=>$demande->id]) }}" target="_blank"
+                title="Télécharger fiche traitement de dossier"><i class="fa fa-download fa-lg"></i>
             </a>
         </span>
+        @endif
+
         <span class="m-2">
             <a href="{{ route('manifestation.details',['id'=>$demande->id]) }}" title="Plus de détails"><i
                     class="fa fa-plus fa-lg"></i>
@@ -127,7 +131,12 @@ Traitement de dossier
                                     <td>Budget engagé de l'UCA ({{ now()->year }})</td>
                                     <td><input class="form-control text-right" name="budgetRestant"
                                             style="font-weight:bold !important" disabled
-                                            value="{{ $budgetRestant->budget_restant }}" /></td>
+                                            @if($budgetRestant->budget_restant == 0)
+                                        value="{{ $budgetRestant->budget_fixe }}"
+                                        @else
+                                        value="{{ $budgetRestant->budget_restant }}"
+                                        @endif
+                                        /></td>
                                     <td class="border-left">Budget octroyé à l'établissement</td>
                                     <td><input class="form-control text-right" type="number" disabled name="budgetEtab"
                                             style="font-weight:bold !important" value="{{ $budgetEtablissement }}" />
@@ -143,9 +152,14 @@ Traitement de dossier
                                         method="POST" name="estimationDotation-form">
                                         <td class="border-left">Estimation de dotation</td>
                                         <td><input class="form-control text-right" type="number" min="0"
-                                                max="{{ $budgetRestant->budget_restant }}" name="estimation"
-                                                id="estimation" style="font-weight:bold !important"
-                                                value="{{ $demande->estimationDotationMax }}" required />
+                                                @if($budgetRestant->budget_restant == 0)
+                                            max="{{ $budgetRestant->budget_fixe }}"
+                                            @else
+                                            max="{{ $budgetRestant->budget_restant }}"
+                                            @endif
+                                            name="estimation"
+                                            id="estimation" style="font-weight:bold !important"
+                                            value="{{ $demande->estimationDotationMax }}" required />
 
                                     </form>
                                     </td>
@@ -178,10 +192,10 @@ Traitement de dossier
                                 @if ($contributeurs != null)
                                 <tbody>
                                     @foreach ($contributeurs as $sponsor )
-                                    @if ($sponsor->typeContributeur->libelle == "Sponsor")
+                                    @if ($sponsor->typeContributeur->libelle == "Sponsors")
                                     <tr>
                                         <td>{{ $sponsor->nom }}</td>
-                                        <td>{{ $sponsor->montant }}</td>
+                                        <td>{{ $sponsor->montant }} MAD</td>
                                     </tr>
                                     @endif
                                     @endforeach
@@ -223,8 +237,10 @@ Traitement de dossier
                                     </tr>
                                     <tr>
                                         <td class="colspan-2">Total contribution:
-                                            <span class="label mr-1 ml-1 font-weight-bold">{{ $contributionParticipants }} MAD</span>
+                                            <span class="label mr-1 ml-1 font-weight-bold">{{ $contributionParticipants
+                                                }} MAD</span>
                                         </td>
+                                    </tr>
                                     <tr>
                                         <td class="colspan-2">Les frais d'inscription couvrent:
                                             @if($natureContributionParticipant != null)
@@ -233,7 +249,8 @@ Traitement de dossier
                                                 @if ($loop->index != 0)
                                                 ,
                                                 @endif
-                                                <span class="label font-weight-bold mr-1">{{ $contribution->natureContribution->libelle
+                                                <span class="label font-weight-bold mr-1">{{
+                                                    $contribution->natureContribution->libelle
                                                     }}</span>
                                                 @endforeach
                                             </p>
@@ -329,9 +346,13 @@ Traitement de dossier
                                             id="" value="{{ $manifestation->soutienSollicite()->sum('montant') }}"></th>
                                     <th>Total accordé</th>
                                     <th class="text-right"><input class="form-control totalmontant text-right" disabled
-                                            type="number" name="totalmontant" max="{{ $budgetRestant->budget_restant }}"
-                                            id="totalmontant" @if($soutienAccorde !=null)
-                                            value="{{ $manifestation->soutienAccorde()->sum('montant') }}" @endif>
+                                            type="number" name="totalmontant" @if ($budgetRestant->budget_restant == 0)
+                                        max="{{ $budgetRestant->budget_fixe }}"
+                                        @else
+                                        max="{{ $budgetRestant->budget_restant }}"
+                                        @endif
+                                        id="totalmontant" @if($soutienAccorde !=null)
+                                        value="{{ $manifestation->soutienAccorde()->sum('montant') }}" @endif>
                                         <div class="text-danger" id="errorBudget" style="visibility :hidden">ATTENTION!
                                             Budget dépassé! </div>
                                     </th>

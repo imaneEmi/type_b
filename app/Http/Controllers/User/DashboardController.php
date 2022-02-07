@@ -183,192 +183,194 @@ class DashboardController extends Controller
 
     public function createRequest(Request $request)
     {
+        try {
+            $chercheur = $this->chercheurService->findByEmail($request->user()->email);
+            $exists = $this->demandeService->isAllRapportLaboratoireExists($chercheur);
 
-
-
-        $chercheur = $this->chercheurService->findByEmail($request->user()->email);
-        $exists = $this->demandeService->isAllRapportLaboratoireExists($chercheur);
-
-        if (!$exists) {
-            return view('user/create-request', ["message" => "dsdd", 'fraisCouvert' => []]);
-        }
-
-        $etablissements = $this->etablissementService->findAll();
-        $user = $request->user();
-        $typeContributeurs = $this->typeContributeurService->findAll();
-        $fraisCouvert = $this->fraisCouvertService->findAll();
-        $natureContributions = $this->natureContributionService->findAll();
-        $piecesDemande = PieceDemande::all();
-        $conditionsGenerale = ConditionsGenerale::all();
-
-        $chercheurs = $this->chercheurService->findAll();
-
-        if ($request->isMethod('post')) {
-            $data = $request->all();
-
-            $request->validate([
-                'intitule' => 'required',
-                'date_debut' => 'required|date',
-                'date_fin' => 'required|date|after_or_equal:date_debut',
-                'type' => 'required',
-                'etendue' => 'required',
-                'partenaires' => 'required',
-                'file_nbr_etudiants_locaux' => 'required',
-                'file_nbr_enseignants_locaux' => 'required',
-                'nbr_etudiants_locaux' => 'required',
-                'nbr_etudiants_non_locaux' => 'required',
-                'nbr_enseignants_locaux' => 'required',
-                'nbr_enseignants_non_locaux' => 'required',
-            ]);
-
-
-
-            $demande = new Demande();
-            $demande->code = $chercheur->id_cher . "/" . $this->demandeService->countCoordonnateurDemandeByCurrentYear($chercheur) + 1 . "/" . date('Y');
-            $demande->date_envoie = date('Y-m-d H:i:s');
-            $demande->etat = DemandeStatus::COURANTE;
-            $demande->coordonnateur_id = $chercheur->id_cher;
-            $demande = Demande::create($demande->getAttributes());
-
-            $manifestation = new Manifestation();
-            $manifestation->intitule = $data['intitule'];
-            $manifestation->type = $data['type'];
-            $manifestation->etendue = $data['etendue'];
-            $manifestation->lieu = $data['lieu'];
-            $manifestation->site_web = $data['site_web'];
-            $manifestation->agence_organisatrice = $data['agence_organisatrice'];
-            $manifestation->partenaires = $data['partenaires'];
-            $manifestation->nbr_participants_prevus = $data['nbr_etudiants_locaux'] + $data['nbr_etudiants_non_locaux'] + $data['nbr_enseignants_locaux'] + $data['nbr_enseignants_non_locaux'];
-            $manifestation->nbr_etudiants_locaux = $data['nbr_etudiants_locaux'];
-            $manifestation->nbr_etudiants_non_locaux = $data['nbr_etudiants_non_locaux'];
-            $manifestation->nbr_enseignants_locaux = $data['nbr_enseignants_locaux'];
-            $manifestation->nbr_enseignants_non_locaux = $data['nbr_enseignants_non_locaux'];
-            $manifestation->date_debut = $data['date_debut'];
-            $manifestation->date_fin = $data['date_fin'];
-
-            $manifestation->entite_organisatrice_id = $chercheur->laboratoire->getAttributes()["id_labo"];
-            $manifestation->demande_id = $demande->getAttributes()["id"];
-
-            $manifestation = Manifestation::create($manifestation->getAttributes());
-
-
-
-            $fileEtudiantsLocauxPath = Storage::disk('local')->put("manifestation_files", $data['file_nbr_etudiants_locaux']);
-            $fileEtudiantsLocauxPath = $data['file_nbr_etudiants_locaux']->storeAs("manifestation_files", $request->file('file_nbr_etudiants_locaux')->getClientOriginalName());
-            $fileManifestation1 = new FileManifestation();
-            $fileManifestation1->titre = Str::of($request->file('file_nbr_etudiants_locaux')->getClientOriginalName())->trim('.pdf');
-            $fileManifestation1->url = $fileEtudiantsLocauxPath;
-            $fileManifestation1->manifestation_id = $manifestation->getAttributes()["id"];
-            $fileManifestation1 = FileManifestation::create($fileManifestation1->getAttributes());
-
-            $fileEnseignantsLocauxPath = Storage::disk('local')->put("manifestation_files", $data['file_nbr_enseignants_locaux']);
-            $fileManifestation2 = new FileManifestation();
-            $fileManifestation2->titre = Str::of($request->file('file_nbr_enseignants_locaux')->getClientOriginalName())->trim('.pdf');
-            $fileManifestation2->url = $fileEnseignantsLocauxPath;
-            $fileManifestation2->manifestation_id = $manifestation->getAttributes()["id"];
-            $fileManifestation2 = FileManifestation::create($fileManifestation2->getAttributes());
-
-            $manifestation->file_manifestation_etudiants_locaux_id = $fileManifestation1->getAttributes()["id"];;
-            $manifestation->file_manifestation_enseignants_locaux_id = $fileManifestation2->getAttributes()["id"];;
-            $manifestation->update($manifestation->getAttributes());
-
-            $gestionFinanciere = json_decode($data['gestionFinanciere'], true);
-            for ($i = 0; $i < count($gestionFinanciere); $i++) {
-                $gestionFinanciere[$i]["manifestation_id"] = $manifestation->getAttributes()["id"];
-                GestionFinanciere::create($gestionFinanciere[$i]);
+            if (!$exists) {
+                return view('user/create-request', ["message" => "dsdd", 'fraisCouvert' => []]);
             }
 
-            $etablissementsOrganisateur = $data['etablissements_organisateur'];
-            for ($i = 0; $i < count($etablissementsOrganisateur); $i++) {
-                $manifestationEtablissement = new ManifestationEtablissement();
-                $manifestationEtablissement->manifestation_id = $manifestation->getAttributes()["id"];
-                $manifestationEtablissement->etablissement_id = $etablissementsOrganisateur[$i];
-                ManifestationEtablissement::create($manifestationEtablissement->getAttributes());
-            }
+            $etablissements = $this->etablissementService->findAll();
+            $user = $request->user();
+            $typeContributeurs = $this->typeContributeurService->findAll();
+            $fraisCouvert = $this->fraisCouvertService->findAll();
+            $natureContributions = $this->natureContributionService->findAll();
+            $piecesDemande = PieceDemande::all();
+            $conditionsGenerale = ConditionsGenerale::all();
+
+            $chercheurs = $this->chercheurService->findAll();
+
+            if ($request->isMethod('post')) {
+                $data = $request->all();
+
+                $request->validate([
+                    'intitule' => 'required',
+                    'date_debut' => 'required|date',
+                    'date_fin' => 'required|date|after_or_equal:date_debut',
+                    'type' => 'required',
+                    'etendue' => 'required',
+                    'partenaires' => 'required',
+                    'file_nbr_etudiants_locaux' => 'required',
+                    'file_nbr_enseignants_locaux' => 'required',
+                    'nbr_etudiants_locaux' => 'required',
+                    'nbr_etudiants_non_locaux' => 'required',
+                    'nbr_enseignants_locaux' => 'required',
+                    'nbr_enseignants_non_locaux' => 'required',
+                ]);
 
 
-            $natureContributions = $data['natureContributions'];
-            for ($i = 0; $i < count($natureContributions); $i++) {
-                $natureManifestation = new NatureContributionManifestation();
-                $natureManifestation->manifestation_id = $manifestation->getAttributes()["id"];
-                $natureManifestation->nature_con_id = $natureContributions[$i];
-                $natureManifestation = NatureContributionManifestation::create($natureManifestation->getAttributes());
-            }
 
-            $contributeurs = json_decode($data['contributeurs'], true);
-            for ($i = 0; $i < count($contributeurs); $i++) {
-                $contributeur = Contributeur::create($contributeurs[$i]);
-                $manifestationContributeur = new ManifestationContributeur();
-                $manifestationContributeur->contributeur_id = $contributeur->getAttributes()['id'];
-                $manifestationContributeur->manifestation_id = $manifestation->getAttributes()["id"];
-                $manifestationContributeur = ManifestationContributeur::create($manifestationContributeur->getAttributes());
-            }
+                $demande = new Demande();
+                $demande->code = $chercheur->id_cher . "/" . $this->demandeService->countCoordonnateurDemandeByCurrentYear($chercheur) + 1 . "/" . date('Y');
+                $demande->date_envoie = date('Y-m-d H:i:s');
+                $demande->etat = DemandeStatus::COURANTE;
+                $demande->coordonnateur_id = $chercheur->id_cher;
+                $demande = Demande::create($demande->getAttributes());
 
-            $contributionParticipants = json_decode($data['contributionParticipants'], true);
-            for ($i = 0; $i < count($contributionParticipants); $i++) {
-                $contributeurParticipant = ContributionParticipant::create($contributionParticipants[$i]);
-                $manifestationContributionParticipant = new ManifestationContributionParticipant();
-                $manifestationContributionParticipant->cont_par_id = $contributeurParticipant->getAttributes()['id'];
-                $manifestationContributionParticipant->manifestation_id = $manifestation->getAttributes()["id"];
-                $manifestationContributionParticipant = ManifestationContributionParticipant::create($manifestationContributionParticipant->getAttributes());
-            }
+                $manifestation = new Manifestation();
+                $manifestation->intitule = $data['intitule'];
+                $manifestation->type = $data['type'];
+                $manifestation->etendue = $data['etendue'];
+                $manifestation->lieu = $data['lieu'];
+                $manifestation->site_web = $data['site_web'];
+                $manifestation->agence_organisatrice = $data['agence_organisatrice'];
+                $manifestation->partenaires = $data['partenaires'];
+                $manifestation->nbr_participants_prevus = $data['nbr_etudiants_locaux'] + $data['nbr_etudiants_non_locaux'] + $data['nbr_enseignants_locaux'] + $data['nbr_enseignants_non_locaux'];
+                $manifestation->nbr_etudiants_locaux = $data['nbr_etudiants_locaux'];
+                $manifestation->nbr_etudiants_non_locaux = $data['nbr_etudiants_non_locaux'];
+                $manifestation->nbr_enseignants_locaux = $data['nbr_enseignants_locaux'];
+                $manifestation->nbr_enseignants_non_locaux = $data['nbr_enseignants_non_locaux'];
+                $manifestation->date_debut = $data['date_debut'];
+                $manifestation->date_fin = $data['date_fin'];
 
-            $comiteOrganisationLocal = $data['comiteOrganisationLocal'];
-            for ($i = 0; $i < count($comiteOrganisationLocal); $i++) {
-                $cl = new ComiteOrganisationLocal();
-                $cl->id_cher = $comiteOrganisationLocal[$i];
-                $cl['manifestation_id'] = $manifestation->getAttributes()["id"];
-                ComiteOrganisationLocal::create($cl->getAttributes());
-            }
+                $manifestation->entite_organisatrice_id = $chercheur->laboratoire->getAttributes()["id_labo"];
+                $manifestation->demande_id = $demande->getAttributes()["id"];
 
-            $comiteOrganisationNonLocal = json_decode($data['comiteOrganisationNonLocal'], true);
-            for ($i = 0; $i < count($comiteOrganisationNonLocal); $i++) {
-                $cnl = $comiteOrganisationNonLocal[$i];
-                $cnl['manifestation_id'] = $manifestation->getAttributes()["id"];
-                ComiteOrganisationNonLocal::create($cnl);
-            }
+                $manifestation = Manifestation::create($manifestation->getAttributes());
 
-            $comiteScientifiqueLocal = json_decode($data['comiteScientifiqueLocal'], true);
-            for ($i = 0; $i < count($comiteScientifiqueLocal); $i++) {
-                $csl = $comiteScientifiqueLocal[$i];
-                $csl['manifestation_id'] = $manifestation->getAttributes()["id"];
-                ComiteScientifiqueLocal::create($csl);
-            }
 
-            $comiteScientifiqueNonLocal = json_decode($data['comiteScientifiqueNonLocal'], true);
-            for ($i = 0; $i < count($comiteScientifiqueNonLocal); $i++) {
-                $csnl = $comiteScientifiqueNonLocal[$i];
-                $csnl['manifestation_id'] = $manifestation->getAttributes()["id"];
-                ComiteScientifiqueNonLocal::create($csnl);
-            }
 
-            for ($i = 0; $i < count($fraisCouvert); $i++) {
-                if ($request->has("frais-ouvert-" . $fraisCouvert[$i]->id)) {
-                    $soutienSollicite = new SoutienSollicite();
-                    $soutienSollicite->nbr = $data["nombre_frais_ouvert_" . $fraisCouvert[$i]->id];
-                    $soutienSollicite->montant = $data["montant_frais_ouvert_" . $fraisCouvert[$i]->id];
-                    $soutienSollicite->remarques = $data["remarques_frais_ouvert_" . $fraisCouvert[$i]->id];
-                    $soutienSollicite->manifestation_id = $manifestation->getAttributes()["id"];
-                    $soutienSollicite->frais_couvert_id = $fraisCouvert[$i]->id;
-                    SoutienSollicite::create($soutienSollicite->getAttributes());
+                $fileEtudiantsLocauxPath = Storage::disk('local')->put("manifestation_files", $data['file_nbr_etudiants_locaux']);
+                $fileEtudiantsLocauxPath = $data['file_nbr_etudiants_locaux']->storeAs("manifestation_files", $request->file('file_nbr_etudiants_locaux')->getClientOriginalName());
+                $fileManifestation1 = new FileManifestation();
+                $fileManifestation1->titre = Str::of($request->file('file_nbr_etudiants_locaux')->getClientOriginalName())->trim('.pdf');
+                $fileManifestation1->url = $fileEtudiantsLocauxPath;
+                $fileManifestation1->manifestation_id = $manifestation->getAttributes()["id"];
+                $fileManifestation1 = FileManifestation::create($fileManifestation1->getAttributes());
+
+                $fileEnseignantsLocauxPath = Storage::disk('local')->put("manifestation_files", $data['file_nbr_enseignants_locaux']);
+                $fileManifestation2 = new FileManifestation();
+                $fileManifestation2->titre = Str::of($request->file('file_nbr_enseignants_locaux')->getClientOriginalName())->trim('.pdf');
+                $fileManifestation2->url = $fileEnseignantsLocauxPath;
+                $fileManifestation2->manifestation_id = $manifestation->getAttributes()["id"];
+                $fileManifestation2 = FileManifestation::create($fileManifestation2->getAttributes());
+
+                $manifestation->file_manifestation_etudiants_locaux_id = $fileManifestation1->getAttributes()["id"];;
+                $manifestation->file_manifestation_enseignants_locaux_id = $fileManifestation2->getAttributes()["id"];;
+                $manifestation->update($manifestation->getAttributes());
+
+                $gestionFinanciere = json_decode($data['gestionFinanciere'], true);
+                for ($i = 0; $i < count($gestionFinanciere); $i++) {
+                    $gestionFinanciere[$i]["manifestation_id"] = $manifestation->getAttributes()["id"];
+                    GestionFinanciere::create($gestionFinanciere[$i]);
                 }
-            }
 
-            if ($request->has('pieces')) {
-                $pieces = $data['pieces'];
-                for ($i = 0; $i < count($pieces); $i++) {
-                    $path = Storage::disk('local')->put("manifestation_files", $pieces[$i]);
-                    $fileManifestation = new FileManifestation();
-                    $fileManifestation->url = $path;
-                    $fileManifestation1->titre = Str::of($pieces[$i]->getClientOriginalName())->trim('.pdf');
-                    $fileManifestation->manifestation_id = $manifestation->getAttributes()["id"];
-                    FileManifestation::create($fileManifestation->getAttributes());
+                $etablissementsOrganisateur = $data['etablissements_organisateur'];
+                for ($i = 0; $i < count($etablissementsOrganisateur); $i++) {
+                    $manifestationEtablissement = new ManifestationEtablissement();
+                    $manifestationEtablissement->manifestation_id = $manifestation->getAttributes()["id"];
+                    $manifestationEtablissement->etablissement_id = $etablissementsOrganisateur[$i];
+                    ManifestationEtablissement::create($manifestationEtablissement->getAttributes());
                 }
-            }
-            return redirect()->route('dashboard.user');
-        }
 
-        return view('user/create-request', ["conditionsGenerale" => $conditionsGenerale, "piecesDemande" => $piecesDemande, "chercheurs" => $chercheurs, "natureContributions" => $natureContributions, "typeContributeurs" => $typeContributeurs, "etablissements" => $etablissements, 'user' => $user, 'fraisCouvert' => $fraisCouvert]);
+
+                $natureContributions = $data['natureContributions'];
+                for ($i = 0; $i < count($natureContributions); $i++) {
+                    $natureManifestation = new NatureContributionManifestation();
+                    $natureManifestation->manifestation_id = $manifestation->getAttributes()["id"];
+                    $natureManifestation->nature_con_id = $natureContributions[$i];
+                    $natureManifestation = NatureContributionManifestation::create($natureManifestation->getAttributes());
+                }
+
+                $contributeurs = json_decode($data['contributeurs'], true);
+                for ($i = 0; $i < count($contributeurs); $i++) {
+                    $contributeur = Contributeur::create($contributeurs[$i]);
+                    $manifestationContributeur = new ManifestationContributeur();
+                    $manifestationContributeur->contributeur_id = $contributeur->getAttributes()['id'];
+                    $manifestationContributeur->manifestation_id = $manifestation->getAttributes()["id"];
+                    $manifestationContributeur = ManifestationContributeur::create($manifestationContributeur->getAttributes());
+                }
+
+                $contributionParticipants = json_decode($data['contributionParticipants'], true);
+                for ($i = 0; $i < count($contributionParticipants); $i++) {
+                    $contributeurParticipant = ContributionParticipant::create($contributionParticipants[$i]);
+                    $manifestationContributionParticipant = new ManifestationContributionParticipant();
+                    $manifestationContributionParticipant->cont_par_id = $contributeurParticipant->getAttributes()['id'];
+                    $manifestationContributionParticipant->manifestation_id = $manifestation->getAttributes()["id"];
+                    $manifestationContributionParticipant = ManifestationContributionParticipant::create($manifestationContributionParticipant->getAttributes());
+                }
+
+                $comiteOrganisationLocal = $data['comiteOrganisationLocal'];
+                for ($i = 0; $i < count($comiteOrganisationLocal); $i++) {
+                    $cl = new ComiteOrganisationLocal();
+                    $cl->id_cher = $comiteOrganisationLocal[$i];
+                    $cl['manifestation_id'] = $manifestation->getAttributes()["id"];
+                    ComiteOrganisationLocal::create($cl->getAttributes());
+                }
+
+                $comiteOrganisationNonLocal = json_decode($data['comiteOrganisationNonLocal'], true);
+                for ($i = 0; $i < count($comiteOrganisationNonLocal); $i++) {
+                    $cnl = $comiteOrganisationNonLocal[$i];
+                    $cnl['manifestation_id'] = $manifestation->getAttributes()["id"];
+                    ComiteOrganisationNonLocal::create($cnl);
+                }
+
+                $comiteScientifiqueLocal = json_decode($data['comiteScientifiqueLocal'], true);
+                for ($i = 0; $i < count($comiteScientifiqueLocal); $i++) {
+                    $csl = $comiteScientifiqueLocal[$i];
+                    $csl['manifestation_id'] = $manifestation->getAttributes()["id"];
+                    ComiteScientifiqueLocal::create($csl);
+                }
+
+                $comiteScientifiqueNonLocal = json_decode($data['comiteScientifiqueNonLocal'], true);
+                for ($i = 0; $i < count($comiteScientifiqueNonLocal); $i++) {
+                    $csnl = $comiteScientifiqueNonLocal[$i];
+                    $csnl['manifestation_id'] = $manifestation->getAttributes()["id"];
+                    ComiteScientifiqueNonLocal::create($csnl);
+                }
+
+                for ($i = 0; $i < count($fraisCouvert); $i++) {
+                    if ($request->has("frais-ouvert-" . $fraisCouvert[$i]->id)) {
+                        $soutienSollicite = new SoutienSollicite();
+                        $soutienSollicite->nbr = $data["nombre_frais_ouvert_" . $fraisCouvert[$i]->id];
+                        $soutienSollicite->montant = $data["montant_frais_ouvert_" . $fraisCouvert[$i]->id];
+                        $soutienSollicite->remarques = $data["remarques_frais_ouvert_" . $fraisCouvert[$i]->id];
+                        $soutienSollicite->manifestation_id = $manifestation->getAttributes()["id"];
+                        $soutienSollicite->frais_couvert_id = $fraisCouvert[$i]->id;
+                        SoutienSollicite::create($soutienSollicite->getAttributes());
+                    }
+                }
+
+                if ($request->has('pieces')) {
+                    $pieces = $data['pieces'];
+                    for ($i = 0; $i < count($pieces); $i++) {
+                        $path = Storage::disk('local')->put("manifestation_files", $pieces[$i]);
+                        $fileManifestation = new FileManifestation();
+                        $fileManifestation->url = $path;
+                        $fileManifestation1->titre = Str::of($pieces[$i]->getClientOriginalName())->trim('.pdf');
+                        $fileManifestation->manifestation_id = $manifestation->getAttributes()["id"];
+                        FileManifestation::create($fileManifestation->getAttributes());
+                    }
+                }
+                return redirect()->route('dashboard.user');
+            }
+
+            return view('user/create-request', ["conditionsGenerale" => $conditionsGenerale, "piecesDemande" => $piecesDemande, "chercheurs" => $chercheurs, "natureContributions" => $natureContributions, "typeContributeurs" => $typeContributeurs, "etablissements" => $etablissements, 'user' => $user, 'fraisCouvert' => $fraisCouvert]);
+        } catch (\Exception $ex) {
+            error_log($ex->getMessage());
+            return response()->view('errors.error-500');
+        }
     }
 
     public function uploadRapport(Request $request)

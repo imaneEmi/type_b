@@ -18,10 +18,10 @@ class UpdateContributeursTable extends Migration
             $table->dropColumn('nature');
 
             $table->unsignedBigInteger('nature_contribution_id');
-            $table->foreign('nature_contribution_id')->references('id')->on('nature_contributions');
+            $table->foreign('nature_contribution_id')->references('id')->on('nature_contributions')->onDelete('cascade');
 
             $table->unsignedBigInteger('type_contributeur_id');
-            $table->foreign('type_contributeur_id')->references('id')->on('type_contributeurs');
+            $table->foreign('type_contributeur_id')->references('id')->on('type_contributeurs')->onDelete('cascade');
         });
     }
 

@@ -58,39 +58,43 @@ class AdminsController extends Controller
         $this->budgetAnnuelService = $budgetAnnuelService;
     }
 
-    public function getManifestation($id, ManifestationService $manifestationService, DemandeService $demandeService)
+    public function getManifestation($id)
     {
-        $manifestationDetails = $manifestationService->getManifestation($id, $demandeService, $this->chercheurService);
-        $coordonnateur = $manifestationDetails['coordonnateur'];
-        $etablissement = $this->etablissementService->findById($coordonnateur->laboratoire->etab_id);
-        $labos = $etablissement->laboratoires;
-        // Calcule Budget octroyé à l'établissement
-        $budgetEtablissement = 0;
-        foreach ($labos as $labo) {
-            $chercheurs = $labo->chercheurs;
-            foreach ($chercheurs as $coordonnateur) {
-                $demandes = $demandeService->findAllByCoordonnateurIdAndCurrentYear($coordonnateur->id);
-                //dd($demandes);
-                foreach ($demandes as $demande) {
-                    //dd($demande->manifestation->soutienAccorde()->sum('montant'));
-                    $budgetEtablissement += $demande->manifestation->soutienAccorde()->sum('montant');
+        try {
+            $manifestationDetails = $this->manifestationService->getManifestation($id, $this->demandeService, $this->chercheurService);
+            $coordonnateur = $manifestationDetails['coordonnateur'];
+            $etablissement = $this->etablissementService->findById($coordonnateur->laboratoire->etab_id);
+            $labos = $etablissement->laboratoires;
+            // Calcule Budget octroyé à l'établissement
+            $budgetEtablissement = 0;
+            foreach ($labos as $labo) {
+                $chercheurs = $labo->chercheurs;
+                foreach ($chercheurs as $coordonnateur) {
+                    $demandes = $this->demandeService->findAllByCoordonnateurIdAndCurrentYear($coordonnateur->id);
+                    //dd($demandes);
+                    foreach ($demandes as $demande) {
+                        //dd($demande->manifestation->soutienAccorde()->sum('montant'));
+                        $budgetEtablissement += $demande->manifestation->soutienAccorde()->sum('montant');
+                    }
                 }
             }
-        }
-        // Budget de la structure
-        $budgetStructure = 0;
-        $labo = $coordonnateur->laboratoire;
-        $chercheurs = $labo->chercheurs;
-        foreach ($chercheurs as $coordonnateur) {
-            $demandes = $demandeService->findAllByCoordonnateurIdAndCurrentYear($coordonnateur->id);
-            foreach ($demandes as $demande) {
-                $budgetStructure += $demande->manifestation->soutienAccorde()->sum('montant');
+            // Budget de la structure
+            $budgetStructure = 0;
+            $labo = $coordonnateur->laboratoire;
+            $chercheurs = $labo->chercheurs;
+            foreach ($chercheurs as $coordonnateur) {
+                $demandes = $this->demandeService->findAllByCoordonnateurIdAndCurrentYear($coordonnateur->id);
+                foreach ($demandes as $demande) {
+                    $budgetStructure += $demande->manifestation->soutienAccorde()->sum('montant');
+                }
             }
+            $manifestationDetails["budgetEtablissement"] = $budgetEtablissement;
+            $manifestationDetails["budgetStructure"] = $budgetStructure;
+            return view('admin/edit_demande', $manifestationDetails);
+        } catch (\Exception $ex) {
+            error_log($ex->getMessage());
+            return redirect()->back()->with('error', "Une erreur est survenue!!");
         }
-        $manifestationDetails["budgetEtablissement"] = $budgetEtablissement;
-        $manifestationDetails["budgetStructure"] = $budgetStructure;
-        //dd($manifestationDetails);
-        return view('admin/edit_demande', $manifestationDetails);
     }
 
     public function delete($id)
@@ -193,9 +197,9 @@ class AdminsController extends Controller
         }
     }
 
-    public function getManifestationDetails($id, ManifestationService $manifestationService, DemandeService $demandeService)
+    public function getManifestationDetails($id, DemandeService $demandeService)
     {
-        return view('admin/manif_details', $manifestationService->getManifestationDetails($id, $demandeService, $this->chercheurService, $this->etablissementService));
+        return view('admin/manif_details', $this->manifestationService->getManifestationDetails($id, $demandeService, $this->chercheurService, $this->etablissementService));
     }
 
     public function getDemandesCourantes(DemandeService $demandeService, ChercheurService $chercheurService)
@@ -231,11 +235,45 @@ class AdminsController extends Controller
         }
     }
 
-    public function generatePdf(Request $request)
+    public function generatePdf($id)
     {
-        $data = Date::now();
-        $pdf = PDF::loadView('admin.traitement_dossier_pdf', compact('data'))->stream();
-        return  $pdf;
+        try {
+            $manifestationDetails = $this->manifestationService->getManifestation($id, $this->demandeService, $this->chercheurService);
+            $coordonnateur = $manifestationDetails['coordonnateur'];
+            $etablissement = $this->etablissementService->findById($coordonnateur->laboratoire->etab_id);
+            $labos = $etablissement->laboratoires;
+            // Calcule Budget octroyé à l'établissement
+            $budgetEtablissement = 0;
+            foreach ($labos as $labo) {
+                $chercheurs = $labo->chercheurs;
+                foreach ($chercheurs as $coordonnateur) {
+                    $demandes = $this->demandeService->findAllByCoordonnateurIdAndCurrentYear($coordonnateur->id);
+                    //dd($demandes);
+                    foreach ($demandes as $demande) {
+                        //dd($demande->manifestation->soutienAccorde()->sum('montant'));
+                        $budgetEtablissement += $demande->manifestation->soutienAccorde()->sum('montant');
+                    }
+                }
+            }
+            // Budget de la structure
+            $budgetStructure = 0;
+            $labo = $coordonnateur->laboratoire;
+            $chercheurs = $labo->chercheurs;
+            foreach ($chercheurs as $coordonnateur) {
+                $demandes = $this->demandeService->findAllByCoordonnateurIdAndCurrentYear($coordonnateur->id);
+                foreach ($demandes as $demande) {
+                    $budgetStructure += $demande->manifestation->soutienAccorde()->sum('montant');
+                }
+            }
+            $data = $this->manifestationService->getManifestationDetails($id, $this->demandeService, $this->chercheurService, $this->etablissementService);
+            $data["budgetEtablissement"] = $budgetEtablissement;
+            $data["budgetStructure"] = $budgetStructure;
+            $pdf = PDF::loadView('admin.traitement_dossier_pdf', compact('data'))->stream();
+            return  $pdf;
+        } catch (\Exception $ex) {
+            error_log($ex->getMessage());
+            return redirect()->back()->with('error',"Une erreur est survenue!");
+        }
     }
 
     public function uploadLettre(Request $request, $id)
@@ -419,24 +457,25 @@ class AdminsController extends Controller
             return redirect()->back()->with('error', $error);
         }
     }
-    public function estimationDotation(Request $request,$id)
+    public function estimationDotation(Request $request, $id)
     {
         try {
             $demande = $this->demandeService->findById($id);
             $demande->estimationDotationMax = $request->get('estimation');
             $this->demandeService->update($demande);
             return response()
-            ->json([
-                'code' => 200,
-                'message' => "Estmation de dotaion Modifiée!"
-            ]);
+                ->json([
+                    'code' => 200,
+                    'message' => "Estmation de dotaion Modifiée!"
+                ]);
         } catch (\Exception $ex) {
             $error = "Echec!!";
             error_log($ex->getMessage());
             return response()
-            ->json([
-                'code' => 500,
-                'message' => $error]);
+                ->json([
+                    'code' => 500,
+                    'message' => $error
+                ]);
         }
     }
 

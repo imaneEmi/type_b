@@ -62,7 +62,8 @@
                                             <td> {{$demande->remarques}}</td>
                                             <td>
                                                 @if($demande->etat === $demandeStatus::ACCEPTEE)
-                                                <div class="badge badge-success text-capitalize">{{$demande->etat}}</div>
+                                                <div class="badge badge-success text-capitalize">{{$demande->etat}}
+                                                </div>
                                                 @elseif($demande->etat === $demandeStatus::REFUSEE )
                                                 <div class="badge badge-danger text-capitalize">{{$demande->etat}}</div>
                                                 @else
@@ -70,21 +71,33 @@
                                                 @endif
                                             </td>
                                             <td class="text-center">
-                                                <a href="" class=" has-icon" id="modal-5{{$demande->id}}">
-                                                    @if (!is_null($demande->manifestation->rapport))
-                                                    <i class="fas fa-pen fa-lg" aria-hidden="true" title="Modifier le rapport"></i>
+                                                <a @if ($demande->etat != \App\Models\DemandeStatus::ACCEPTEE)
+                                                    disabled
+                                                    terget = "_blank"
                                                     @else
-                                                    <i class="fa fa-upload fa-lg" aria-hidden="true" title="Télécharger le rapport"></i>
+                                                    id="modal-5{{$demande->id}}"
+                                                    @endif
+                                                    class=" has-icon" target="_blank" >
+                                                    @if (!is_null($demande->manifestation->rapport))
+                                                    <i class="fas fa-pen fa-lg" aria-hidden="true"
+                                                        title="Modifier le rapport"></i>
+                                                    @else
+                                                    <i class="fa fa-upload fa-lg" aria-hidden="true"
+                                                        title="Télécharger le rapport"></i>
                                                     @endif
                                                 </a>
                                                 @if (!is_null($demande->manifestation->rapport))
-                                                <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->rapport->url)])}}" class="has-icon ml-2"><i class="fa fa-file-pdf fa-lg" aria-hidden="true" title="Consulter le rapport"></i></a>
+                                                <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->rapport->url)])}}"
+                                                    class="has-icon ml-2"><i class="fa fa-file-pdf fa-lg"
+                                                        aria-hidden="true" title="Consulter le rapport"></i></a>
                                                 @endif
                                             </td>
                                             <td class="text-center">
                                                 <a @if (!is_null($demande->manifestation->lettreAcceptation) )
                                                     href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->lettreAcceptation->url)])}}"
+                                                    @else
                                                     disabled
+                                                    target="_blank"
                                                     @endif
                                                     class="has-icon" target="_blank">
                                                     <i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a>
@@ -92,11 +105,14 @@
                                             <td class="text-center">
                                                 @if ($demande->editable)
                                                 <a class="has-icon m-1" href="" id="modal-6{{$demande->id}}">
-                                                    <i class="fa fa-upload fa-lg" aria-hidden="true" title="Télécharger les documents manquants"></i>
+                                                    <i class="fa fa-upload fa-lg" aria-hidden="true"
+                                                        title="Télécharger les documents manquants"></i>
                                                 </a>
                                                 @endif
-                                                <a href="{{route('request.pdf',['id'=>$demande->id])}}" class="has-icon m-1" target="_blank">
-                                                    <i class="fa fa-plus fa-lg" aria-hidden="true" title="Plus de détails"></i></a>
+                                                <a href="{{route('request.pdf',['id'=>$demande->id])}}"
+                                                    class="has-icon m-1" target="_blank">
+                                                    <i class="fa fa-plus fa-lg" aria-hidden="true"
+                                                        title="Plus de détails"></i></a>
                                             </td>
                                         </tr>
                                         @endforeach

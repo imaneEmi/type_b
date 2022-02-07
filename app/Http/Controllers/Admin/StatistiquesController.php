@@ -54,27 +54,31 @@ class StatistiquesController extends Controller
 
     public function search(Request $request)
     {
+        try {
+            $etab = $request->etablissements;
+            $entite = $request->structuresScientifiques;
+            $annee = $request->annees;
+            Session::put('etab', $etab);
+            Session::put('entite', $entite);
+            Session::put('annee', (int)$annee);
+            Session::put('budgetDemandes', $request->budgetDemandes);
+            if ($request->budgetDemandes == "budget") {
+                $isBudget = true;
+                $result = $this->budgetAnnuelService->searchBudget($etab, $entite, $annee);
+            } else  if ($request->budgetDemandes == "demande") {
+                $isBudget = false;
+                $result = $this->budgetAnnuelService->searchDemande($etab, $entite, $annee);
+            }
 
-        $etab = $request->etablissements;
-        $entite = $request->structuresScientifiques;
-        $annee = $request->annees;
-        Session::put('etab', $etab);
-        Session::put('entite', $entite);
-        Session::put('annee', (int)$annee);
-        Session::put('budgetDemandes', $request->budgetDemandes);
-        if ($request->budgetDemandes == "budget") {
-            $isBudget = true;
-            $result = $this->budgetAnnuelService->searchBudget($etab, $entite, $annee);
-        } else  if ($request->budgetDemandes == "demande") {
-            $isBudget = false;
-            $result = $this->budgetAnnuelService->searchDemande($etab, $entite, $annee);
+            //making sure that all the varibales arrived
+
+            return view('admin/statistiques', [
+
+                'isBudget' => $isBudget, 'result' => $result
+            ]);
+        } catch (\Exception $ex) {
+            error_log($ex->getMessage());
+            return redirect()->back()->with('error', "Une erreur est survenue!");
         }
-
-        //making sure that all the varibales arrived
-
-        return view('admin/statistiques', [
-
-            'isBudget' => $isBudget, 'result' => $result
-        ]);
     }
 }

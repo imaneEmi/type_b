@@ -65,14 +65,35 @@
             <!-- Main Content -->
             <div class="main-content">
                 <section class="section">
+                    @if(Session::get('success') != null)
+                    <div class="alert alert-success alert-dismissible show fade">
+                        <div class="alert-body">
+                            <button class="close" data-dismiss="alert">
+                                <span>&times;</span>
+                            </button>
+                            {{ Session::get('success') }}
+                        </div>
+                    </div>
+                    @endif
+                    @if(Session::get('error') != null)
+                    <div class="alert alert-danger alert-dismissible show fade">
+                        <div class="alert-body">
+                            <button class="close" data-dismiss="alert">
+                                <span>&times;</span>
+                            </button>
+                            {{ Session::get('error') }}
+                        </div>
+                    </div>
+                    @endif
                     <div class="section-header">
                         <h1>{{ $manifestation->intitule }}</h1>
                         <div class="section-header-breadcrumb">
                             <div class="d-inline m-3">
                                 <span>
-                                    @if($demande->etat === \App\Models\DemandeStatus::ACCEPTEE && $demande->manifestation->lettreAcceptation != null)
+                                    @if($demande->etat === \App\Models\DemandeStatus::ACCEPTEE &&
+                                    $demande->manifestation->lettreAcceptation != null)
                                     <a href="{{route('manifastation.lettre',['url'=>Str::replace('/','-',$demande->manifestation->lettreAcceptation->url)])}}"
-                                        title="Lettre d'acceptation"><i class="fa fa-file-pdf fa-lg"
+                                       target="_blank" title="Lettre d'acceptation"><i class="fa fa-file-pdf fa-lg"
                                             aria-hidden="true"></i>
                                     </a>
                                     @endif
@@ -87,14 +108,18 @@
                                 </span>
                             </div>
                             @endif
+                            @if ($demande->etat === \App\Models\DemandeStatus::ACCEPTEE || $demande->etat ===
+                            \App\Models\DemandeStatus::ENCOURS)
                             <div class="d-inline">
                                 <span>
-                                    <a href="{{ route('pdf',['id'=>$demande->id]) }}"
+                                    <a href="{{ route('pdf',['id'=>$demande->id]) }}" target="_blank"
                                         title="Télécharger Fiche traitement de dossier"><i
                                             class="fa fa-download fa-lg"></i>
                                     </a>
                                 </span>
                             </div>
+
+                            @endif
                             <div class="d-inline m-3">
                                 <span>
                                     <a href="{{ url()->previous() }}" title="Retour en arrière">
@@ -267,7 +292,7 @@
                                 <thead>
                                     <tr>
                                         <th>NOM Prénom</th>
-                                        <th>Contact</th>
+                                        <th>Contact (email/tel)</th>
                                         <th>Etablissement</th>
                                     </tr>
                                 </thead>
@@ -297,7 +322,6 @@
                                     <tr>
                                         <th>NOM Prénom</th>
                                         <th>Contact</th>
-                                        <th>Entité</th>
                                         <th>Université / Etablissement</th>
                                         <th>Ville</th>
                                     </tr>
@@ -312,9 +336,6 @@
                                         </td>
                                         <td> <span class="mr-1">{{ $comite->email }}</span>
                                             <span>/ {{ $comite->tel }}</span>
-                                        </td>
-                                        <td><span class="mr-1 text-capitalize">{{ $comite->type_entite }}:</span>
-                                            <span class="text-capitalize"> {{ $comite->nom_entite }}</span>
                                         </td>
                                         <td><span class="mr-1 text-capitalize">{{ $comite->universite }}</span>
                                             <span class="text-capitalize">/ {{ $comite->etablissement }}</span>
@@ -524,13 +545,22 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach ($files as $file)
                                     <tr>
                                         <td>
-
+                                            <span class="text-capitalize">{{ $file->titre
+                                                }}</span>
                                         </td>
                                         <td>
+                                            <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$file->url)])}}"
+                                                title="{{ $file->titre }}" target="_blank"><i class="fa fa-file-pdf fa-lg"
+                                                    aria-hidden="true"></i>
+                                            </a>
                                         </td>
                                     </tr>
+
+
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
