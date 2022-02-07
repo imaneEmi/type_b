@@ -42,11 +42,6 @@ class EditBudgetController extends Controller
         $request->validate([
             'budget' => 'required',
         ]);
-        $budget_fixe = $budgetAnnuelService->findBudgetParAnneeAndType(Common::getAnneeActuelle(), 'budget_fixe');
-        $budget_restant =  $budgetAnnuelService->findBudgetParAnneeAndType(Common::getAnneeActuelle(), 'budget_restant');
-        if ($budget_fixe != $budget_restant) {
-            return back()->with('error', 1);
-        }
 
         $budgetAnnuelService->updateBudgetActuel($request->budget);
         return back()->with('succes', 2);
