@@ -13,12 +13,15 @@ class UpdateContributeursTable extends Migration
      */
     public function up()
     {
-        Schema::connection('mysql')->table('contributeurs', function($table) {
+        Schema::connection('mysql')->table('contributeurs', function ($table) {
             $table->dropColumn('type');
             $table->dropColumn('nature');
-        
+
             $table->unsignedBigInteger('nature_contribution_id');
             $table->foreign('nature_contribution_id')->references('id')->on('nature_contributions');
+
+            $table->unsignedBigInteger('type_contributeur_id');
+            $table->foreign('type_contributeur_id')->references('id')->on('type_contributeurs');
         });
     }
 

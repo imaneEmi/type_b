@@ -10,6 +10,7 @@ class FileManifestation extends Model
     use HasFactory;
     protected $connection = 'mysql';
     public $fillable = [
+        'titre',
         'url',
         'manifestation_id',
     ];

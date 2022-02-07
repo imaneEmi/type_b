@@ -1,22 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>Layout &rsaquo; Top Navigation &mdash; Stisla</title>
+    <title>{{ $manifestation->intitule }}</title>
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
         integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link href="{{asset('assets/img/uca-logo.png')}}" rel="icon">
+    <link href="{{asset('assets/assets/img/uca-logo.png')}}" rel="apple-touch-icon">
 
     <!-- CSS Libraries -->
 
     <!-- Template CSS -->
     <link rel="stylesheet" href="{{asset('../assets/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('../assets/css/components.css')}}">
+    <link rel="stylesheet" href="{{asset('../assets/css/customStyle.css')}}">
 </head>
 
 <body class="layout-3">
@@ -39,7 +42,8 @@
                             <ul class="dropdown-menu">
                                 <li class="nav-item"><a href="#entite" class="nav-link">Entité</a></li>
                                 <li class="nav-item"><a href="#coordonnateur" class="nav-link">Coordonnateur</a></li>
-                                <li class="nav-item"><a href="#comite" class="nav-link">Comité</a></li>
+                                <li class="nav-item"><a href="#comite" class="nav-link">Comité d'organisation</a></li>
+                                <li class="nav-item"><a href="#comiteS" class="nav-link">Comité scientifique</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -49,6 +53,10 @@
                         <li class="nav-item dropdown">
                             <a href="#soutienSollicite" class="nav-link"><i class="far fa-clone"></i><span>Soutien
                                     sollicité</span></a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a href="#piecesFournies" class="nav-link"><i class="far fa-clone"></i>
+                                <span>Piéces fournies</span></a>
                         </li>
                     </ul>
                 </div>
@@ -60,7 +68,34 @@
                     <div class="section-header">
                         <h1>{{ $manifestation->intitule }}</h1>
                         <div class="section-header-breadcrumb">
+                            <div class="d-inline m-3">
+                                <span>
+                                    @if($demande->etat === \App\Models\DemandeStatus::ACCEPTEE && $demande->manifestation->lettreAcceptation != null)
+                                    <a href="{{route('manifastation.lettre',['url'=>Str::replace('/','-',$demande->manifestation->lettreAcceptation->url)])}}"
+                                        title="Lettre d'acceptation"><i class="fa fa-file-pdf fa-lg"
+                                            aria-hidden="true"></i>
+                                    </a>
+                                    @endif
+                                </span>
+                            </div>
+                            @if ($demande->etat ===\App\Models\DemandeStatus::ACCEPTEE &&
+                            $demande->manifestation->lettreAcceptation == null)
+                            <div class="d-inline m-3">
+                                <span><a href="#" id="upload" title="Télécharger la lettre d'acceptation">
+                                        <i class="fa fa-upload fa-lg"></i>
+                                    </a>
+                                </span>
+                            </div>
+                            @endif
                             <div class="d-inline">
+                                <span>
+                                    <a href="{{ route('pdf',['id'=>$demande->id]) }}"
+                                        title="Télécharger Fiche traitement de dossier"><i
+                                            class="fa fa-download fa-lg"></i>
+                                    </a>
+                                </span>
+                            </div>
+                            <div class="d-inline m-3">
                                 <span>
                                     <a href="{{ url()->previous() }}" title="Retour en arrière">
                                         <i class="fa fa-reply fa-lg"></i>
@@ -72,7 +107,6 @@
 
                     <div class="section-body">
                         <h2 class="section-title">{{ $manifestation->type }}</h2>
-                        <p class="section-lead">This page is just an example for you to create your own page.</p>
                         <div class="card">
                             <div class="card-header">
                                 <h4>Informations concernant la manifestation</h4>
@@ -104,9 +138,13 @@
                                 </div>
                             </div>
                             <div class="card-footer bg-whitesmoke">
-                                site web: <a href="{{ $manifestation->site_web}}"> {{ $manifestation->site_web}}</a>
+                                @if ( $manifestation->site_web != null)
+                                <i class="fas fa-globe mr-1"></i>Site web: <a href="{{ $manifestation->site_web}}"> {{
+                                    $manifestation->site_web}}</a>
+                                @endif
                             </div>
                         </div>
+                        @if ($gestionFinanciere != null )
                         <div class="card" id="gestion-financiere">
                             <div class="card-header">
                                 <h4>Gestion financière</h4>
@@ -119,7 +157,9 @@
                             <div class="card-footer bg-whitesmoke">
                             </div>
                         </div>
+                        @endif
 
+                        @if ($etablissements != null )
                         <div class="card" id="etablissements">
                             <div class="card-header">
                                 <h4>Etablissement(s) de l’UCAM impliqué(s) dans l’organisation </h4>
@@ -129,15 +169,17 @@
                                     <thead>
                                         <tr>
                                             <th>Etablissement</th>
-                                            <th>Intitule</th>
+                                            <th>Ville</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($etablissements as $etablissement )
+                                        @if ($etablissement != null)
                                         <tr>
-                                            <td>{{ $etablissement->libelle }}</td>
-                                            <td>{{ $etablissement->intitule }}</td>
+                                            <td>{{ $etablissement->nom }}</td>
+                                            <td>{{ $etablissement->ville }}</td>
                                         </tr>
+                                        @endif
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -145,7 +187,8 @@
                             <div class="card-footer bg-whitesmoke">
                             </div>
                         </div>
-
+                        @endif
+                        @if ($entiteOrganisatrice != null)
                         <div class="card" id="entite">
                             <div class="card-header">
                                 <h4>Entité de recherche organisant la manifestation</h4>
@@ -162,12 +205,14 @@
                                     <tbody>
                                         <tr>
                                             <td>{{ $entiteOrganisatrice->nom }}</td>
-                                            <td>{{ $entiteOrganisatrice->responsable }}</td>
-                                            <td>{{ $entiteOrganisatrice->etablissement->libelle }}</td>
+                                            <td>{{ $entiteOrganisatrice->responsable->nom }}</td>
+                                            <td>{{ $entiteOrganisatrice->etablissement->nom }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
+                            @endif
+
                             <div class="card-footer bg-whitesmoke">
                                 @if ($manifestation->agence_organisatrice != null)
                                 <span>Organisation confié à l'agence: {{ $manifestation->agence_organisatrice }}</span>
@@ -180,28 +225,32 @@
                                 <h4>Coordonnateur</h4>
                             </div>
                             <div class="card-body">
+                                @if ($coordonnateur == null)
+                                <span class="text-danger">!! Introuvable !!</span>
+                                @else
                                 <table class="table table-striped" id="table-1">
                                     <thead>
                                         <tr>
                                             <th>Nom Prenom</th>
+                                            <th>Specialité</th>
                                             <th>Grade</th>
                                             <th>Etablissement</th>
                                             <th>E-mail</th>
                                             <th>N° tel personnel</th>
-                                            <th>Fax</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>{{ $coordonnateur->name }}&nbsp;{{ $coordonnateur->prenom }}</td>
-                                            <td>{{ $coordonnateur->profession }}</td>
-                                            <td>{{ $coordonnateur->etablissement->libelle }}</td>
+                                            <td>{{ $coordonnateur->nom }}&nbsp;{{ $coordonnateur->prenom }}</td>
+                                            <td>{{ $coordonnateur->specialite }}</td>
+                                            <td>{{ $coordonnateur->grade }}</td>
+                                            <td>{{ $coordonnateur->laboratoire->etablissement->nom }}</td>
                                             <td>{{ $coordonnateur->email }}</td>
                                             <td>{{ $coordonnateur->tel }}</td>
-                                            <td>{{ $coordonnateur->fax }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
+                                @endif
                             </div>
                             <div class="card-footer bg-whitesmoke">
                             </div>
@@ -213,29 +262,155 @@
                             <h4>Comité d'organisation</h4>
                         </div>
                         <div class="card-body">
+                            <h5>Local</h5>
                             <table class="table table-striped" id="table-1">
                                 <thead>
                                     <tr>
-                                        <th>Nom Prénom</th>
-                                        <th>Etablissement</th>
+                                        <th>NOM Prénom</th>
                                         <th>Contact</th>
+                                        <th>Etablissement</th>
                                     </tr>
                                 </thead>
+                                @if($membresComiteOrganisationsLocal != null)
                                 <tbody>
-                                    @foreach ($comiteOrganisations as $comiteOrganisation )
+                                    @foreach ($membresComiteOrganisationsLocal as $membre)
+                                    @if($membre != null)
                                     <tr>
-                                        <td>{{ $comiteOrganisation->nom }}&nbsp;{{ $comiteOrganisation->prenom }}</td>
-                                        <td>{{ $comiteOrganisation->etablissement->libelle }}</td>
-                                        <td>{{ $comiteOrganisation->email }}&nbsp;/{{ $comiteOrganisation->tel }}</td>
+                                        <td><span class="text-uppercase mr-1">{{ $membre->nom
+                                                }}</span>
+                                            <span class="text-capitalize">{{ $membre->prenom
+                                                }}</span>
+                                        </td>
+                                        <td>{{ $membre->email }}&nbsp;/{{
+                                            $membre->tel }}</td>
+                                        <td class="text-capitalize">{{
+                                            $membre->laboratoire->etablissement->nom }}</td>
                                     </tr>
+                                    @endif
                                     @endforeach
                                 </tbody>
+                                @endif
+                            </table>
+                            <h5>Non local</h5>
+                            <table class="table table-striped" id="table-1">
+                                <thead>
+                                    <tr>
+                                        <th>NOM Prénom</th>
+                                        <th>Contact</th>
+                                        <th>Entité</th>
+                                        <th>Université / Etablissement</th>
+                                        <th>Ville</th>
+                                    </tr>
+                                </thead>
+                                @if ($comiteOrganisationsNonLocal != null)
+                                <tbody>
+                                    @foreach ($comiteOrganisationsNonLocal as $comite )
+                                    @if ($comite != null)
+                                    <tr>
+                                        <td><span class="mr-1 text-uppercase">{{ $comite->nom }}</span>
+                                            <span class="text-capitalize">{{ $comite->prenom }}</span>
+                                        </td>
+                                        <td> <span class="mr-1">{{ $comite->email }}</span>
+                                            <span>/ {{ $comite->tel }}</span>
+                                        </td>
+                                        <td><span class="mr-1 text-capitalize">{{ $comite->type_entite }}:</span>
+                                            <span class="text-capitalize"> {{ $comite->nom_entite }}</span>
+                                        </td>
+                                        <td><span class="mr-1 text-capitalize">{{ $comite->universite }}</span>
+                                            <span class="text-capitalize">/ {{ $comite->etablissement }}</span>
+                                        </td>
+                                        <td class="text-uppercase">{{ $comite->ville }}</td>
+                                    </tr>
+                                    @endif
+                                    @endforeach
+                                </tbody>
+                                @endif
+                            </table>
+                        </div>
+                        <div class="card-footer bg-whitesmoke">
+                        </div>
+                    </div>
+                    <div class="card" id="comiteS">
+                        <div class="card-header">
+                            <h4>Comité scientifique</h4>
+                        </div>
+                        <div class="card-body">
+                            <h5>Local</h5>
+                            <table class="table table-striped" id="table-1">
+                                <thead>
+                                    <tr>
+                                        <th>NOM Prénom</th>
+                                        <th>Contact</th>
+                                        <th>Entité</th>
+                                        <th>Université / Etablissement</th>
+                                        <th>Ville</th>
+                                    </tr>
+                                </thead>
+                                @if ($comiteScientifiqueLocal != null)
+                                <tbody>
+                                    @foreach ($comiteScientifiqueLocal as $comite )
+                                    @if ($comite != null)
+                                    <tr>
+                                        <td><span class="mr-1 text-uppercase">{{ $comite->nom }}</span>
+                                            <span class="text-capitalize">{{ $comite->prenom }}</span>
+                                        </td>
+                                        <td> <span class="mr-1">{{ $comite->email }}</span>
+                                            <span>/ {{ $comite->tel }}</span>
+                                        </td>
+                                        <td><span class="mr-1 text-capitalize">{{ $comite->type_entite }}:</span>
+                                            <span class="text-capitalize"> {{ $comite->nom_entite }}</span>
+                                        </td>
+                                        <td><span class="mr-1 text-capitalize">{{ $comite->universite }}</span>
+                                            <span class="text-capitalize">/ {{ $comite->etablissement }}</span>
+                                        </td>
+                                        <td class="text-uppercase">{{ $comite->ville }}</td>
+                                    </tr>
+                                    @endif
+                                    @endforeach
+                                </tbody>
+                                @endif
+                            </table>
+                            <h5>Non local</h5>
+                            <table class="table table-striped" id="table-1">
+                                <thead>
+                                    <tr>
+                                        <th>NOM Prénom</th>
+                                        <th>Contact</th>
+                                        <th>Entité</th>
+                                        <th>Université / Etablissement</th>
+                                        <th>Pays</th>
+                                    </tr>
+                                </thead>
+                                @if ($comiteScientifiqueNonLocal != null)
+                                <tbody>
+                                    @foreach ($comiteScientifiqueNonLocal as $comite )
+                                    @if ($comite != null)
+                                    <tr>
+                                        <td><span class="mr-1 text-uppercase">{{ $comite->nom }}</span>
+                                            <span class="text-capitalize">{{ $comite->prenom }}</span>
+                                        </td>
+                                        <td> <span class="mr-1">{{ $comite->email }}</span>
+                                            <span>/ {{ $comite->tel }}</span>
+                                        </td>
+                                        <td><span class="mr-1 text-capitalize">{{ $comite->type_entite }}:</span>
+                                            <span class="text-capitalize"> {{ $comite->nom_entite }}</span>
+                                        </td>
+                                        <td><span class="mr-1 text-capitalize">{{ $comite->universite }}</span>
+                                            <span class="text-capitalize">/ {{ $comite->etablissement }}</span>
+                                        </td>
+                                        <td class="text-uppercase">{{ $comite->pays }}</td>
+                                    </tr>
+                                    @endif
+                                    @endforeach
+                                </tbody>
+                                @endif
                             </table>
                         </div>
                         <div class="card-footer bg-whitesmoke">
                         </div>
                     </div>
 
+                    @if ($contributeurs != null)
                     <div class="card" id="contribution">
                         <div class="card-header">
                             <h4>Contribution</h4>
@@ -254,11 +429,17 @@
                                     @foreach ($contributeurs as $contributeur )
                                     <tr>
                                         <td>{{ $contributeur->typeContributeur->libelle }}</td>
+
+                                        @if ($contributeur->nom !='')
                                         <td>
-                                            @if ($contributeur->nom !='')
                                             {{ $contributeur->nom }}
-                                            @endif
                                         </td>
+                                        @else
+                                        <td>
+                                            --------
+                                        </td>
+                                        @endif
+
                                         <td>{{ $contributeur->montant }}&nbsp;DH</td>
                                         <td>{{ $contributeur->natureContribution->libelle }}</td>
                                     </tr>
@@ -269,7 +450,7 @@
                         <div class="card-footer bg-whitesmoke">
                         </div>
                     </div>
-
+                    @endif
                     <div class="card" id="soutienSollicite">
                         <div class="card-header">
                             <h4>Soutien sollicité</h4>
@@ -297,11 +478,12 @@
                                             </i>
                                         </td>
                                         <td class="text-right"><input class="form-control text-right" type="number"
-                                                disabled name="" id="" value="{ $soutienAccorde[$i]->pivot->nbr }}">
+                                                disabled name="" id="" @if (sizeof($soutienAccorde) !=0 )
+                                                value="{{ $soutienAccorde[$i]->pivot->nbr }}" @endif>
                                         </td>
                                         <td class="text-right"><input class="form-control montantOk text-right"
-                                                type="number" disabled id=""
-                                                value="{ $soutienAccorde[$i]->pivot->montant }}">
+                                                type="number" disabled id="" @if (sizeof($soutienAccorde) !=0 )
+                                                value="{{ $soutienAccorde[$i]->pivot->montant }}" @endif>
                                         </td>
                                         </tr>
                                         @endfor
@@ -321,23 +503,65 @@
                                         <th>Total accordé</th>
                                         <th class="text-right"><input class="form-control totalmontant text-right"
                                                 disabled type="number" name="totalmontant" id="totalmontant"
-                                                value="{{ $demande->manifestation->soutienAccorde()->sum('montant') }}">
+                                                @if($soutienAccorde !=null)
+                                                value="{{ $manifestation->soutienAccorde()->sum('montant') }}" @endif>
                                         </th>
                                     </tr>
                                 </table>
                             </div>
                         </div>
                     </div>
+                    <div class="card" id="piecesFournies">
+                        <div class="card-header">
+                            <h4>Piéces fournies</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped" id="table-1">
+                                <thead>
+                                    <tr>
+                                        <th>Intitulé</th>
+                                        <th>Document</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-footer bg-whitesmoke">
+                        </div>
+                    </div>
                 </section>
             </div>
-            <footer class="main-footer">
-                <div class="footer-right">
+            <a href="#" class="back-to-top"><i class="fas fa-angle-up mr-1"></i></a>
+            <footer class="main-footer d-flex justify-content-center">
+                <div class="footer-center">
                     Copyright &copy; Made with 🧡 by EL OUADI, KHADIM and EL AIMANI
                 </div>
             </footer>
         </div>
     </div>
-
+    <div hidden>
+        <div id="uploadBody">
+            <form method="POST" action="{{ route('upload.lettre',['id'=>$demande->id]) }}" enctype="multipart/form-data"
+                id="uplodaForm">
+                @csrf
+                <div class="form-group">
+                    <div class="custom-file">
+                        <label for="customFile" class="custom-file-label">Télécharger la lettre d'acceptation</label>
+                        <input type="file" class="custom-file-input" id="customFile" required name="lettre"
+                            accept="application/pdf">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     <!-- General JS Scripts -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -358,6 +582,30 @@
     <!-- Template JS File -->
     <script src="{{asset('../assets/js/scripts.js')}}"></script>
     <script src="{{asset('../assets/js/custom.js')}}"></script>
+    <script src="{{asset('../assets/js/page/bootstrap-modal.js')}}"></script>
+    <script type="text/javascript">
+        $("#upload").fireModal({
+        title: "Télécharger la lettre d'acceptation",
+        body: $('#uploadBody'),
+        buttons: [
+            {
+                text: 'Télécharger',
+                class: 'btn btn-success btn-shadow',
+                submit: true,
+                handler: function (modal) {
+                    modal.modal('toggle');
+                }
+            },
+            {
+                text: 'Annuler',
+                class: 'btn btn-danger btn-shadow',
+                handler: function (modal) {
+                    modal.modal('toggle');
+                }
+            }
+        ]
+    });
+    </script>
 </body>
 
 </html>

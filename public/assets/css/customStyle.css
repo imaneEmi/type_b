@@ -30,3 +30,43 @@
   .popover .popover-body {
     padding: 15px;
     line-height: 24px; }
+
+/* Back to top button */
+.back-to-top {
+    position: fixed;
+    display: none;
+    background:#a34f23;
+
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    border-radius: 50px;
+    right: 15px;
+    bottom: 15px;
+    transition: background 0.5s ease-in-out;
+  }
+
+  .back-to-top i {
+    font-size: 24px;
+    padding-top: 6px;
+  }
+
+  @media (max-width: 768px) {
+    .back-to-top {
+      bottom: 15px;
+    }
+  }
+
+  .back-to-top:focus {
+    background: #6d3111;
+    color: #fff;
+    outline: none;
+  }
+
+  .back-to-top:hover {
+    background: #E8BDA5;
+    color: #fff;
+  }
+
+

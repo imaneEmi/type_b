@@ -25,7 +25,7 @@ class CreateComiteOrganisationNonLocals extends Migration
             $table->string('etablissement',50);
             $table->string('ville',15);
             $table->unsignedBigInteger('manifestation_id');
-            $table->foreign('manifestation_id')->references('id')->on('manifestations') ;
+            $table->foreign('manifestation_id')->references('id')->on('manifestations')->onDelete('cascade') ;
             $table->timestamps();
         });
 

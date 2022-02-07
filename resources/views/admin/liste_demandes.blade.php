@@ -1,14 +1,47 @@
 @extends('layouts.main_admin')
 
+@section('title')
+@if (Route::is('demandes.courantes'))
+Demandes courantes
+@elseif (Route::is('demandes.acceptees'))
+Demandes acceptées
+@elseif (Route::is('demandes.refusées'))
+Demandes refusées
+@else
+Demandes en cours de traitement
+@endif
+@endsection
 @section('content')
 <section class="section">
+    @if(Session::get('success') != null)
+    <div class="alert alert-success alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+            {{ Session::get('success') }}
+        </div>
+    </div>
+    @endif
+    @if(Session::get('error') != null)
+    <div class="alert alert-danger alert-dismissible show fade">
+        <div class="alert-body">
+            <button class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+            {{ Session::get('error') }}
+        </div>
+    </div>
+    @endif
     <div class="section-header">
         @if (Route::is('demandes.courantes'))
         <h1>Demandes courantes</h1>
         @elseif (Route::is('demandes.acceptees'))
         <h1>Demandes acceptées</h1>
-        @else
+        @elseif (Route::is('demandes.refusees'))
         <h1>Demandes refusées</h1>
+        @else
+        <h1>Demandes en cours de traitements</h1>
         @endif
     </div>
     <div class="section-body">
@@ -37,7 +70,7 @@
                                             @endif
                                         </th>
                                         <th>Date reçu</th>
-                                        <th>@if (Route::is('demandes.courantes'))
+                                        <th>@if (Route::is('demandes.courantes') || Route::is('demandes.enCours'))
                                             Modifier
                                             @else
                                             Details
@@ -53,8 +86,13 @@
                                         </td>
                                         <td>{{ $demande->manifestation->intitule }}</td>
                                         <td class="align-middle">
-                                            {{ $demande->coordonnateur->name }}&nbsp;{{ $demande->coordonnateur->prenom
+                                            @if ($coordonnateurs[$loop->index] != null)
+                                            {{ $coordonnateurs[$loop->index]->nom }}&nbsp;{{
+                                            $coordonnateurs[$loop->index]->prenom
                                             }}
+                                            @else
+                                            <span class="text-danger">!! Introuvable !!</span>
+                                            @endif
                                         </td>
                                         <td>
                                             @if (Route::is('demandes.acceptees'))
@@ -63,13 +101,15 @@
                                             {{ $demande->manifestation->soutienSollicite()->sum('montant') }}
                                             @endif
                                         </td>
-                                        <td>{{ $demande->created_at }}</td>
+                                        <td>{{ $demande->created_at->format('d/m/Y H:i') }}</td>
                                         <td class="text-center">
-                                            @if (Route::is('demandes.courantes'))
-                                            <a href="{{ route('admin.edit.manifestation',['id'=>$demande->id]) }}" class="text-job has-icon"><i class="fas fa-pen"></i>
+                                            @if (Route::is('demandes.courantes') || Route::is('demandes.enCours'))
+                                            <a href="{{ route('admin.edit.manifestation',['id'=>$demande->id]) }}"
+                                                class=" has-icon"><i class="fas fa-pen"></i>
                                             </a>
                                             @else
-                                            <a href="{{ route('manifestation.details',['id'=>$demande->id]) }}" title="Plus de détails"><i class="fa fa-plus fa-lg"></i>
+                                            <a href="{{ route('manifestation.details',['id'=>$demande->id]) }}"
+                                                title="Plus de détails"><i class="fa fa-plus fa-lg"></i>
                                             </a>
                                             @endif
                                         </td>

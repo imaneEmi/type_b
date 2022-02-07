@@ -13,12 +13,13 @@ class CreateManifestationContributionParticipants extends Migration
      */
     public function up()
     {
-        Schema::create('manifestation_contribution_participants', function (Blueprint $table) {
+        Schema::connection('mysql')->create('manifestation_contribution_participants', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('manifestation_id');
             $table->unsignedBigInteger('cont_par_id');
 
-            $table->foreign('manifestation_id')->references('id')->on('manifestations') ;
+            $table->foreign('manifestation_id')->references('id')->on('manifestations')
+            ->onDelete('cascade');
             $table->index('manifestation_id');
             $table->foreign('cont_par_id')->references('id')->on('contribution_participants');
             $table->timestamps();

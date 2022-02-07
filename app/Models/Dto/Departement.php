@@ -21,11 +21,11 @@ class Departement extends Model
         'created_at'
     ];
 
-    public function respensable()
+    public function responsable()
     {
         return $this->belongsTo(Chercheur::class, 'resp_id');
     }
-    
+
     public function etablissement()
     {
         return $this->belongsTo(Etablissement::class, 'etab_id');

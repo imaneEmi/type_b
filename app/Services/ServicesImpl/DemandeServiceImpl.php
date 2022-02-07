@@ -3,14 +3,12 @@
 namespace App\Services\ServicesImpl;
 
 use App\Models\Demande;
+use App\Models\DemandeStatus;
 use App\Models\Manifestation;
 use App\Services\LaboratoireService;
-use App\Services\util\Config;
 use App\Services\DemandeService;
 use App\Services\util\Common;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use PhpParser\Node\Expr\Cast\Array_;
 
 
 class DemandeServiceImpl implements DemandeService
@@ -34,10 +32,15 @@ class DemandeServiceImpl implements DemandeService
         return Demande::all();
     }
 
-    public function getAll()
+    public function getAll($chercheurService)
     {
-        $demandes = Demande::with('coordonnateur', 'manifestation')->get();
-        return ['demandes' => $demandes];
+        $demandes = Demande::with('manifestation')->get();
+        $coordonnateurs = [];
+        foreach ($demandes as $demande) {
+            $coordonnateur = $chercheurService->findByIdNull($demande->coordonnateur_id);
+            $coordonnateurs[] = $coordonnateur;
+        }
+        return ['demandes' => $demandes, 'coordonnateurs' => $coordonnateurs];
     }
 
     public function findById($id)
@@ -69,10 +72,15 @@ class DemandeServiceImpl implements DemandeService
         return $demande->delete();
     }
 
-    public function findByEtat($etat)
+    public function findByEtat($etat, $chercheurService)
     {
-        $demandes = Demande::whereYear('created_at', date('Y'))->where('etat', $etat)->with('coordonnateur', 'manifestation')->get();
-        return ['demandes' => $demandes];
+        $demandes = Demande::whereYear('created_at', date('Y'))->where('etat', $etat)->with('manifestation')->get();
+        $coordonnateurs = [];
+        foreach ($demandes as $demande) {
+            $coordonnateur = $chercheurService->findByIdNull($demande->coordonnateur_id);
+            $coordonnateurs[] = $coordonnateur;
+        }
+        return ['demandes' => $demandes, 'coordonnateurs' => $coordonnateurs];
     }
 
     public function getNbrDemandesAnneeCour()
@@ -88,14 +96,31 @@ class DemandeServiceImpl implements DemandeService
     public function nbrDemandeParEtablissAnneeCour()
     {
 
-        return DB::table($this->manifestations)
-            ->join($this->demandes, $this->manifestations . '.demande_id', '=', $this->demandes . '.id')
-            ->join($this->laboratoires, $this->manifestations . '.entite_organisatrice_id', '=', $this->laboratoires . '.id')
-            ->join($this->etablissements, $this->laboratoires . '.etablissement_id', '=', $this->etablissements . '.id')
-            ->whereYear('date_debut', '=', date(Common::getAnneeActuelle()))
-            ->where('etat', '=', 'acceptée')
-            ->select($this->etablissements . '.nom', DB::raw('count(*) as total'))
-            ->groupBy($this->etablissements . '.nom')->get();
+
+        $query = "SELECT " . $this->etablissements . ".nom as nom_etablissement, count(*) as total FROM "
+            . $this->laboratoires
+            . ", "
+            . $this->etablissements
+            . ", "
+            . $this->demandes
+            . ", "
+
+            . $this->manifestations
+
+            . " where etab_id="
+            . $this->etablissements . '.id'
+            . " and "
+            . $this->laboratoire . 'id_labo'
+            . "="
+            . $this->manifestations . '.entite_organisatrice_id'
+            . " and "
+            . $this->demandes . '.id'
+            . "="
+            . $this->manifestations . '.demande_id 
+            and year(date_debut)=' . Common::getAnneeActuelle() . " and etat='" . DemandeStatus::ACCEPTEE . "'" . ' group by ' . $this->etablissements . '.nom;';
+        $result = DB::select($query);
+        // dd($result);
+        return $result;
     }
 
     public function countCoordonnateurDemandeByCurrentYear($chercheur)
@@ -107,10 +132,13 @@ class DemandeServiceImpl implements DemandeService
     {
         return Demande::where("coordonnateur_id", $id)->get();
     }
+    public function findAllByCoordonnateurIdAndCurrentYear($id)
+    {
+        return Demande::whereYear('created_at', date('Y'))->where("coordonnateur_id", $id)->get();
+    }
 
     public function isAllRapportLaboratoireExists($chercheur)
     {
-
         $chercheurs = $chercheur->laboratoire->chercheurs;
         foreach ($chercheurs as $chercheur) {
             $demandes = $this->findByCoordonnateurId($chercheur->id_cher);

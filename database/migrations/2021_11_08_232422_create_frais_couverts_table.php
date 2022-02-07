@@ -15,12 +15,12 @@ class CreateFraisCouvertsTable extends Migration
     {
         Schema::connection('mysql')->create('frais_couverts', function (Blueprint $table) {
             $table->id();
-            $table->string('libelle',100);
+            $table->string('libelle', 100);
             $table->double('forfait');
-            $table->string('unite',60);
-            $table->string('limite',100);
+            $table->string('unite', 60)->nullable();
+            $table->string('limite', 100)->nullable();
             $table->text('description');
-            $table->text('remarques');
+            $table->text('remarques')->nullable();
             $table->timestamps();
         });
     }

@@ -1,5 +1,9 @@
 @extends('layouts.main_admin')
 
+@section('title')
+Tableau de bord
+@endsection
+
 @section('content')
 <section class="section">
 
@@ -10,7 +14,10 @@
                 <div class="card-stats">
                     <div class="card-stats-title card-header  ">
                         Statistiques sur le budget de l'année courante
+                        @if(!empty($error) && $error==0)
                         <div style="float: right;"> <a href="#" class="btn btn-primary" id="modal-5">Modifier</a></div>
+
+                        @endif
 
                     </div>
 
@@ -151,11 +158,15 @@
 
                     <div class="mb-4">
                         <div class="text-small float-right font-weight-bold text-muted">{{$demandeacc->total}}</div>
-                        <div class="font-weight-bold mb-1">{{$demandeacc->libelle}}</div>
+                        <div class="font-weight-bold mb-1">{{$demandeacc->nom_etablissement}}</div>
                         <div class="progress progress-bar-success" data-height="20">
 
                             <div class="progress-bar progress-bar-success" role="progressbar" data-width="{{ (($demandeacc->total)/$nbrTotalAccepte)*100}}%" aria-valuenow="{{ (($demandeacc->total)/$nbrTotal)*100}}" aria-valuemin="0" aria-valuemax="100">
-                                {{ (($demandeacc->total)/$nbrTotalAccepte)*100}}%
+                                @php
+                                $number= number_format(((($demandeacc->total)/$nbrTotalAccepte)*100), 2, '.', '');
+                                @endphp
+                                {{ $number}}%
+
                             </div>
                         </div>
 
@@ -213,11 +224,7 @@
     swal('Succés', 'le budget a été bien modifié!', 'success');
 </script>
 @endif
-@if (!empty(Session::get('error')))
-<script>
-    swal('Succés', 'le budget ne peut pas etre modifié car il est déjà consommé!', 'error');
-</script>
-@endif
+
 
 <script>
     $("#modal-5").fireModal({

@@ -10,6 +10,7 @@ use App\Models\ComiteOrganisationLocal;
 use App\Models\ComiteOrganisationNonLocal;
 use App\Models\ComiteScientifiqueLocal;
 use App\Models\ComiteScientifiqueNonLocal;
+use App\Models\ConditionsGenerale;
 use App\Models\Contributeur;
 use App\Models\ContributionParticipant;
 use App\Models\Demande;
@@ -24,6 +25,7 @@ use App\Models\ManifestationContributeur;
 use App\Models\ManifestationContributionParticipant;
 use App\Models\ManifestationEtablissement;
 use App\Models\ManifestationTypeContributeur;
+use App\Models\NatureContributionManifestation;
 use App\Models\PieceDemande;
 use App\Models\SoutienSollicite;
 use App\Services\ChercheurService;
@@ -41,6 +43,7 @@ use App\Services\ManifestationContributionParticipantService;
 use App\Services\ManifestationEtablissementService;
 use App\Services\ManifestationService;
 use App\Services\ManifestationTypeContributeurService;
+use App\Services\NatureContributionManifestationService;
 use App\Services\NatureContributionService;
 use App\Services\SoutienSolliciteService;
 use App\Services\TypeContributeurService;
@@ -49,6 +52,7 @@ use Illuminate\Http\Request;
 use PDF;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 
 class DashboardController extends Controller
@@ -72,6 +76,7 @@ class DashboardController extends Controller
     private $manifestationContributionParticipantService;
     private $manifestationTypeContributeurService;
     private $soutienSolliciteService;
+    private $natureContributionManifestationService;
 
     /**
      * Create a new controller instance.
@@ -96,7 +101,8 @@ class DashboardController extends Controller
         ChercheurService $chercheurService,
         ManifestationEtablissementService $manifestationEtablissementService,
         GestionFinanciereService $gestionFinanciereService,
-        ComiteOrganisationLocalService $comiteOrganisationLocalService
+        ComiteOrganisationLocalService $comiteOrganisationLocalService,
+        NatureContributionManifestationService $natureContributionManifestationService
     ) {
         $this->soutienSolliciteService = $soutienSolliciteService;
         $this->manifestationTypeContributeurService = $manifestationTypeContributeurService;
@@ -116,6 +122,7 @@ class DashboardController extends Controller
         $this->gestionFinanciereService = $gestionFinanciereService;
         $this->comiteOrganisationLocalService = $comiteOrganisationLocalService;
         $this->comiteOrganisationNonLocalService = $comiteOrganisationNonLocalService;
+        $this->natureContributionManifestationService = $natureContributionManifestationService;
     }
 
     /**
@@ -149,6 +156,7 @@ class DashboardController extends Controller
         $comiteScientifiqueLocal = $this->comiteScientifiqueLocalService->findByManifistation($demande->manifestation);
         $manifestationContributionParticipant = $this->manifestationContributionParticipantService->findByManifistation($demande->manifestation);
         $manifestationTypeContributeur = $this->manifestationTypeContributeurService->findByManifistation($demande->manifestation);
+        $natureContributionManifestation =  $this->natureContributionManifestationService->findByManifistation($demande->manifestation);
         $soutienSollicite = $this->soutienSolliciteService->findByManifistation($demande->manifestation);
         $totalSoutienSollicite = $this->soutienSolliciteService->calculateTotal($soutienSollicite);
         $pdf = PDF::loadView('user/pdf', compact(
@@ -167,13 +175,17 @@ class DashboardController extends Controller
             'manifestationComite',
             'manifestationcontributeurs',
             'etablissementsOrganisateur',
-            'gestionFinanciere'
+            'gestionFinanciere',
+            'natureContributionManifestation'
         ));
         return $pdf->stream("Soutien_a_la_recherche_Type_B.pdf", array("Attachment" => false));
     }
 
     public function createRequest(Request $request)
     {
+
+
+
         $chercheur = $this->chercheurService->findByEmail($request->user()->email);
         $exists = $this->demandeService->isAllRapportLaboratoireExists($chercheur);
 
@@ -187,6 +199,7 @@ class DashboardController extends Controller
         $fraisCouvert = $this->fraisCouvertService->findAll();
         $natureContributions = $this->natureContributionService->findAll();
         $piecesDemande = PieceDemande::all();
+        $conditionsGenerale = ConditionsGenerale::all();
 
         $chercheurs = $this->chercheurService->findAll();
 
@@ -199,6 +212,7 @@ class DashboardController extends Controller
                 'date_fin' => 'required|date|after_or_equal:date_debut',
                 'type' => 'required',
                 'etendue' => 'required',
+                'partenaires' => 'required',
                 'file_nbr_etudiants_locaux' => 'required',
                 'file_nbr_enseignants_locaux' => 'required',
                 'nbr_etudiants_locaux' => 'required',
@@ -206,6 +220,8 @@ class DashboardController extends Controller
                 'nbr_enseignants_locaux' => 'required',
                 'nbr_enseignants_non_locaux' => 'required',
             ]);
+
+
 
             $demande = new Demande();
             $demande->code = $chercheur->id_cher . "/" . $this->demandeService->countCoordonnateurDemandeByCurrentYear($chercheur) + 1 . "/" . date('Y');
@@ -236,14 +252,18 @@ class DashboardController extends Controller
             $manifestation = Manifestation::create($manifestation->getAttributes());
 
 
+
             $fileEtudiantsLocauxPath = Storage::disk('local')->put("manifestation_files", $data['file_nbr_etudiants_locaux']);
+            $fileEtudiantsLocauxPath = $data['file_nbr_etudiants_locaux']->storeAs("manifestation_files", $request->file('file_nbr_etudiants_locaux')->getClientOriginalName());
             $fileManifestation1 = new FileManifestation();
+            $fileManifestation1->titre = Str::of($request->file('file_nbr_etudiants_locaux')->getClientOriginalName())->trim('.pdf');
             $fileManifestation1->url = $fileEtudiantsLocauxPath;
             $fileManifestation1->manifestation_id = $manifestation->getAttributes()["id"];
             $fileManifestation1 = FileManifestation::create($fileManifestation1->getAttributes());
 
             $fileEnseignantsLocauxPath = Storage::disk('local')->put("manifestation_files", $data['file_nbr_enseignants_locaux']);
             $fileManifestation2 = new FileManifestation();
+            $fileManifestation2->titre = Str::of($request->file('file_nbr_enseignants_locaux')->getClientOriginalName())->trim('.pdf');
             $fileManifestation2->url = $fileEnseignantsLocauxPath;
             $fileManifestation2->manifestation_id = $manifestation->getAttributes()["id"];
             $fileManifestation2 = FileManifestation::create($fileManifestation2->getAttributes());
@@ -266,12 +286,13 @@ class DashboardController extends Controller
                 ManifestationEtablissement::create($manifestationEtablissement->getAttributes());
             }
 
-            $typeContributeurs = $data['typeContributeurs'];
-            for ($i = 0; $i < count($typeContributeurs); $i++) {
-                $manifestationTypeContributeur = new ManifestationTypeContributeur();
-                $manifestationTypeContributeur->manifestation_id = $manifestation->getAttributes()["id"];
-                $manifestationTypeContributeur->type_contributeur_id = $typeContributeurs[$i];
-                ManifestationTypeContributeur::create($manifestationTypeContributeur->getAttributes());
+
+            $natureContributions = $data['natureContributions'];
+            for ($i = 0; $i < count($natureContributions); $i++) {
+                $natureManifestation = new NatureContributionManifestation();
+                $natureManifestation->manifestation_id = $manifestation->getAttributes()["id"];
+                $natureManifestation->nature_con_id = $natureContributions[$i];
+                $natureManifestation = NatureContributionManifestation::create($natureManifestation->getAttributes());
             }
 
             $contributeurs = json_decode($data['contributeurs'], true);
@@ -339,6 +360,7 @@ class DashboardController extends Controller
                     $path = Storage::disk('local')->put("manifestation_files", $pieces[$i]);
                     $fileManifestation = new FileManifestation();
                     $fileManifestation->url = $path;
+                    $fileManifestation1->titre = Str::of($pieces[$i]->getClientOriginalName())->trim('.pdf');
                     $fileManifestation->manifestation_id = $manifestation->getAttributes()["id"];
                     FileManifestation::create($fileManifestation->getAttributes());
                 }
@@ -346,7 +368,7 @@ class DashboardController extends Controller
             return redirect()->route('dashboard.user');
         }
 
-        return view('user/create-request', ["piecesDemande" => $piecesDemande, "chercheurs" => $chercheurs, "natureContributions" => $natureContributions, "typeContributeurs" => $typeContributeurs, "etablissements" => $etablissements, 'user' => $user, 'fraisCouvert' => $fraisCouvert]);
+        return view('user/create-request', ["conditionsGenerale" => $conditionsGenerale, "piecesDemande" => $piecesDemande, "chercheurs" => $chercheurs, "natureContributions" => $natureContributions, "typeContributeurs" => $typeContributeurs, "etablissements" => $etablissements, 'user' => $user, 'fraisCouvert' => $fraisCouvert]);
     }
 
     public function uploadRapport(Request $request)

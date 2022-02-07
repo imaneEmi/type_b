@@ -41,9 +41,9 @@
                                             <th>Reference</th>
                                             <th>Date d'envoi</th>
                                             <th>Remarques</th>
-                                            <th>état</th>
+                                            <th class="text-center">Etat</th>
                                             <th>Rapport</th>
-                                            <th>lettre d'acceptation</th>
+                                            <th class="text-center">Lettre d'acceptation</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -57,44 +57,46 @@
                                             </td>
                                             <td>{{$demande->code}}</td>
                                             <td class="align-middle">
-                                                {{$demande->date_envoie}}
+                                                {{$demande->date_envoie->format('d/m/Y H:i')}}
                                             </td>
                                             <td> {{$demande->remarques}}</td>
                                             <td>
                                                 @if ($demande->etat === $demandeStatus::COURANTE)
-                                                <div class="badge badge-info">{{$demande->etat}}</div>
-                                                @elseif($demande->etat === $demandeStatus::ACCEPTEE )
-                                                <div class="badge badge-success">{{$demande->etat}}</div>
+                                                <div class="badge badge-light text-capitalize">{{$demande->etat}}</div>
+                                                @elseif($demande->etat === $demandeStatus::ACCEPTEE)
+                                                <div class="badge badge-success text-capitalize">{{$demande->etat}}</div>
                                                 @elseif($demande->etat === $demandeStatus::REFUSEE )
-                                                <div class="badge badge-danger">{{$demande->etat}}</div>
+                                                <div class="badge badge-danger text-capitalize">{{$demande->etat}}</div>
                                                 @endif
                                             </td>
-                                            <td>
-                                                <button style=" max-width: 80px;min-width: 80px;" class="btn btn-primary dashboard-user-bnt" id="modal-5{{$demande->id}}">
+                                            <td class="text-center">
+                                                <a href="" class=" has-icon" id="modal-5{{$demande->id}}">
                                                     @if (!is_null($demande->manifestation->rapport))
-                                                    éditer
+                                                    <i class="fas fa-pen fa-lg" aria-hidden="true" title="Modifier le rapport"></i>
                                                     @else
-                                                    upload
+                                                    <i class="fa fa-upload fa-lg" aria-hidden="true" title="Télécharger le rapport"></i>
                                                     @endif
-                                                </button>
+                                                </a>
                                                 @if (!is_null($demande->manifestation->rapport))
-                                                <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->rapport->url)])}}" class="btn btn-primary dashboard-user-bnt" style=" max-width: 80px; min-width: 80px;" target="_blank"> voir </a>
+                                                <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->rapport->url)])}}" class="has-icon ml-2"><i class="fa fa-file-pdf fa-lg" aria-hidden="true" title="Consulter le rapport"></i></a>
                                                 @endif
                                             </td>
-                                            <td>
-                                                @if (!is_null($demande->manifestation->lettreAcceptation) )
-                                                <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->lettreAcceptation->url)])}}" class="btn btn-primary dashboard-user-bnt" style=" max-width: 80px;min-width: 80px; " target="_blank">voir</a>
-                                                @else
-                                                indisponible pour le moment
-                                                @endif
+                                            <td class="text-center">
+                                                <a @if (!is_null($demande->manifestation->lettreAcceptation) )
+                                                    href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->lettreAcceptation->url)])}}"
+                                                    disabled
+                                                    @endif
+                                                    class="has-icon" target="_blank">
+                                                    <i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a>
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 @if ($demande->editable)
-                                                <button class="btn btn-primary dashboard-user-bnt" style=" max-width: 80px;min-width: 80px; " id="modal-6{{$demande->id}}">
-                                                    +fichier
-                                                </button>
+                                                <a class="has-icon m-1" href="" id="modal-6{{$demande->id}}">
+                                                    <i class="fa fa-upload fa-lg" aria-hidden="true" title="Télécharger les documents manquants"></i>
+                                                </a>
                                                 @endif
-                                                <a href="{{route('request.pdf',['id'=>$demande->id])}}" class="btn btn-primary dashboard-user-bnt" style=" max-width: 80px;min-width: 80px;" target="_blank">PDF</a>
+                                                <a href="{{route('request.pdf',['id'=>$demande->id])}}" class="has-icon m-1" target="_blank">
+                                                    <i class="fa fa-plus fa-lg" aria-hidden="true" title="Plus de détails"></i></a>
                                             </td>
                                         </tr>
                                         @endforeach
@@ -184,7 +186,7 @@
                         form.stopProgress();
                         if (response.code === 200) {
                             modal.find('.modal-body').prepend('<div class="alert alert-info">' + response.message + '</div>')
-
+                            window.location.reload();
                         } else {
                             modal.find('.modal-body').prepend('<div class="alert alert-danger">' + response.message + '</div>')
 
@@ -239,7 +241,7 @@
                         form.stopProgress();
                         if (response.code === 200) {
                             modal.find('.modal-body').prepend('<div class="alert alert-info">' + response.message + '</div>')
-
+                            window.location.reload();
                         } else {
                             modal.find('.modal-body').prepend('<div class="alert alert-danger">' + response.message + '</div>')
 

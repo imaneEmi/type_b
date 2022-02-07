@@ -20,5 +20,4 @@ class ComiteScientifiqueNonLocal extends Model
         'manifestation_id'
     ];
 
-  
 }

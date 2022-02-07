@@ -48,7 +48,7 @@ class EditBudgetController extends Controller
             return back()->with('error', 1);
         }
 
-        $budgetAnnuelService->update($request->budget);
+        $budgetAnnuelService->updateBudgetActuel($request->budget);
         return back()->with('succes', 2);
     }
 }

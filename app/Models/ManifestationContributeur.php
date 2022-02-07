@@ -18,4 +18,7 @@ class ManifestationContributeur extends Model
     {
         return $this->belongsTo(Contributeur::class, 'contributeur_id');
     }
+
 }
+
+

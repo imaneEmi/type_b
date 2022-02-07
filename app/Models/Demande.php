@@ -9,7 +9,8 @@ class Demande extends Model
 {
     use HasFactory;
     protected $connection = 'mysql';
-    protected $with = ['coordonnateur','manifestation'];
+    protected $with = ['manifestation'];
+    protected $dates = ['date_envoie'];
 
     public $fillable = [
         'code',
@@ -18,14 +19,10 @@ class Demande extends Model
         'editable',
         'remarques',
         'coordonnateur_id',
-        
+
     ];
 
     public function manifestation(){
         return $this->hasOne(Manifestation::class);
-    }
-
-    public function coordonnateur(){
-        return $this->belongsTo(User::class,'coordonnateur_id');
     }
 }

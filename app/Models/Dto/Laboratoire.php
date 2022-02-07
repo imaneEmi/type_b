@@ -15,16 +15,26 @@ class Laboratoire extends Model
         'id_labo',
         'nom',
         'etab_id',
-        'resp_id'
+        'resp_id',
+        'dep_id'
     ];
 
     public function etablissement()
     {
         return $this->belongsTo(Etablissement::class, 'etab_id');
     }
+    public function responsable()
+    {
+        return $this->hasOne(Chercheur::class,"lab_id");
+    }
 
     public function chercheurs()
     {
         return $this->hasMany(Chercheur::class, "lab_id");
+    }
+
+    public function departement()
+    {
+        return $this->belongsTo(Departement::class, 'dep_id');
     }
 }

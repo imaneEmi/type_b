@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>UCA</title>
+    <link href="{{asset('assets/img/uca-logo.png')}}" rel="icon">
+    <link href="{{asset('assets/assets/img/uca-logo.png')}}" rel="apple-touch-icon">
+    <title>@yield('title')</title>
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -38,7 +40,7 @@
                 </form>
                 <ul class="navbar-nav navbar-right">
                     <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                            <img alt="image" src="../assets/img/avatar/avatar-1.png" class="rounded-circle mr-1">
+                            <i class="fas fa-user-circle mr-1" style="font-size: 30px;"></i>
                             <div class="d-sm-none d-lg-inline-block">Bienvenue, {{ Auth::user()->name }}&nbsp;{{
                                 Auth::user()->prenom
                                 }}</div>
@@ -72,14 +74,18 @@
 
                         <li class="menu-header">Tableau de bord</li>
                         <li @if (Route::is('dashboard.admin')) class="nav-item dropdown active" @endif>
-                            <a href="{{ route('dashboard.admin') }}" class="nav-link"><i class="fas fa-fire"></i><span>Tableau de bord</span></a>
+                            <a href="{{ route('dashboard.admin') }}" class="nav-link"><i class="fas fa-tachometer-alt" aria-hidden="true"></i><span>Tableau de bord</span></a>
 
                         </li>
                         <li class="nav-item {{Route::is('statistiques.admin')?'active':''}} ">
-                            <a href="{{ route('statistiques.admin') }}" class="nav-link"><i class="fas fa-fire"></i><span>Statistiques</span></a>
+                            <a href="{{ route('statistiques.admin') }}" class="nav-link"><i class="fas fa-chart-bar" aria-hidden="true"></i><span>Statistiques</span></a>
                         </li>
 
                         <li class="menu-header">Liste des Demandes</li>
+                        <li class="nav-item dropdown {{Route::is('demandes.enCours')?'active':''}}"><a class="" href="{{ route('demandes.enCours') }}">
+                                <i class="fas fa-tasks"></i>
+                                <span> En cours de traitement</span>
+                            </a></li>
                         <li class="nav-item dropdown {{Route::is('demandes.courantes')?'active':''}}"><a class="" href="{{ route('demandes.courantes') }}">
                                 <i class="fas fa-folder-open"></i>
                                 <span> Courantes</span>
@@ -98,13 +104,22 @@
                             </a></li>
 
                         <li class="menu-header">Paramétres</li>
-                        <li class="nav-item dropdown {{Route::is('edit.budgetFixe') || Route::is('edit.frais') || Route::is('edit.pieces') ?'active':''}}">
+                        <li class="nav-item dropdown {{Route::is('edit.budgetFixe')
+                        || Route::is('frais_couvert.list')
+                        || Route::is('piece_demandee.list')
+                        || Route::is('type_contributeur.list')
+                        || Route::is('nature_contribution.list')
+                        || Route::is('conditions_generale.list')
+                        ?'active':''}}">
                             <a href="#" class="nav-link has-dropdown"><i class="fas fa-cog"></i><span>Liste des
                                     paramétres</span></a>
                             <ul class="dropdown-menu ">
-                                <li class="{{Route::is('edit.budgetFixe') ? 'active':''}}"><a class="{{Route::is('edit.budgetFixe') ? 'beep beep-sidebar':''}}" href="{{ route('edit.budgetFixe') }}">Budget Total Annuel</a></li>
-                                <li class="{{Route::is('edit.frais')?'active':''}}"><a class="{{Route::is('edit.frais')?'beep beep-sidebar':''}}" href="{{ route('edit.frais') }}">Frais couvert</a></li>
-                                <li class="{{Route::is('edit.pieces')?'active':''}}"><a class="{{Route::is('edit.pieces')?'beep beep-sidebar':''}}" href="{{ route('edit.pieces') }}">Pieces demandées</a></li>
+                                <li class="{{Route::is('edit.budgetFixe') ? 'active':''}}"><a class="{{Route::is('edit.budgetFixe') ? 'beep beep-sidebar':''}}" href="{{ route('edit.budgetFixe') }}">Budget Total Fixe</a></li>
+                                <li class="{{Route::is('frais_couvert.list')?'active':''}}"><a class="{{Route::is('frais_couvert.list')?'beep beep-sidebar':''}}" href="{{ route('frais_couvert.list') }}">Frais couvert</a></li>
+                                <li class="{{Route::is('piece_demandee.list')?'active':''}}"><a class="{{Route::is('piece_demandee.list')?'beep beep-sidebar':''}}" href="{{ route('piece_demandee.list') }}">Pieces demandées</a></li>
+                                <li class="{{Route::is('type_contributeur.list')?'active':''}}"><a class="{{Route::is('type_contributeur.list')?'beep beep-sidebar':''}}" href="{{ route('type_contributeur.list') }}">Types de contributeurs</a></li>
+                                <li class="{{Route::is('nature_contribution.list')?'active':''}}"><a class="{{Route::is('nature_contribution.list')?'beep beep-sidebar':''}}" href="{{ route('nature_contribution.list') }}">Type de cotisation</a></li>
+                                <li class="{{Route::is('conditions_generale.list')?'active':''}}"><a class="{{Route::is('conditions_generale.list')?'beep beep-sidebar':''}}" href="{{ route('conditions_generale.list') }}">Conditions générales</a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown {{Route::is('edit.profile')?'active':''}}">
