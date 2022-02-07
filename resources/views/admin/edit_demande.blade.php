@@ -95,7 +95,7 @@ Traitement de dossier
                         <div class="d-inline">
                             <h6 class="d-inline label mr-1"><i class="fa fa-user fa-lg mr-1 label"
                                     aria-hidden="true"></i>Demandeur: </h6>
-                            <span class="d-inline-block text-uppercase lead mr-1">el aimani</span>
+                            <span class="d-inline-block text-uppercase lead mr-1">{{$coordonnateur->nom }}</span>
                             <span class="text-capitalize lead"> {{$coordonnateur->prenom }}</span>
                         </div>
                     </div>
