@@ -110,6 +110,10 @@ class AppServiceProvider extends ServiceProvider
             'App\Services\NatureContributionManifestationService',
             'App\Services\ServicesImpl\NatureContributionManifestationServiceImpl'
         );
+        $this->app->bind(
+            'App\Services\ConditionGeneraleService',
+            'App\Services\ServicesImpl\ConditionGeneraleServiceImpl'
+        );
     }
 
     /**

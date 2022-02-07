@@ -79,17 +79,13 @@
                                                     @endif
                                                     class=" has-icon" target="_blank" >
                                                     @if (!is_null($demande->manifestation->rapport))
-                                                    <i class="fas fa-pen fa-lg" aria-hidden="true"
-                                                        title="Modifier le rapport"></i>
+                                                    <i class="fas fa-pen fa-lg" aria-hidden="true" title="Modifier le rapport"></i>
                                                     @else
-                                                    <i class="fa fa-upload fa-lg" aria-hidden="true"
-                                                        title="Télécharger le rapport"></i>
+                                                    <i class="fa fa-upload fa-lg" aria-hidden="true" title="Télécharger le rapport"></i>
                                                     @endif
                                                 </a>
                                                 @if (!is_null($demande->manifestation->rapport))
-                                                <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->rapport->url)])}}"
-                                                    class="has-icon ml-2"><i class="fa fa-file-pdf fa-lg"
-                                                        aria-hidden="true" title="Consulter le rapport"></i></a>
+                                                <a href="{{route('manifestation.read.rapport',['url'=>Str::replace('/','-',$demande->manifestation->rapport->url)])}}" class="has-icon ml-2"><i class="fa fa-file-pdf fa-lg" aria-hidden="true" title="Consulter le rapport"></i></a>
                                                 @endif
                                             </td>
                                             <td class="text-center">
@@ -105,14 +101,11 @@
                                             <td class="text-center">
                                                 @if ($demande->editable)
                                                 <a class="has-icon m-1" href="" id="modal-6{{$demande->id}}">
-                                                    <i class="fa fa-upload fa-lg" aria-hidden="true"
-                                                        title="Télécharger les documents manquants"></i>
+                                                    <i class="fa fa-upload fa-lg" aria-hidden="true" title="Télécharger les documents manquants"></i>
                                                 </a>
                                                 @endif
-                                                <a href="{{route('request.pdf',['id'=>$demande->id])}}"
-                                                    class="has-icon m-1" target="_blank">
-                                                    <i class="fa fa-plus fa-lg" aria-hidden="true"
-                                                        title="Plus de détails"></i></a>
+                                                <a href="{{route('request.pdf',['id'=>$demande->id])}}" class="has-icon m-1" target="_blank">
+                                                    <i class="fa fa-plus fa-lg" aria-hidden="true" title="Plus de détails"></i></a>
                                             </td>
                                         </tr>
                                         @endforeach
@@ -130,6 +123,8 @@
 
 @endsection
 @section('scripts')
+
+
 <script>
     demandes = @json($demandes);
     for (var i = 0; i < demandes.length; i < i++) {
