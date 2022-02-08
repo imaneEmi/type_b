@@ -374,7 +374,7 @@ class AdminsController extends Controller
             try {
                 Mail::to($email)
                     ->send(new CustomMail($nom, $objet, $corpsEmail));
-                if ($editable > 0) {
+                if ($editable != null) {
                     $demande = $this->demandeService->findById($editable[0]);
                     $demande->editable = true;
                     $this->demandeService->update($demande);
