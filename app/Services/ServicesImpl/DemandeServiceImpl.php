@@ -42,6 +42,19 @@ class DemandeServiceImpl implements DemandeService
         }
         return ['demandes' => $demandes, 'coordonnateurs' => $coordonnateurs];
     }
+    public function findAllByChercheur($chercheur)
+    {
+        $ds = Demande::with('manifestation')->get();
+        $demandes = [];
+
+        foreach ($ds as $demande) {
+
+            if ($chercheur->id_cher == $demande->coordonnateur_id) {
+                $demandes[] = $demande;
+            }
+        }
+        return  $demandes;
+    }
 
     public function findById($id)
     {
@@ -116,7 +129,7 @@ class DemandeServiceImpl implements DemandeService
             . " and "
             . $this->demandes . '.id'
             . "="
-            . $this->manifestations . '.demande_id 
+            . $this->manifestations . '.demande_id
             and year(date_debut)=' . Common::getAnneeActuelle() . " and etat='" . DemandeStatus::ACCEPTEE . "'" . ' group by ' . $this->etablissements . '.nom;';
         $result = DB::select($query);
         // dd($result);

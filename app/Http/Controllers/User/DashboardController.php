@@ -137,7 +137,8 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
 
-        $demandes = $this->demandeService->findAll();
+        $chercheur = $this->chercheurService->findByEmail($request->user()->email);
+        $demandes = $this->demandeService->findAllByChercheur($chercheur);
 
         return view('user/list-request', ['demandes' => $demandes, "demandeStatus" => DemandeStatus::class]);
     }
@@ -187,15 +188,15 @@ class DashboardController extends Controller
 
     public function createRequest(Request $request)
     {
-        try {
+
             $chercheur = $this->chercheurService->findByEmail($request->user()->email);
             $exists = $this->demandeService->isAllRapportLaboratoireExists($chercheur);
-            $verifyNatureManifest = $this->natureContributionService->findAll();
+           /* $verifyNatureManifest = $this->natureContributionService->findAll();
             $verigyFraisCouverts = $this->fraisCouvertService->findAll();
             $verifyConditionGeneral = $this->conditionsGeneraleService->findAll();
 
-            if (count($verifyNatureManifest) == 0 || count($verigyFraisCouverts))
-                return view('error/error-500');
+            if (count($verifyNatureManifest) == 0 || count($verigyFraisCouverts)   )
+                return view('errors.error-500');*/
             if (!$exists) {
                 return view('user/create-request', ["message" => "dsdd", 'fraisCouvert' => []]);
             }
@@ -377,10 +378,7 @@ class DashboardController extends Controller
             }
 
             return view('user/create-request', ["conditionsGenerale" => $conditionsGenerale, "piecesDemande" => $piecesDemande, "chercheurs" => $chercheurs, "natureContributions" => $natureContributions, "typeContributeurs" => $typeContributeurs, "etablissements" => $etablissements, 'user' => $user, 'fraisCouvert' => $fraisCouvert]);
-        } catch (\Exception $ex) {
-            error_log($ex->getMessage());
-            return response()->view('errors.error-500');
-        }
+
     }
 
     public function uploadRapport(Request $request)

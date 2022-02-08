@@ -21,4 +21,5 @@ interface DemandeService
     public function isAllRapportLaboratoireExists($chercheur);
     public function  findByCoordonnateurId($id);
     public function findAllByCoordonnateurIdAndCurrentYear($id);
+    public function findAllByChercheur($chercheur);
 }
