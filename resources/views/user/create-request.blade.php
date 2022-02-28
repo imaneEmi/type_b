@@ -624,7 +624,7 @@
 @endsection
 
 @section('scripts')
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{asset('../assets/js/sweetalert/dist/sweetalert.min.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     var comiteOrganisationNonLocal = []
@@ -920,16 +920,16 @@
             .attr("value", JSON.stringify(comiteScientifiqueNonLocal))
             .appendTo("#manifestationForm");
 
-        Swal.fire({
-            title: 'Attention!!',
-            text: "L'argent accordé n'est dépensé que pour la manifestation!",
-            icon: 'error',
-            confirmButtonText: "OK",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $("#manifestationForm").submit();
-            }
-        })
+        swal({
+            title: 'Information',
+            text: "Seul le compte de l'établissement d'attache peut être utilisé pour la gestion financière.",
+            buttons: ['Annuler','Lu et approuvé'],
+        }).then((willDelete) => {
+      if (willDelete) {
+        $("#manifestationForm").submit();;
+      } else {
+      }
+    })
 
     });
 </script>

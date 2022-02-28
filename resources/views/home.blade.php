@@ -77,7 +77,7 @@
           <div data-aos="fade-up" data-aos-delay="600">
             <div class="text-center text-lg-start">
               <a href="{{ route('dashboard') }}" class="btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center">
-                <span>Dashboard</span>
+                <span>Commencer</span>
                 <i class="bi bi-arrow-right"></i>
               </a>
             </div>

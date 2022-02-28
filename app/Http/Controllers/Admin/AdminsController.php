@@ -140,12 +140,9 @@ class AdminsController extends Controller
             $annee = $demande->created_at->format('Y');
             $budget = $this->budgetAnnuelService->findBudgetParAnnee($annee);
             $totalAccorde = $manifestation->soutienAccorde()->sum('montant');
-            if ($budget->budget_restant == 0) {
-                $budget->budget_restant = $budget->budget_fixe - $totalAccorde;
-            } else {
+            if ($budget->budget_restant > 0 && ($budget->budget_restant - $totalAccorde) >= 0) {
                 $budget->budget_restant = $budget->budget_restant - $totalAccorde;
-            }
-            if ($budget->budget_restant < 0) {
+            } else {
                 $error = "Echec!Dépassement du budget fixé!!";
                 return redirect()->back()->with('error', $error);
             }
@@ -316,18 +313,6 @@ class AdminsController extends Controller
         $response = Common::readFileFromLocalStorage($url);
         if ($response == null)  return redirect()->route('dashboard.admin');
         return $response;
-    }
-
-    public function notificationEmail(Request $request)
-    {
-        try {
-            Mail::to('me@uca.ma')
-                ->cc(['me2@uca.ma', 'me3@uca.ma'])
-                ->send(new NotificationMail('EL AIMANI Imane'));
-            return redirect()->back();
-        } catch (\Throwable $th) {
-            error_log($th->getMessage());
-        }
     }
 
     public function customEmail(Request $request)

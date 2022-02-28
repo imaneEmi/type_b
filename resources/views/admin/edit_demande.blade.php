@@ -65,15 +65,11 @@ Traitement de dossier
             </a>
         </span>
         @endif
-        @if ($demande->etat === \App\Models\DemandeStatus::ACCEPTEE || $demande->etat ===
-        \App\Models\DemandeStatus::ENCOURS)
         <span class="m-2">
             <a href="{{ route('pdf',['id'=>$demande->id]) }}" target="_blank"
                 title="Télécharger fiche traitement de dossier"><i class="fa fa-download fa-lg"></i>
             </a>
         </span>
-        @endif
-
         <span class="m-2">
             <a href="{{ route('manifestation.details',['id'=>$demande->id]) }}" title="Plus de détails"><i
                     class="fa fa-plus fa-lg"></i>
@@ -511,7 +507,7 @@ $("#sendEmail").fireModal({
             class: 'btn btn-success btn-shadow',
             handler: function () {
                 swal({
-                    title: '?',
+                    title: '',
                     text: "Voulez-vous vraiment envoyer cet e-mail?.",
                     icon: 'warning',
                     buttons: ['NON','OUI'],

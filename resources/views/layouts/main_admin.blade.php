@@ -82,13 +82,13 @@
                         </li>
 
                         <li class="menu-header">Liste des Demandes</li>
+                        <li class="nav-item dropdown {{Route::is('demandes.courantes')?'active':''}}"><a class="" href="{{ route('demandes.courantes') }}">
+                            <i class="fas fa-folder-open"></i>
+                            <span> Nouvelles</span>
+                        </a></li>
                         <li class="nav-item dropdown {{Route::is('demandes.enCours')?'active':''}}"><a class="" href="{{ route('demandes.enCours') }}">
                                 <i class="fas fa-tasks"></i>
                                 <span> En cours de traitement</span>
-                            </a></li>
-                        <li class="nav-item dropdown {{Route::is('demandes.courantes')?'active':''}}"><a class="" href="{{ route('demandes.courantes') }}">
-                                <i class="fas fa-folder-open"></i>
-                                <span> Courantes</span>
                             </a></li>
                         <li class="nav-item dropdown {{Route::is('demandes.acceptees')?'active':''}}"><a class="" href="{{ route('demandes.acceptees') }}">
                                 <i class="fas fa-folder"></i>

@@ -2,7 +2,7 @@
 
 @section('title')
 @if (Route::is('demandes.courantes'))
-Demandes courantes
+Demandes nouvelles
 @elseif (Route::is('demandes.acceptees'))
 Demandes acceptées
 @elseif (Route::is('demandes.refusées'))
@@ -35,7 +35,7 @@ Demandes en cours de traitement
     @endif
     <div class="section-header">
         @if (Route::is('demandes.courantes'))
-        <h1>Demandes courantes</h1>
+        <h1>Demandes nouvelles</h1>
         @elseif (Route::is('demandes.acceptees'))
         <h1>Demandes acceptées</h1>
         @elseif (Route::is('demandes.refusees'))

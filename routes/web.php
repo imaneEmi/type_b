@@ -62,7 +62,7 @@ Route::group(['middleware' => ['budgetFixeSet', 'admin']], function () {
         ->name('manifestation.details');
     Route::get('/demandes-enCours', [App\Http\Controllers\Admin\AdminsController::class, 'getDemandesEnCours'])
         ->name('demandes.enCours');
-    Route::get('/demandes-courantes', [App\Http\Controllers\Admin\AdminsController::class, 'getDemandesCourantes'])
+    Route::get('/demandes-nouvelles', [App\Http\Controllers\Admin\AdminsController::class, 'getDemandesCourantes'])
         ->name('demandes.courantes');
     Route::get('/demandes-acceptees', [App\Http\Controllers\Admin\AdminsController::class, 'getDemandesAcceptees'])
         ->name('demandes.acceptees');
@@ -79,7 +79,6 @@ Route::group(['middleware' => ['budgetFixeSet', 'admin']], function () {
     Route::post('/upload-lettre/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'uploadLettre'])->name('upload.lettre');
     Route::get('manifastation/lettre/{url}', [App\Http\Controllers\Admin\AdminsController::class, 'getLettre'])->name('manifastation.lettre');
 
-    Route::post('/notification-email', [App\Http\Controllers\Admin\AdminsController::class, 'notificationEmail'])->name('emails.notify');
     Route::post('/custom-email', [App\Http\Controllers\Admin\AdminsController::class, 'customEmail'])->name('emails.custom');
     Route::get('/disable-upload/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'disableUpload'])->name('disableUpload');
     Route::post('/demande-estimationDotation/{id}', [App\Http\Controllers\Admin\AdminsController::class, 'estimationDotation'])->name('demande.estimationDotation');

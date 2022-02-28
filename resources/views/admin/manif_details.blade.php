@@ -108,8 +108,6 @@
                                 </span>
                             </div>
                             @endif
-                            @if ($demande->etat === \App\Models\DemandeStatus::ACCEPTEE || $demande->etat ===
-                            \App\Models\DemandeStatus::ENCOURS)
                             <div class="d-inline">
                                 <span>
                                     <a href="{{ route('pdf',['id'=>$demande->id]) }}" target="_blank"
@@ -118,8 +116,6 @@
                                     </a>
                                 </span>
                             </div>
-
-                            @endif
                             <div class="d-inline m-3">
                                 <span>
                                     <a href="{{ url()->previous() }}" title="Retour en arrière">
